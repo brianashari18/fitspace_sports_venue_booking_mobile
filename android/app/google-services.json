@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "156389780519",
+    "project_id": "abp-database",
+    "storage_bucket": "abp-database.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156389780519:android:42d0c04b7783de7580f202",
+        "android_client_info": {
+          "package_name": "com.example.fitspace_sports_venue_booking_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApqGlUmpmtfgg1ngvLZadmnzokAhnBBaY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
