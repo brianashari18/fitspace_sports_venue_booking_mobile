@@ -86,6 +86,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     );
   }
 
+
   List<TextSpan> _buildTextWithHighlight(int index) {
     String title = titles[index];
 
