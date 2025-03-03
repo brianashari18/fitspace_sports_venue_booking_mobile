@@ -3,30 +3,37 @@ import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => SignInScreenState();
+  State<SignUpScreen> createState() => SignUpScreenState();
 }
 
-class SignInScreenState extends State<SignInScreen> {
+class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  // final AuthService _apiService = AuthService();
-  // final GoogleService _googleService = GoogleService();
+  final TextEditingController _confirmPassController = TextEditingController();
 
   String? _emailError;
   String? _passwordError;
+  String? _confirmPasswordError;
   bool _obscurePassword = true;
-  bool _isSignIn = false;
+  bool _obscureConfirmPassword = true;
+  bool _isSignUp = false;
   bool _isChecked = false;
+
+  bool _isMinLength = false;
+  bool _hasUpperCase = false;
+  bool _hasLowerCase = false;
+  bool _hasNumber = false;
+  bool _hasSpecialCharacter = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPassController.dispose();
     super.dispose();
   }
 
@@ -44,7 +51,7 @@ class SignInScreenState extends State<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    'Sign in to your account',
+                    'Create new account',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -53,7 +60,7 @@ class SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 30),
                   const Align(
-                    alignment: Alignment.centerLeft, // Aligns the text to the left
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Email Address',
                       style: TextStyle(
@@ -88,7 +95,7 @@ class SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 15),
                   const Align(
-                    alignment: Alignment.centerLeft, // Aligns the text to the left
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Password',
                       style: TextStyle(
@@ -107,7 +114,7 @@ class SignInScreenState extends State<SignInScreen> {
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'Enter your password',
                         labelStyle: const TextStyle(
                           fontSize: 14,
                           color: AppColors.lightGrey,
@@ -134,30 +141,105 @@ class SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     // builder: (context) =>
-                        //     // const ForgetPasswordScreen()));
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                            color: AppColors.grey,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600
+                  const SizedBox(height: 15),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Confirm Password',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.darkGrey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      controller: _confirmPassController,
+                      obscureText: _obscureConfirmPassword,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your confirm password',
+                        labelStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.lightGrey,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword = !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                        filled: true,
+                        fillColor: AppColors.whitePurple,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        errorText: _confirmPasswordError,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      Checkbox(
+                        value: _isChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _isChecked = value!;
+                          });
+                        },
+                      ),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "I’ve read and agreed to ",
+                            style: const TextStyle(
+                                color: AppColors.darkGrey),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "User Agreement",
+                                style: const TextStyle(
+                                    color: AppColors.darkerPrimaryColor,
+                                    fontWeight: FontWeight.bold),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    // Handle User Agreement tap
+                                    print('User Agreement tapped');
+                                  },
+                              ),
+                              const TextSpan(
+                                text: " and ",
+                                style: TextStyle(
+                                    color: AppColors.darkGrey
+                                ),
+                              ),
+                              TextSpan(
+                                text: "Privacy Policy",
+                                style: const TextStyle(
+                                    color: AppColors.darkerPrimaryColor,
+                                    fontWeight: FontWeight.bold),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    // Handle Privacy Policy tap
+                                    print('Privacy Policy tapped');
+                                  },
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                   const SizedBox(height: 35),
                   SizedBox(
@@ -171,10 +253,10 @@ class SignInScreenState extends State<SignInScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      child: _isSignIn
+                      child: _isSignUp
                           ? const CircularProgressIndicator()
                           : const Text(
-                        'SIGN IN',
+                        'SIGN UP',
                         style: TextStyle(
                           fontSize: 16,
                           color: Color.fromRGBO(245, 245, 245, 1),
@@ -184,7 +266,7 @@ class SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    'other way to sign in',
+                    'other way to sign up',
                     style: TextStyle(
                       color: AppColors.grey,
                       fontSize: 14,
@@ -212,13 +294,13 @@ class SignInScreenState extends State<SignInScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                'Don\'t have an account?',
+                                'Already have an account?',
                                 style: TextStyle(
                                   color: AppColors.grey,
                                   fontSize: 14,
                                 ),
                               ),
-                              const SizedBox(width: 5),  // Add some space between the texts
+                              const SizedBox(width: 5),
                               InkWell(
                                 onTap: () {
                                   // Navigator.of(context).push(MaterialPageRoute(
@@ -227,11 +309,11 @@ class SignInScreenState extends State<SignInScreen> {
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 child: const Text(
-                                  'Create Account',
+                                  'Sign In',
                                   style: TextStyle(
                                     color: AppColors.darkerPrimaryColor,
                                     fontSize: 14,
-                                    fontWeight: FontWeight.bold,  // Make it stand out
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
@@ -256,72 +338,59 @@ class SignInScreenState extends State<SignInScreen> {
     return emailRegex.hasMatch(email);
   }
 
+  void _checkPassword(String password) {
+    setState(() {
+      _isMinLength = password.length >= 8;
+      _hasUpperCase = password.contains(RegExp(r'[A-Z]'));
+      _hasLowerCase = password.contains(RegExp(r'[a-z]'));
+      _hasNumber = password.contains(RegExp(r'\d'));
+      _hasSpecialCharacter =
+          password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    });
+  }
+
   void _validateInputs() async {
     setState(() {
-      _isSignIn = true;
+      _isSignUp = true;
+      _emailError = null;
+      _passwordError = null;
+      _confirmPasswordError = null;
     });
 
     final email = _emailController.text;
     final password = _passwordController.text;
+    final confirmPassword = _confirmPassController.text;
 
-    setState(() {
-      _emailError = null;
-      _passwordError = null;
-
-      if (email.isEmpty || !_isValidEmail(email)) {
+    if (email.isEmpty || !_isValidEmail(email)) {
+      setState(() {
         _emailError = 'Enter a valid email address';
-        FocusScope.of(context).requestFocus(FocusNode());
-      }
-    });
-
-    if (password.isEmpty) {
-      _passwordError = 'Password cannot be empty';
-      FocusScope.of(context).requestFocus(FocusNode());
+      });
+      return;
     }
 
-    // Validasi Password
-    // if (_emailError == null && _passwordError == null) {
-    //   final result = await _apiService.login(email, password);
-    //   if (result['success'] == 'true') {
-    //     User user = result['user'];
-    //     ScaffoldMessenger.of(context).clearSnackBars();
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(content: Text('Sign In Successfully')));
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //       MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
-    //           (route) => false,
-    //     );
-    //   } else {
-    //     final errorMessage = result['error'];
-    //     ScaffoldMessenger.of(context).clearSnackBars();
-    //     ScaffoldMessenger.of(context)
-    //         .showSnackBar(SnackBar(content: Text(errorMessage)));
-    //   }
-    // } else {
-    //   print('Login Failed');
-    // }
+    if (password.isEmpty) {
+      setState(() {
+        _passwordError = 'Password cannot be empty';
+      });
+      return;
+    }
+
+    if (!_isMinLength || !_hasUpperCase || !_hasLowerCase || !_hasNumber || !_hasSpecialCharacter) {
+      setState(() {
+        _passwordError = 'Password does not meet the complexity requirements';
+      });
+      return;
+    }
+
+    if (password != confirmPassword) {
+      setState(() {
+        _confirmPasswordError = 'Passwords do not match';
+      });
+      return;
+    }
 
     setState(() {
-      _isSignIn = false;
+      _isSignUp = false;
     });
   }
-
-  // void _onLoginGoogle() async {
-  //   final result = await _googleService.login();
-  //   if (result['success'] == 'true') {
-  //     User user = result['user'];
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text('Sign In Successfully')));
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //       MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
-  //           (route) => false,
-  //     );
-  //   } else {
-  //     final errorMessage = result['error'];
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text(errorMessage)));
-  //   }
-  // }
 }
