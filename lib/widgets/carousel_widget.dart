@@ -7,19 +7,19 @@ import 'package:google_fonts/google_fonts.dart';
 final List<String> imagePaths = [
   'assets/images/login1.png',
   'assets/images/login2.png',
-  'assets/images/login1.png',
+  'assets/images/login3.png',
 ];
 
 final List<String> titles = [
-  'Easy Booking & \nSecure Payment',
-  'Real Time \nSchedule Availibility',
-  'Many People \nUse This',
+  'Book Your Favorite \nVenue in Seconds!',
+  'Multiple Payment \nOptions, Fully Secure',
+  'Play More, Worry Less',
 ];
 
 final List<String> descriptions = [
-  'Reserve, pay securely, and enjoy your \ngame without any worries!',
-  'Reserve, pay securely, and enjoy your \ngame without any worries!',
-  'Reserve, pay securely, and enjoy your \ngame without any worries!',
+  'Find and reserve best courts and fields \nanytime, anywhere',
+  'Choose your preferred payment method \nwith complete security and peace of \nmind.',
+  'Enjoy a smooth booking experience and make every game count. Book now!',
 ];
 
 class CarouselWidget extends StatefulWidget {
@@ -47,7 +47,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
                 initialPage: 0,
                 autoPlay: true,
                 autoPlayInterval: const Duration(seconds: 5),
-                height: 250,
+                height: 300,
                 enlargeCenterPage: true,
                 viewportFraction: 1.0,
                 onPageChanged: (value, _) {
@@ -91,42 +91,43 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     String title = titles[index];
 
     List<TextSpan> result = [];
-    String before = '';
-    String highlighted = '';
-    String after = '';
 
     if (index == 0) {
-      // Highlighting "Booking" and "Secure"
-      before = title.split('Booking')[0];
-      highlighted = 'Booking';
-      after = title.split('Booking')[1];
+      // Highlighting "Book" and "in Seconds"
+      String before = '';
+      String highlighted = 'Book';
+      String after = 'in Seconds';
+      String remaining = title.split(after)[1];
+
       result.add(TextSpan(text: before));
       result.add(TextSpan(text: highlighted, style: TextStyle(color: Colors.blue)));
-      result.add(TextSpan(text: after.split('Secure')[0]));
-      result.add(TextSpan(text: 'Secure', style: TextStyle(color: Colors.blue)));
-      result.add(TextSpan(text: after.split('Secure')[1]));
+      result.add(TextSpan(text: title.split(after)[0].substring(highlighted.length)));
+      result.add(TextSpan(text: after, style: TextStyle(color: Colors.blue)));
+      result.add(TextSpan(text: remaining));
     } else if (index == 1) {
-      // Highlighting "Time" and "Availibility"
-      before = title.split('Time')[0];
-      highlighted = 'Time';
-      after = title.split('Time')[1];
+      // Highlighting "Fully Secure"
+      String before = '';
+      String highlighted = 'Fully Secure';
+      String remaining = title.split(highlighted)[1];
+
       result.add(TextSpan(text: before));
       result.add(TextSpan(text: highlighted, style: TextStyle(color: Colors.blue)));
-      result.add(TextSpan(text: after.split('Availibility')[0]));
-      result.add(TextSpan(text: 'Availibility', style: TextStyle(color: Colors.blue)));
-      result.add(TextSpan(text: after.split('Availibility')[1]));
+      result.add(TextSpan(text: remaining));
     } else if (index == 2) {
-      // Highlighting "People"
-      before = title.split('People')[0];
-      highlighted = 'People';
-      after = title.split('People')[1];
+      // Highlighting "Play More"
+      String before = '';
+      String highlighted = 'Play More';
+      String remaining = title.split(highlighted)[1];
+
       result.add(TextSpan(text: before));
       result.add(TextSpan(text: highlighted, style: TextStyle(color: Colors.blue)));
-      result.add(TextSpan(text: after));
+      result.add(TextSpan(text: remaining));
     }
 
     return result;
   }
+
+
 
   buildCarouselIndicator() {
     return Row(
