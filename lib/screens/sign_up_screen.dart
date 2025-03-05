@@ -242,51 +242,66 @@ class SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   const SizedBox(height: 35),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _validateInputs,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkerPrimaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                  Column(
+                    children: [
+                      // Sign in button at the top
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _validateInputs,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.darkerPrimaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: _isSignUp
+                              ? const CircularProgressIndicator()
+                              : const Text(
+                            'SIGN UP',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.whitePurple,
+                            ),
+                          ),
                         ),
                       ),
-                      child: _isSignUp
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                        'SIGN UP',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color.fromRGBO(245, 245, 245, 1),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: _signUpWithGoogle,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.whitePurple,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(color: AppColors.darkerPrimaryColor),
+                            ),
+                          ),
+                          icon: Transform.scale(
+                            scale: 1.5,  // Adjust this value to resize the logo
+                            child: Image.asset(
+                              'assets/icons/google.png', // Google logo image
+                              height: 24, // Maintain original height
+                            ),
+                          ),
+                          label: const Text(
+                            'Sign up with Google',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.darkGrey,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'other way to sign up',
-                    style: TextStyle(
-                      color: AppColors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  GestureDetector(
-                    onTap: () {
-                      // _onLoginGoogle();
-                      // _googleService.logout();
-                    },
-                    child: Image.asset(
-                      'assets/icons/google.png',
-                      height: 40,
-                    ),
+                    ],
                   ),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 50),
+                      padding: const EdgeInsets.only(top: 80),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -392,5 +407,9 @@ class SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _isSignUp = false;
     });
+  }
+
+  void _signUpWithGoogle() async{
+
   }
 }

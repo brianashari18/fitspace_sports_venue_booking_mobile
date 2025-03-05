@@ -160,51 +160,66 @@ class SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 35),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _validateInputs,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkerPrimaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                  Column(
+                    children: [
+                      // Sign in button at the top
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _validateInputs,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.darkerPrimaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: _isSignIn
+                              ? const CircularProgressIndicator()
+                              : const Text(
+                            'SIGN IN',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.whitePurple,
+                            ),
+                          ),
                         ),
                       ),
-                      child: _isSignIn
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                        'SIGN IN',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color.fromRGBO(245, 245, 245, 1),
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: _signInWithGoogle,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.whitePurple,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(color: AppColors.darkerPrimaryColor),
+                            ),
+                          ),
+                          icon: Transform.scale(
+                            scale: 1.5,  // Adjust this value to resize the logo
+                            child: Image.asset(
+                              'assets/icons/google.png', // Google logo image
+                              height: 24, // Maintain original height
+                            ),
+                          ),
+                          label: const Text(
+                            'Sign in with Google',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColors.darkGrey,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'other way to sign in',
-                    style: TextStyle(
-                      color: AppColors.grey,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  GestureDetector(
-                    onTap: () {
-                      // _onLoginGoogle();
-                      // _googleService.logout();
-                    },
-                    child: Image.asset(
-                      'assets/icons/google.png',
-                      height: 40,
-                    ),
+                    ],
                   ),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 50),
+                      padding: const EdgeInsets.only(top: 80),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -306,22 +321,22 @@ class SignInScreenState extends State<SignInScreen> {
     });
   }
 
-  // void _onLoginGoogle() async {
-  //   final result = await _googleService.login();
-  //   if (result['success'] == 'true') {
-  //     User user = result['user'];
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(const SnackBar(content: Text('Sign In Successfully')));
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //       MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
-  //           (route) => false,
-  //     );
-  //   } else {
-  //     final errorMessage = result['error'];
-  //     ScaffoldMessenger.of(context).clearSnackBars();
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text(errorMessage)));
-  //   }
-  // }
+  void _signInWithGoogle() async {
+    // final result = await _googleService.login();
+    // if (result['success'] == 'true') {
+    //   User user = result['user'];
+    //   ScaffoldMessenger.of(context).clearSnackBars();
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(const SnackBar(content: Text('Sign In Successfully')));
+    //   Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
+    //         (route) => false,
+    //   );
+    // } else {
+    //   final errorMessage = result['error'];
+    //   ScaffoldMessenger.of(context).clearSnackBars();
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text(errorMessage)));
+    // }
+  }
 }
