@@ -15,10 +15,9 @@ class StartScreen extends StatelessWidget {
           height: AppSize.getHeight(context),
           padding: const EdgeInsets.all(25),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const CarouselWidget(),
-
               Container(
                 width: double.infinity, // Full width
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
