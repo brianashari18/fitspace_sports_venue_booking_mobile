@@ -95,10 +95,10 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 spacing: 8,
                                 runSpacing: 8,
                                 children: [
-                                  _buildButton('Mini Soccer'),
-                                  _buildButton('Volleyball'),
-                                  _buildButton('Swimming Pool'),
-                                  _buildButton('Badminton'),
+                                  fieldTag('Mini Soccer'),
+                                  fieldTag('Volleyball'),
+                                  fieldTag('Swimming Pool'),
+                                  fieldTag('Badminton'),
                                 ],
                               ),
                             ),
@@ -286,7 +286,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   }
 
 
-  Widget _buildButton(String text) {
+  Widget fieldTag(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
