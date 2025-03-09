@@ -92,7 +92,6 @@ class HomepageScreenState extends State<HomepageScreen> {
                 ],
               ),
               const SizedBox(height: 10),
-              // Search Bar Row
               Row(
                 children: [
                   Expanded(
@@ -137,7 +136,6 @@ class HomepageScreenState extends State<HomepageScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              // Sport Filter Buttons Row (non-scrollable)
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(

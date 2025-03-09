@@ -1,4 +1,6 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/notification_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/splash_screen.dart';
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const HomepageScreen(),
+      home: const MainScreen(),
     );
   }
 }
