@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 final List<String> imagePaths = [
   'assets/images/login1.png',
   'assets/images/login2.png',
-  'assets/images/login3.png',
+  'assets/images/success.png',
 ];
 
 final List<String> titles = [
