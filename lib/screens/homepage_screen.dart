@@ -17,6 +17,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
   List<String> selectedSports = [];
   Position? _currentPosition;
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool showAllNearby = false;
+  bool showAllRecommended = false;
+
   @override
   void initState() {
     super.initState();
@@ -112,6 +117,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.whitePurple,
       body: SafeArea(
         child: Padding(
@@ -128,9 +134,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       const Text(
                         'Location',
                         style: TextStyle(
-                          color: AppColors.grey,
+                          color: AppColors.lightGrey,
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Row(
@@ -171,9 +177,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ),
                           onPressed: () {
                             Navigator.push(
-                                context, MaterialPageRoute(
-                                  builder: (context) => const NotificationScreen()
-                                )
+                              context,
+                              MaterialPageRoute(builder: (context) => const NotificationScreen()),
                             );
                           },
                         ),
@@ -218,7 +223,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        Scaffold.of(context).openEndDrawer();
+                        _scaffoldKey.currentState!.openEndDrawer();
                       },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
@@ -227,6 +232,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 ],
               ),
               const SizedBox(height: 20),
+              // Sports category filter buttons
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -241,13 +247,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Expanded(
                 child: ListView.builder(
-                  itemCount: 2, // Two sections: Nearby Court, Recommended for You
+                  itemCount: 2,
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      // Nearby Court section
                       return Column(
                         children: [
                           Row(
@@ -263,11 +268,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  print('See All pressed');
+                                  setState(() {
+                                    showAllNearby = !showAllNearby;
+                                  });
                                 },
-                                child: const Text(
-                                  'See All',
-                                  style: TextStyle(
+                                child: Text(
+                                  showAllNearby ? 'See Less' : 'See All',
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: AppColors.darkerPrimaryColor,
                                   ),
@@ -278,7 +285,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
-                              children: nearbyCourts.map((court) {
+                              children: (showAllNearby ? nearbyCourts : nearbyCourts.take(10).toList())
+                                  .map((court) {
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: _nearbyCourtCard(
@@ -298,7 +306,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ],
                       );
                     } else if (index == 1) {
-                      // Recommended for You section
                       return Column(
                         children: [
                           Row(
@@ -314,11 +321,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  print('See All pressed');
+                                  setState(() {
+                                    showAllRecommended = !showAllRecommended;
+                                  });
                                 },
-                                child: const Text(
-                                  'See All',
-                                  style: TextStyle(
+                                child: Text(
+                                  showAllRecommended ? 'See Less' : 'See All',
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     color: AppColors.darkerPrimaryColor,
                                   ),
@@ -327,7 +336,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             ],
                           ),
                           Column(
-                            children: recommendedCourts.map((court) {
+                            children: (showAllRecommended
+                                ? recommendedCourts
+                                : recommendedCourts.take(10).toList())
+                                .map((court) {
                               return Column(
                                 children: [
                                   _recommendedCourtCard(
@@ -348,11 +360,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ],
                       );
                     } else {
-                      return SizedBox.shrink(); // Empty widget for other cases
+                      return const SizedBox.shrink();
                     }
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -451,7 +463,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         '$rating',
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
+                          color: AppColors.darkGrey,
                         ),
                       ),
                     ],
@@ -474,15 +486,32 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     const Icon(
                       Icons.location_on,
                       size: 20,
-                      color: Colors.grey,
+                      color: AppColors.darkGrey,
                     ),
                     Text(
                       location,
                       style: const TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold
+                          color: AppColors.darkGrey,
                       ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Text(
+                      '|',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.darkGrey,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                        distance != null
+                            ? "${distance?.toStringAsFixed(2)} km"
+                            : "Loading...",
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.darkGrey,
+                        )
                     ),
                   ],
                 ),
@@ -494,7 +523,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   children: [
                     const Text(
                       'Start From: ',
-                      style: TextStyle(fontSize: 12, color: AppColors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.darkGrey
+                      ),
                     ),
                     Text(
                       price,
@@ -552,9 +584,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 10), // Add spacing between image and text content
-
-              // Text and details section
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -583,7 +613,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 '$rating',
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey,
+                                  color: AppColors.darkGrey,
                                 ),
                               ),
                             ],
@@ -594,7 +624,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     const SizedBox(height: 5),
                     Text(
                       name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -602,15 +635,32 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         const Icon(
                           Icons.location_on,
                           size: 20,
-                          color: Colors.grey,
+                          color: AppColors.darkGrey,
                         ),
                         Text(
                           location,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
+                            color: AppColors.darkGrey,
                           ),
+                        ),
+                        const SizedBox(width: 5),
+                        const Text(
+                          '|',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                            distance != null
+                                ? "${distance?.toStringAsFixed(2)} km"
+                                : "Loading...",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.darkGrey,
+                            )
                         ),
                       ],
                     ),
@@ -619,7 +669,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       children: [
                         const Text(
                           'Start From: ',
-                          style: TextStyle(fontSize: 12, color: AppColors.grey),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.darkGrey
+                          ),
                         ),
                         Text(
                           price,

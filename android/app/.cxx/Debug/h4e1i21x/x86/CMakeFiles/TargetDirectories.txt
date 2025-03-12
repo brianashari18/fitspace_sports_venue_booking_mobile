@@ -1,0 +1,2 @@
+C:/Users/evely/OneDrive/Dokumen/Kuliah/Semester 6/ABP/fitspace_sports_venue_booking_mobile/android/app/.cxx/Debug/h4e1i21x/x86/CMakeFiles/edit_cache.dir
+C:/Users/evely/OneDrive/Dokumen/Kuliah/Semester 6/ABP/fitspace_sports_venue_booking_mobile/android/app/.cxx/Debug/h4e1i21x/x86/CMakeFiles/rebuild_cache.dir
