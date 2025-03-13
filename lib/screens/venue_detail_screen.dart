@@ -129,7 +129,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                           width: 36,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Colors.grey[400],
+                            color: AppColors.grey,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -169,7 +169,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 SizedBox(width: 4),
                                 Text('(102 Reviews)',
                                     style: TextStyle(
-                                        fontSize: 14, color: Colors.grey)),
+                                        fontSize: 14, color: AppColors.grey)),
                               ],
                             ),
                           ),
@@ -194,13 +194,13 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               Icon(
                                 Icons.location_on,
                                 size: 16,
-                                color: Colors.grey,
+                                color: AppColors.grey,
                               ),
                               SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   'Jl. Soekarno-Hatta No.785A, Kab. Bandung',
-                                  style: TextStyle(color: Colors.grey),
+                                  style: TextStyle(color: AppColors.grey),
                                   softWrap: true,
                                 ),
                               ),
@@ -249,7 +249,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 20,
-                                backgroundColor: Colors.grey,
+                                backgroundColor: AppColors.grey,
                                 child: Text('FM'),
                               ),
                               SizedBox(width: 8),
@@ -259,16 +259,21 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                   Text('Feronica Maria',
                                       style: TextStyle(
                                           color: AppColors.darkGrey,
-                                          fontWeight: FontWeight.bold)),
+                                          fontWeight: FontWeight.bold
+                                      )
+                                  ),
                                   Text('Joined 2 yrs ago',
-                                      style: TextStyle(color: AppColors.grey)),
+                                      style: TextStyle(
+                                          color: AppColors.darkGrey
+                                      )
+                                  ),
                                 ],
                               ),
                             ],
                           ),
                           const SizedBox(height: 16),
                           const Divider(
-                            color: Colors.grey,
+                            color: AppColors.grey,
                           ),
                           const Text(
                             'Available Court',

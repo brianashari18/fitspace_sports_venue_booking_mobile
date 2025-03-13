@@ -32,31 +32,35 @@ class _VerificationScreenState extends State<VerificationScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppColors.baseColor,
         automaticallyImplyLeading: false,
         title: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.west,
-                  size: 24,
-                  color: AppColors.darkGrey,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.west,
+                    size: 24,
+                    color: AppColors.darkGrey,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              const Text(
-                'Verification',
-                style: TextStyle(
-                  color: AppColors.darkGrey,
-                  fontSize: 24,
+                const Spacer(),
+                const Text(
+                  'Verification',
+                  style: TextStyle(
+                    color: AppColors.darkGrey,
+                    fontSize: 24,
+                  ),
                 ),
-              ),
-              const Spacer(),
-            ],
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),

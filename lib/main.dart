@@ -1,5 +1,8 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/about_us_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/change_password_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/forgot_password_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/profile_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/reset_password_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/reset_succes_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const ResetPasswordScreen(),
+      home: const ChangePasswordScreen(),
     );
   }
 }

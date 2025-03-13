@@ -16,7 +16,7 @@ class ResetSuccesfullScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              'Reset Password Successful',
+              'Change Password Successful',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,

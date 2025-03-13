@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 
-class ResetPasswordScreen extends StatefulWidget{
-  const ResetPasswordScreen({super.key});
+class ChangePasswordScreen extends StatefulWidget{
+  const ChangePasswordScreen({super.key});
 
   @override
-  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
+class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
+  final TextEditingController _currPassword = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  String? _currPasswordError;
   String? _passwordError;
   String? _confirmPasswordError;
+  bool _obscureCurrPassword = true;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isMinLength = false;
@@ -53,7 +56,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
                 ),
                 const Spacer(),
                 const Text(
-                  'Reset Password',
+                  'Change Password',
                   style: TextStyle(
                     color: AppColors.darkGrey,
                     fontSize: 24,
@@ -74,12 +77,50 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
             const Text(
               'This password must be different than before',
               style: TextStyle(
-                fontSize: 16,
-                color: AppColors.darkGrey,
-                fontWeight: FontWeight.w500
+                  fontSize: 16,
+                  color: AppColors.darkGrey,
+                  fontWeight: FontWeight.w500
               ),
             ),
             const SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextField(
+                controller: _currPassword,
+                obscureText: _obscureCurrPassword,
+                onChanged: _checkPassword,
+                decoration: InputDecoration(
+                  labelText: 'Enter your current password',
+                  labelStyle: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.grey,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureCurrPassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureCurrPassword = !_obscureCurrPassword;
+                      });
+                    },
+                  ),
+                  filled: true,
+                  fillColor: AppColors.whitePurple,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  errorText: _currPasswordError,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -128,9 +169,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
                 decoration: InputDecoration(
                   labelText: 'Confirm your new password',
                   labelStyle: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w500
+                      fontSize: 14,
+                      color: AppColors.grey,
+                      fontWeight: FontWeight.w500
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -167,7 +208,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
                   ),
                 ),
                 child: const Text(
-                  'Reset Password',
+                  'Change Password',
                   style: TextStyle(
                     color: AppColors.whitePurple,
                     fontWeight: FontWeight.w500,

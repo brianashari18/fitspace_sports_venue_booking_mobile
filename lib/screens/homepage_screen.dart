@@ -134,7 +134,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       const Text(
                         'Location',
                         style: TextStyle(
-                          color: AppColors.lightGrey,
+                          color: AppColors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -168,7 +168,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: AppColors.lightGrey.withOpacity(0.5),
+                        backgroundColor: AppColors.grey.withOpacity(0.5),
                         child: IconButton(
                           icon: const Icon(
                             Icons.notifications,
@@ -196,7 +196,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search',
                         filled: true,
-                        fillColor: AppColors.lightGrey.withOpacity(0.3),
+                        fillColor: AppColors.grey.withOpacity(0.3),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

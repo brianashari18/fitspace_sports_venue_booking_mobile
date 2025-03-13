@@ -28,39 +28,42 @@ class NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: AppColors.whitePurple,
       appBar: AppBar(
-        backgroundColor: AppColors.whitePurple,
+        backgroundColor: AppColors.baseColor,
         automaticallyImplyLeading: false,
         title: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(
-                  Icons.west,
-                  size: 24,
-                  color: AppColors.darkGrey,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.west,
+                    size: 24,
+                    color: AppColors.darkGrey,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              const Text(
-                'Notification',
-                style: TextStyle(
-                  color: AppColors.darkGrey,
-                  fontSize: 24,
+                const Spacer(),
+                const Text(
+                  'Notification',
+                  style: TextStyle(
+                    color: AppColors.darkGrey,
+                    fontSize: 24,
+                  ),
                 ),
-              ),
-              const Spacer(),
-            ],
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),
       body: Column(
         children: [
           const Divider(
-            color: AppColors.lightGrey,
+            color: AppColors.grey,
             thickness: 1,
           ),
           Expanded(
@@ -70,7 +73,7 @@ class NotificationScreenState extends State<NotificationScreen> {
                 itemCount: notifications.length,
                 separatorBuilder: (BuildContext context, int index) {
                   return const Divider(
-                    color: AppColors.lightGrey,
+                    color: AppColors.grey,
                     thickness: 0.5,
                   );
                 },
