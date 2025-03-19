@@ -1,3 +1,6 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/change_password_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/contact_us_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/my_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/about_us_screen.dart';
@@ -45,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 40,
+                      radius: 30,
                       backgroundImage: NetworkImage('https://your-image-url.com'), // Replace with actual image URL
                     ),
                     SizedBox(width: 16),
@@ -85,13 +88,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.person_outline,
                       title: 'My Account',
                       subtitle: 'Make changes to your account settings',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyAccountScreen(),
+                          ),
+                        );
+                      },
                     ),
                     _buildListTile(
                       icon: Icons.lock_outline,
                       title: 'Change Password',
                       subtitle: 'Update your password for better security',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangePasswordScreen(),
+                          ),
+                        );
+                      },
                     ),
                     _buildListTile(
                       icon: Icons.inventory_2_outlined,
@@ -103,7 +120,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.exit_to_app,
                       title: 'Log out',
                       subtitle: 'Sign out of your account securely',
-                      onTap: () {},
+                      onTap: () {
+                        _showLogoutDialog(context);
+                      },
                     ),
                   ],
                 ),
@@ -119,7 +138,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildListTile(
                       icon: Icons.notifications_outlined,
                       title: 'Help & Support',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ContactUsScreen(),
+                          ),
+                        );
+                      },
                     ),
                     _buildListTile(
                       icon: Icons.favorite_border,
@@ -187,6 +213,101 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: AppColors.grey,
       ),
       onTap: onTap,
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.whitePurple,
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundColor: AppColors.darkerPrimaryColor.withOpacity(0.1),
+                  child: const Icon(
+                    Icons.exit_to_app,
+                    size: 50, // Icon size
+                    color: AppColors.darkerPrimaryColor,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Are you logging out?',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: AppColors.darkGrey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Are you sure you want to log out? You can always log back in at any time.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.darkGrey,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        side: const BorderSide(
+                          color: AppColors.darkerPrimaryColor,
+                          width: 1,
+                        ),
+                        foregroundColor: AppColors.darkGrey,
+                        backgroundColor: AppColors.whitePurple,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: AppColors.baseColor,
+                        backgroundColor: AppColors.darkerPrimaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'Logout',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

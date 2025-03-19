@@ -40,7 +40,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
         automaticallyImplyLeading: false,
         title: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(top: 25),
+            padding: const EdgeInsets.symmetric(vertical: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
