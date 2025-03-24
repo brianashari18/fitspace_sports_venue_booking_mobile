@@ -8,5 +8,11 @@ class AppColors {
   static const darkGrey = Color(0xFF333333);
   static const whitePurple = Color(0xFFF3F6FF);
   static const baseColor = Color(0xFFF7FAFF);
-  static const grey = Color(0XFFABABAB);
+  static const grey = Color(0xFFABABAB);
+  static const green = Color(0xFFC5FFD6);
+  static const darkGreen = Color(0xFF1C892D);
+  static const darkYellow = Color(0xFF847124);
+  static const darkRed = Color(0xFF9C3A3A);
+  static final yellow = const Color(0xFFFFCC00).withOpacity(0.62);
+  static final red = const Color(0xFFFF6B66).withOpacity(0.62);
 }
