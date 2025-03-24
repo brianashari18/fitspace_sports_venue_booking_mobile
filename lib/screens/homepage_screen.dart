@@ -589,7 +589,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Rating and tags row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

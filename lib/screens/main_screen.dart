@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/main_venue_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const HomepageScreen(),
-    // const VenueScreen(),
+    const MainVenueScreen(),
     // const HistoryScreen(),
     const ProfileScreen(),
   ];
