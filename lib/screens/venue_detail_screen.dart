@@ -1,3 +1,7 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +108,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/venue_dummy.png'),
+                      image: AssetImage('assets/images/dummy/venue_dummy.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -226,8 +230,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                   text: flag ? " Read More" : " Show Less",
                                   // Perhatikan spasi di awal
                                   style: const TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -286,10 +290,13 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Swimming Pool',
                                 price: 'Rp 35.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  print('Booked');
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PaymentDetailScreen(),
+                                  ));
                                 },
                               ),
                               const SizedBox(height: 8),
@@ -297,10 +304,13 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  print('Booked');
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PaymentDetailScreen(),
+                                  ));
                                 },
                               ),
                               const SizedBox(height: 8),
@@ -308,11 +318,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png',
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png',
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  print('Booked');
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PaymentDetailScreen(),
+                                  ));
                                 },
                               ),
                               const SizedBox(height: 8),
@@ -320,12 +333,15 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png',
-                                  'assets/images/venue_dummy.png',
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png',
+                                  'assets/images/dummy/venue_dummy.png',
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  print('Booked');
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PaymentDetailScreen(),
+                                  ));
                                 },
                               ),
                             ],
