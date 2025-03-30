@@ -2,8 +2,8 @@ import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:booking_calendar/booking_calendar.dart';
 
-class MyBookingPage extends StatefulWidget {
-  const MyBookingPage({
+class BookingScreen extends StatefulWidget {
+  const BookingScreen({
     super.key,
     this.width,
     this.height,
@@ -13,10 +13,10 @@ class MyBookingPage extends StatefulWidget {
   final double? height;
 
   @override
-  _MyBookingPageState createState() => _MyBookingPageState();
+  _BookingScreenState createState() => _BookingScreenState();
 }
 
-class _MyBookingPageState extends State<MyBookingPage> {
+class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,12 +1,7 @@
-import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
-import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
-import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
-import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
-import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
-import 'package:fitspace_sports_venue_booking_mobile/widgets/card_court_widgets.dart';
 
 class VenueDetailScreen extends StatefulWidget {
   const VenueDetailScreen({super.key});
@@ -42,16 +37,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   @override
   Widget build(BuildContext context) {
     double topHeight = AppSize.getHeight(context) * 0.3;
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
-          _containerKey.currentContext?.findRenderObject() as RenderBox;
+      _containerKey.currentContext?.findRenderObject() as RenderBox;
       final size = renderBox.size;
       setState(() {
         containerHeight = size.height;
       });
     });
-
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -122,7 +115,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                   decoration: const BoxDecoration(
                       color: AppColors.whitePurple,
                       borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20))),
+                      BorderRadius.vertical(top: Radius.circular(20))),
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
@@ -133,7 +126,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                           width: 36,
                           height: 4,
                           decoration: BoxDecoration(
-                            color: Colors.grey[400],
+                            color: AppColors.grey,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -173,7 +166,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 SizedBox(width: 4),
                                 Text('(102 Reviews)',
                                     style: TextStyle(
-                                        fontSize: 14, color: Colors.grey)),
+                                        fontSize: 14, color: AppColors.grey)),
                               ],
                             ),
                           ),
@@ -198,13 +191,13 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               Icon(
                                 Icons.location_on,
                                 size: 16,
-                                color: Colors.grey,
+                                color: AppColors.grey,
                               ),
                               SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   'Jl. Soekarno-Hatta No.785A, Kab. Bandung',
-                                  style: TextStyle(color: Colors.grey),
+                                  style: TextStyle(color: AppColors.grey),
                                   softWrap: true,
                                 ),
                               ),
@@ -253,7 +246,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 20,
-                                backgroundColor: Colors.grey,
+                                backgroundColor: AppColors.grey,
                                 child: Text('FM'),
                               ),
                               SizedBox(width: 8),
@@ -263,16 +256,21 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                   Text('Feronica Maria',
                                       style: TextStyle(
                                           color: AppColors.darkGrey,
-                                          fontWeight: FontWeight.bold)),
+                                          fontWeight: FontWeight.bold
+                                      )
+                                  ),
                                   Text('Joined 2 yrs ago',
-                                      style: TextStyle(color: AppColors.grey)),
+                                      style: TextStyle(
+                                          color: AppColors.darkGrey
+                                      )
+                                  ),
                                 ],
                               ),
                             ],
                           ),
                           const SizedBox(height: 16),
                           const Divider(
-                            color: Colors.grey,
+                            color: AppColors.grey,
                           ),
                           const Text(
                             'Available Court',
@@ -286,35 +284,29 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.zero,
                             children: [
-                              CardCourtWidgets(
+                              _cardCourt(
                                 title: 'Swimming Pool',
                                 price: 'Rp 35.000/hr',
                                 imagePaths: const [
                                   'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentDetailScreen(),
-                                  ));
+                                  print('Booked');
                                 },
                               ),
                               const SizedBox(height: 8),
-                              CardCourtWidgets(
+                              _cardCourt(
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
                                   'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentDetailScreen(),
-                                  ));
+                                  print('Booked');
                                 },
                               ),
                               const SizedBox(height: 8),
-                              CardCourtWidgets(
+                              _cardCourt(
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
@@ -322,14 +314,11 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                   'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentDetailScreen(),
-                                  ));
+                                  print('Booked');
                                 },
                               ),
                               const SizedBox(height: 8),
-                              CardCourtWidgets(
+                              _cardCourt(
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
@@ -338,10 +327,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                   'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentDetailScreen(),
-                                  ));
+                                  print('Booked');
                                 },
                               ),
                             ],
@@ -369,6 +355,151 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       child: Text(
         text,
         style: TextStyle(color: Colors.blue[800]),
+      ),
+    );
+  }
+
+  Widget _cardCourt({
+    required String title,
+    required String price,
+    required VoidCallback? onBook,
+    required List<String> imagePaths,
+  }) {
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            imagePaths.isNotEmpty
+                ? SizedBox(
+              width: double.infinity,
+              height: 120,
+              child: imagePaths.length == 1
+                  ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    imagePaths[0],
+                    fit: BoxFit.cover,
+                    width: 250,
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No more image',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.darkerPrimaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+                  : ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: imagePaths.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Image.asset(
+                      imagePaths[index],
+                      fit: BoxFit.cover,
+                      width: 250,
+                    ),
+                  );
+                },
+              ),
+            )
+                : Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: 250,
+                  height: 120,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Image not available',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.darkerPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Image not available',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.darkerPrimaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      price,
+                      style: const TextStyle(
+                        color: AppColors.darkerPrimaryColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 90,
+                  height: 30,
+                  child: ElevatedButton(
+                    onPressed: onBook,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.darkerPrimaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Book',
+                      style: TextStyle(
+                        color: AppColors.whitePurple,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/notification_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/widgets/filter_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
@@ -6,14 +8,19 @@ class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
 
   @override
-  State<HomepageScreen> createState() => HomepageScreenState();
+  State<HomepageScreen> createState() => _HomepageScreenState();
 }
 
-class HomepageScreenState extends State<HomepageScreen> {
+class _HomepageScreenState extends State<HomepageScreen> {
   String? selectedLocation;
   TextEditingController searchController = TextEditingController();
   List<String> selectedSports = [];
   Position? _currentPosition;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool showAllNearby = false;
+  bool showAllRecommended = false;
 
   @override
   void initState() {
@@ -21,9 +28,96 @@ class HomepageScreenState extends State<HomepageScreen> {
     _getCurrentLocation();
   }
 
+  List<Court> nearbyCourts = [
+    Court(
+      name: 'Progresif Sports',
+      location: 'Kab. Bandung',
+      price: 'IDR 50K',
+      rating: 4.5,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.9000,
+      longitude: 107.6000,
+      tags: ['Futsal', 'Basketball', 'Volleyball', 'Badminton'],
+    ),
+    Court(
+      name: 'Sport Center Tech',
+      location: 'Kab. Bandung',
+      price: 'IDR 30K',
+      rating: 4.0,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.8900,
+      longitude: 107.6100,
+      tags: ['Premium Venue'],
+    ),
+    Court(
+      name: 'Mega Sport Center',
+      location: 'Bandung',
+      price: 'IDR 75K',
+      rating: 4.8,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.9200,
+      longitude: 107.6200,
+      tags: ['Elite Venue'],
+    ),
+    Court(
+      name: 'Active Arena',
+      location: 'Bandung Barat',
+      price: 'IDR 60K',
+      rating: 4.7,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.9300,
+      longitude: 107.6300,
+      tags: ['Best Seller', 'Popular Venue'],
+    ),
+  ];
+
+  List<Court> recommendedCourts = [
+    Court(
+      name: 'Progresif Sports',
+      location: 'Kab. Bandung',
+      price: 'IDR 50K',
+      rating: 4.5,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.9000,
+      longitude: 107.6000,
+      tags: ['Futsal', 'Basketball', 'Volleyball', 'Badminton'],
+    ),
+    Court(
+      name: 'Sport Center Tech',
+      location: 'Kab. Bandung',
+      price: 'IDR 30K',
+      rating: 4.0,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.8900,
+      longitude: 107.6100,
+      tags: ['Premium Venue'],
+    ),
+    Court(
+      name: 'Mega Sport Center',
+      location: 'Bandung',
+      price: 'IDR 75K',
+      rating: 4.8,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.9200,
+      longitude: 107.6200,
+      tags: ['Elite Venue'],
+    ),
+    Court(
+      name: 'Active Arena',
+      location: 'Bandung Barat',
+      price: 'IDR 60K',
+      rating: 4.7,
+      image: 'assets/images/dummy/venue_dummy.png',
+      latitude: -6.9300,
+      longitude: 107.6300,
+      tags: ['Best Seller', 'Popular Venue'],
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: AppColors.whitePurple,
       body: SafeArea(
         child: Padding(
@@ -31,7 +125,6 @@ class HomepageScreenState extends State<HomepageScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Location and Notification Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -43,7 +136,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                         style: TextStyle(
                           color: AppColors.grey,
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Row(
@@ -75,7 +168,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: AppColors.lightGrey.withOpacity(0.5),
+                        backgroundColor: AppColors.grey.withOpacity(0.5),
                         child: IconButton(
                           icon: const Icon(
                             Icons.notifications,
@@ -83,7 +176,10 @@ class HomepageScreenState extends State<HomepageScreen> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            print('Notification icon pressed');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const NotificationScreen()),
+                            );
                           },
                         ),
                       ),
@@ -100,7 +196,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search',
                         filled: true,
-                        fillColor: AppColors.lightGrey.withOpacity(0.3),
+                        fillColor: AppColors.grey.withOpacity(0.3),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -127,7 +223,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        print('Filter icon pressed');
+                        _scaffoldKey.currentState!.openEndDrawer();
                       },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
@@ -136,6 +232,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                 ],
               ),
               const SizedBox(height: 20),
+              // Sports category filter buttons
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -150,126 +247,129 @@ class HomepageScreenState extends State<HomepageScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: ListView.builder(
+                  itemCount: 2,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Column(
                         children: [
-                          const Text(
-                            'Nearby Court',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              print('See All pressed');
-                            },
-                            child: const Text(
-                              'See All',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.darkerPrimaryColor,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Nearby Court',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _nearbyCourtCard(
-                              'Progresif Sports', 'Kab. Bandung', 'IDR 50K', 4.5,
-                              'assets/images/venue_dummy.png', -6.9000, 107.6000,
-                              ['Futsal', 'Basketball', 'Volleyball', 'Badminton'],
-                            ),
-                            const SizedBox(width: 10),
-                            _nearbyCourtCard(
-                              'Sport Center Tech', 'Kab. Bandung', 'IDR 30K', 4.0,
-                              'assets/images/venue_dummy.png', -6.8900, 107.6100,
-                              ['Premium Venue'],
-                            ),
-                            const SizedBox(width: 10),
-                            _nearbyCourtCard(
-                              'Mega Sport Center', 'Bandung', 'IDR 75K', 4.8,
-                              'assets/images/venue_dummy.png', -6.9200, 107.6200,
-                              ['Elite Venue'],
-                            ),
-                            const SizedBox(width: 10),
-                            _nearbyCourtCard(
-                              'Active Arena', 'Bandung Barat', 'IDR 60K', 4.7,
-                              'assets/images/venue_dummy.png', -6.9300, 107.6300,
-                              ['Best Seller', 'Popular Venue'],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Recommended for You',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              print('See All pressed');
-                            },
-                            child: const Text(
-                              'See All',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.darkerPrimaryColor,
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showAllNearby = !showAllNearby;
+                                  });
+                                },
+                                child: Text(
+                                  showAllNearby ? 'See Less' : 'See All',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.darkerPrimaryColor,
+                                  ),
+                                ),
                               ),
+                            ],
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: (showAllNearby ? nearbyCourts : nearbyCourts.take(10).toList())
+                                  .map((court) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: _nearbyCourtCard(
+                                    court.name,
+                                    court.location,
+                                    court.price,
+                                    court.rating,
+                                    court.image,
+                                    court.latitude,
+                                    court.longitude,
+                                    court.tags,
+                                  ),
+                                );
+                              }).toList(),
                             ),
                           ),
                         ],
-                      ),
-                      Column(
+                      );
+                    } else if (index == 1) {
+                      return Column(
                         children: [
-                          _recommendedCourtCard(
-                            'Progresif Sports', 'Kab. Bandung', 'IDR 50K', 4.5,
-                            'assets/images/venue_dummy.png', -6.9000, 107.6000,
-                            ['Futsal', 'Basketball', 'Volleyball', 'Badminton'],
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Recommended for You',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    showAllRecommended = !showAllRecommended;
+                                  });
+                                },
+                                child: Text(
+                                  showAllRecommended ? 'See Less' : 'See All',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.darkerPrimaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          _recommendedCourtCard(
-                            'Sport Center Tech', 'Kab. Bandung', 'IDR 30K', 4.0,
-                            'assets/images/venue_dummy.png', -6.8900, 107.6100,
-                            ['Premium Venue'],
-                          ),
-                          const SizedBox(height: 10),
-                          _recommendedCourtCard(
-                            'Mega Sport Center', 'Bandung', 'IDR 75K', 4.8,
-                            'assets/images/venue_dummy.png', -6.9200, 107.6200,
-                            ['Elite Venue'],
-                          ),
-                          const SizedBox(height: 10),
-                          _recommendedCourtCard(
-                            'Active Arena', 'Bandung Barat', 'IDR 60K', 4.7,
-                            'assets/images/venue_dummy.png', -6.9300, 107.6300,
-                            ['Best Seller', 'Popular Venue'],
+                          Column(
+                            children: (showAllRecommended
+                                ? recommendedCourts
+                                : recommendedCourts.take(10).toList())
+                                .map((court) {
+                              return Column(
+                                children: [
+                                  _recommendedCourtCard(
+                                    court.name,
+                                    court.location,
+                                    court.price,
+                                    court.rating,
+                                    court.image,
+                                    court.latitude,
+                                    court.longitude,
+                                    court.tags,
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              );
+                            }).toList(),
                           ),
                         ],
-                      ),
-                    ],
-                  ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
+      endDrawer: const FilterDrawer(),
     );
   }
 
@@ -363,7 +463,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                         '$rating',
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
+                          color: AppColors.darkGrey,
                         ),
                       ),
                     ],
@@ -386,15 +486,32 @@ class HomepageScreenState extends State<HomepageScreen> {
                     const Icon(
                       Icons.location_on,
                       size: 20,
-                      color: Colors.grey,
+                      color: AppColors.darkGrey,
                     ),
                     Text(
                       location,
                       style: const TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold
+                          color: AppColors.darkGrey,
                       ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Text(
+                      '|',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.darkGrey,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                        distance != null
+                            ? "${distance?.toStringAsFixed(2)} km"
+                            : "Loading...",
+                        style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.darkGrey,
+                        )
                     ),
                   ],
                 ),
@@ -406,7 +523,10 @@ class HomepageScreenState extends State<HomepageScreen> {
                   children: [
                     const Text(
                       'Start From: ',
-                      style: TextStyle(fontSize: 12, color: AppColors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.darkGrey
+                      ),
                     ),
                     Text(
                       price,
@@ -464,14 +584,11 @@ class HomepageScreenState extends State<HomepageScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 10), // Add spacing between image and text content
-
-              // Text and details section
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Rating and tags row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -495,7 +612,7 @@ class HomepageScreenState extends State<HomepageScreen> {
                                 '$rating',
                                 style: const TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey,
+                                  color: AppColors.darkGrey,
                                 ),
                               ),
                             ],
@@ -506,7 +623,10 @@ class HomepageScreenState extends State<HomepageScreen> {
                     const SizedBox(height: 5),
                     Text(
                       name,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
                     const SizedBox(height: 5),
                     Row(
@@ -514,15 +634,32 @@ class HomepageScreenState extends State<HomepageScreen> {
                         const Icon(
                           Icons.location_on,
                           size: 20,
-                          color: Colors.grey,
+                          color: AppColors.darkGrey,
                         ),
                         Text(
                           location,
                           style: const TextStyle(
                             fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
+                            color: AppColors.darkGrey,
                           ),
+                        ),
+                        const SizedBox(width: 5),
+                        const Text(
+                          '|',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                            distance != null
+                                ? "${distance?.toStringAsFixed(2)} km"
+                                : "Loading...",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.darkGrey,
+                            )
                         ),
                       ],
                     ),
@@ -531,7 +668,10 @@ class HomepageScreenState extends State<HomepageScreen> {
                       children: [
                         const Text(
                           'Start From: ',
-                          style: TextStyle(fontSize: 12, color: AppColors.grey),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.darkGrey
+                          ),
                         ),
                         Text(
                           price,
@@ -594,4 +734,26 @@ class HomepageScreenState extends State<HomepageScreen> {
     double distanceInMeters = Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
     return distanceInMeters / 1000;
   }
+}
+
+class Court {
+  final String name;
+  final String location;
+  final String price;
+  final double rating;
+  final String image;
+  final double latitude;
+  final double longitude;
+  final List<String> tags;
+
+  Court({
+    required this.name,
+    required this.location,
+    required this.price,
+    required this.rating,
+    required this.image,
+    required this.latitude,
+    required this.longitude,
+    required this.tags,
+  });
 }

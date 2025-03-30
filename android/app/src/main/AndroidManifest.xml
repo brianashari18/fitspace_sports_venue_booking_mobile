@@ -1,4 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    package="com.example.fitspace_sports_venue_booking_mobile">
+
+    <!-- Menambahkan izin lokasi dan foreground service -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:label="fitspace_sports_venue_booking_mobile"
         android:name="${applicationName}"

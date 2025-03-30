@@ -81,7 +81,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                         labelText: 'Enter your email address',
                         labelStyle: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.lightGrey,
+                          color: AppColors.grey,
                         ),
                         errorText: _emailError,
                         border: OutlineInputBorder(
@@ -117,7 +117,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                         labelText: 'Enter your password',
                         labelStyle: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.lightGrey,
+                          color: AppColors.grey,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -165,7 +165,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                         labelText: 'Enter your confirm password',
                         labelStyle: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.lightGrey,
+                          color: AppColors.grey,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -311,7 +311,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                               const Text(
                                 'Already have an account?',
                                 style: TextStyle(
-                                  color: AppColors.grey,
+                                  color: AppColors.darkGrey,
                                   fontSize: 14,
                                 ),
                               ),

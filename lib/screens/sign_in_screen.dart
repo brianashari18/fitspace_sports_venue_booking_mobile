@@ -53,7 +53,7 @@ class SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 30),
                   const Align(
-                    alignment: Alignment.centerLeft, // Aligns the text to the left
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Email Address',
                       style: TextStyle(
@@ -74,7 +74,7 @@ class SignInScreenState extends State<SignInScreen> {
                         labelText: 'Enter your email address',
                         labelStyle: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.lightGrey,
+                          color: AppColors.grey,
                         ),
                         errorText: _emailError,
                         border: OutlineInputBorder(
@@ -88,7 +88,7 @@ class SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 15),
                   const Align(
-                    alignment: Alignment.centerLeft, // Aligns the text to the left
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Password',
                       style: TextStyle(
@@ -110,7 +110,7 @@ class SignInScreenState extends State<SignInScreen> {
                         labelText: 'Password',
                         labelStyle: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.lightGrey,
+                          color: AppColors.grey,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -151,9 +151,9 @@ class SignInScreenState extends State<SignInScreen> {
                         child: const Text(
                           'Forgot password?',
                           style: TextStyle(
-                            color: AppColors.grey,
+                            color: AppColors.darkGrey,
                             fontSize: 14,
-                            fontWeight: FontWeight.w600
+                            fontWeight: FontWeight.w500
                           ),
                         ),
                       ),
@@ -229,11 +229,11 @@ class SignInScreenState extends State<SignInScreen> {
                               const Text(
                                 'Don\'t have an account?',
                                 style: TextStyle(
-                                  color: AppColors.grey,
+                                  color: AppColors.darkGrey,
                                   fontSize: 14,
                                 ),
                               ),
-                              const SizedBox(width: 5),  // Add some space between the texts
+                              const SizedBox(width: 5),
                               InkWell(
                                 onTap: () {
                                   // Navigator.of(context).push(MaterialPageRoute(
