@@ -48,7 +48,7 @@ class AboutUsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset(
-                'assets/images/venue_dummy.png',
+                'assets/images/dummy/venue_dummy.png',
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,

@@ -17,7 +17,7 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
     'date': '17 Aug',
     'time': '14.00-15.00',
     'price': 'Rp 31.500',
-    'image': 'assets/images/venue_dummy.png',
+    'image': 'assets/images/dummy/venue_dummy.png',
     'paymentMethod': 'Virtual Account Mandiri',
     'virtualAccount': '96969696969699',
     'basePrice': 'Rp 30.000',

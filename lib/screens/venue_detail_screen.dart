@@ -39,7 +39,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     double topHeight = AppSize.getHeight(context) * 0.3;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
-          _containerKey.currentContext?.findRenderObject() as RenderBox;
+      _containerKey.currentContext?.findRenderObject() as RenderBox;
       final size = renderBox.size;
       setState(() {
         containerHeight = size.height;
@@ -101,7 +101,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/venue_dummy.png'),
+                      image: AssetImage('assets/images/dummy/venue_dummy.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -115,7 +115,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                   decoration: const BoxDecoration(
                       color: AppColors.whitePurple,
                       borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20))),
+                      BorderRadius.vertical(top: Radius.circular(20))),
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
@@ -223,8 +223,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                   text: flag ? " Read More" : " Show Less",
                                   // Perhatikan spasi di awal
                                   style: const TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
@@ -288,7 +288,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Swimming Pool',
                                 price: 'Rp 35.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
                                   print('Booked');
@@ -299,7 +299,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
                                   print('Booked');
@@ -310,8 +310,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png',
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png',
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
                                   print('Booked');
@@ -322,9 +322,9 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 title: 'Mini Soccer',
                                 price: 'Rp 45.000/hr',
                                 imagePaths: const [
-                                  'assets/images/venue_dummy.png',
-                                  'assets/images/venue_dummy.png',
-                                  'assets/images/venue_dummy.png'
+                                  'assets/images/dummy/venue_dummy.png',
+                                  'assets/images/dummy/venue_dummy.png',
+                                  'assets/images/dummy/venue_dummy.png'
                                 ],
                                 onBook: () {
                                   print('Booked');

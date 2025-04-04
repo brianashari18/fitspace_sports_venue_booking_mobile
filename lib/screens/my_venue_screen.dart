@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.dart';
 
-class AllNearbyCourtScreen extends StatefulWidget{
-  const AllNearbyCourtScreen({super.key});
+class MyVenueScreen extends StatefulWidget {
+  const MyVenueScreen({super.key});
 
   @override
-  State<AllNearbyCourtScreen> createState() => _AllNearbyCourtScreenState();
-
+  State<MyVenueScreen> createState() => _MyVenueScreenState();
 }
 
-class _AllNearbyCourtScreenState extends State<AllNearbyCourtScreen>{
+class _MyVenueScreenState extends State<MyVenueScreen> {
   List<Map<String, dynamic>> venues = [
     {
       'name': 'Progresif Sports',
@@ -21,37 +20,7 @@ class _AllNearbyCourtScreenState extends State<AllNearbyCourtScreen>{
       'latitude': 12.9716,
       'longitude': 77.5946,
       'tags': ['Football', 'Basketball'],
-    },
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 2',
-      'price': 'IDR 150K',
-      'rating': 4.8,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 13.0827,
-      'longitude': 80.2707,
-      'tags': ['Badminton', 'Volleyball'],
-    },
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 2',
-      'price': 'IDR 150K',
-      'rating': 4.8,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 13.0827,
-      'longitude': 80.2707,
-      'tags': ['Badminton', 'Volleyball'],
-    },
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 1',
-      'price': 'IDR 100K',
-      'rating': 4.5,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 12.9716,
-      'longitude': 77.5946,
-      'tags': ['Football', 'Basketball'],
-    },
+    }
   ];
 
   @override
@@ -79,7 +48,7 @@ class _AllNearbyCourtScreenState extends State<AllNearbyCourtScreen>{
                 ),
                 const Spacer(),
                 const Text(
-                  'Nearby Court',
+                  'My Venue',
                   style: TextStyle(
                     color: AppColors.darkGrey,
                     fontSize: 24,
@@ -89,6 +58,26 @@ class _AllNearbyCourtScreenState extends State<AllNearbyCourtScreen>{
               ],
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        height: 90,
+        padding: const EdgeInsets.all(0),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(color: AppColors.base),
+          child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  backgroundColor: AppColors.darkerPrimaryColor),
+              child: Text(
+                "Add Venue",
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold, color: AppColors.base),
+              )),
         ),
       ),
       body: SafeArea(

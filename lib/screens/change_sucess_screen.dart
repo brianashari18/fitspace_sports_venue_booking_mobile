@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart'; // Pastikan SignInScreen sudah didefinisikan
 
-class ResetSuccesfullScreen extends StatelessWidget {
-  const ResetSuccesfullScreen({super.key});
+class ChangeSuccesfullScreen extends StatelessWidget {
+  const ChangeSuccesfullScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

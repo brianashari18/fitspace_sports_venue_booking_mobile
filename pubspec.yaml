@@ -44,6 +44,8 @@ dependencies:
   google_sign_in: ^6.2.2
   shared_preferences: ^2.3.3
   geolocator: ^9.0.1
+  booking_calendar: ^1.1.10
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -75,7 +77,14 @@ flutter:
     - assets/images/login3.png
     - assets/images/success.png
     - assets/icons/google.png
-    - assets/images/venue_dummy.png
+    - assets/images/dummy/venue_dummy.png
+    - assets/images/dummy/pool_dummy.png
+    - assets/images/dummy/futsal_dummy.png
+    - assets/images/payments/qrish.png
+    - assets/images/payments/va.png
+    - assets/images/payments/credit.png
+    - assets/images/payments/dummy_qr.jpg
+    - assets/images/payments/success.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

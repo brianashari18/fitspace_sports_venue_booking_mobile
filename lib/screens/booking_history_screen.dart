@@ -18,7 +18,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
       'date': '17 Aug',
       'time': '14.00-15.00',
       'price': 'Rp 31.500',
-      'image': 'assets/images/venue_dummy.png',
+      'image': 'assets/images/dummy/venue_dummy.png',
     },
     {
       'status': 'Waiting for Payment',
@@ -28,7 +28,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
       'date': '17 Aug',
       'time': '14.00-15.00',
       'price': 'Rp 31.500',
-      'image': 'assets/images/venue_dummy.png',
+      'image': 'assets/images/dummy/venue_dummy.png',
     },
     {
       'status': 'Canceled',
@@ -38,7 +38,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
       'date': '17 Aug',
       'time': '14.00-15.00',
       'price': 'Rp 31.500',
-      'image': 'assets/images/venue_dummy.png',
+      'image': 'assets/images/dummy/venue_dummy.png',
     },
   ];
 

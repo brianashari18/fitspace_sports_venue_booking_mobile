@@ -205,8 +205,10 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
 
   Future<void> _getCurrentLocation() async {
     try {
+      print("Loading...");
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
+        print("!enabled");
         return;
       }
 
@@ -214,12 +216,33 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
+          print("denied");
           return;
         }
       }
 
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print("here");
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 3), // Timeout dalam 10 detik
+        );
+        print(position);
+      } catch (e) {
+        print("Gagal mendapatkan lokasi: $e");
+      }
+
+      print("pass");
+
+      Position? position = await Geolocator.getLastKnownPosition();
+      if (position != null) {
+        print("Lokasi terakhir: ${position.latitude}, ${position.longitude}");
+      } else {
+        print("Tidak ada lokasi terakhir yang tersedia");
+      }
+
       setState(() {
+        print("test");
         _currentPosition = position;
         _isLoading = false; // Set loading to false after location is fetched
       });

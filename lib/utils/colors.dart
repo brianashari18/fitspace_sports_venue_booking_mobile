@@ -15,4 +15,7 @@ class AppColors {
   static const darkRed = Color(0xFF9C3A3A);
   static final yellow = const Color(0xFFFFCC00).withOpacity(0.62);
   static final red = const Color(0xFFFF6B66).withOpacity(0.62);
+  static const lightGrey = Color(0xFFC4C4C4);
+  // static const grey = Color(0xFF757575);
+  static const base = Color(0xFFF7FAFF);
 }

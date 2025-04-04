@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage('https://your-image-url.com'), // Replace with actual image URL
+                      backgroundImage: NetworkImage('https://static.vecteezy.com/system/resources/previews/003/715/527/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'), // Replace with actual image URL
                     ),
                     SizedBox(width: 16),
                     Column(
