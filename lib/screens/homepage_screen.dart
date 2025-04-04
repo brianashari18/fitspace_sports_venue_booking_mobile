@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 
+import '../models/user_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
+
+
 class HomepageScreen extends StatefulWidget {
-  const HomepageScreen({super.key});
+  const HomepageScreen({super.key, required this.user});
+  final User user;
 
   @override
   State<HomepageScreen> createState() => _HomepageScreenState();

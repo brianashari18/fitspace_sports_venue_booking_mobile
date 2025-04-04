@@ -5,27 +5,38 @@ import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/profile_screen.dart';
 
+import '../models/user_model.dart';
+
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, required this.user});
+  final User user;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
+
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  late List<Widget> _pages;
 
-  final List<Widget> _pages = [
-    const HomepageScreen(),
-    const MainVenueScreen(),
-    const BookingHistoryScreen(),
-    const ProfileScreen(),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pages = [
+      HomepageScreen(user: widget.user),
+      const MainVenueScreen(),
+      const BookingHistoryScreen(),
+      const ProfileScreen(),
+    ];
   }
 
   @override

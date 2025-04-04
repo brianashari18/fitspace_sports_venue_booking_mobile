@@ -32,8 +32,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   initializeDateFormatting('en_US', null).then((_) {
     runApp(const MyApp());
   });
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fitspace Mobile App',
       theme: ThemeData(useMaterial3: true, textTheme: GoogleFonts.robotoTextTheme()),
-      home: const EditAvailableScheduleScreen(),
+      home: const SignInScreen(),
     );
   }
 }

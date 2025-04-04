@@ -1,7 +1,11 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,6 +18,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
+  final AuthService _authService = AuthService();
+
 
   String? _emailError;
   String? _passwordError;
@@ -244,7 +250,6 @@ class SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 35),
                   Column(
                     children: [
-                      // Sign in button at the top
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -390,12 +395,12 @@ class SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    if (!_isMinLength || !_hasUpperCase || !_hasLowerCase || !_hasNumber || !_hasSpecialCharacter) {
-      setState(() {
-        _passwordError = 'Password does not meet the complexity requirements';
-      });
-      return;
-    }
+    // if (!_isMinLength || !_hasUpperCase || !_hasLowerCase || !_hasNumber || !_hasSpecialCharacter) {
+    //   setState(() {
+    //     _passwordError = 'Password does not meet the complexity requirements';
+    //   });
+    //   return;
+    // }
 
     if (password != confirmPassword) {
       setState(() {
@@ -404,9 +409,25 @@ class SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    final result = await _authService.register(email, password, confirmPassword);
+    if (!mounted) return;
     setState(() {
       _isSignUp = false;
     });
+
+    if (result['success'] == true) {
+      // You could navigate to login screen or home screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Registration successful!")),
+      );
+      // Example: Navigate to login screen
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignInScreen()));
+    } else {
+      final error = result['error'] is String ? result['error'] : (result['error'] as List).join('\n');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error)),
+      );
+    }
   }
 
   void _signUpWithGoogle() async{

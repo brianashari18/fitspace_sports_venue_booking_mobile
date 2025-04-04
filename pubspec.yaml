@@ -85,6 +85,7 @@ flutter:
     - assets/images/payments/credit.png
     - assets/images/payments/dummy_qr.jpg
     - assets/images/payments/success.png
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

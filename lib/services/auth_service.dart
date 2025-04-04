@@ -9,6 +9,11 @@ class AuthService {
       "http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}/api/users";
   final UserService _userService = UserService();
 
+  Map<String, dynamic> _handleError(http.Response response) {
+    final body = json.decode(response.body);
+    return {'success': false, 'error': body['errors']};
+  }
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final responseLogin = await http.post(
@@ -45,12 +50,10 @@ class AuthService {
           return {'success': 'true', 'user': user};
 
         } else if (responseUser.statusCode == 400) {
-          final body = json.decode(responseUser.body);
-          return {'success': false, 'error': body['errors']};
+          return _handleError(responseUser);
 
         } else {
-          final body = json.decode(responseUser.body);
-          return {'success': false, 'error': body['errors']};
+          return _handleError(responseUser);
         }
 
       } else if (responseLogin.statusCode == 401) {
@@ -87,11 +90,9 @@ class AuthService {
           'email': email,
         };
       } else if (responseRegister.statusCode == 400) {
-        final body = json.decode(responseRegister.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(responseRegister);
       } else {
-        final body = json.decode(responseRegister.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(responseRegister);
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};
@@ -113,11 +114,9 @@ class AuthService {
           'message': body['message'],
         };
       } else if (response.statusCode == 400) {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       } else {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};
@@ -139,11 +138,9 @@ class AuthService {
           'message': body['message'],
         };
       } else if (response.statusCode == 400) {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       } else {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};
@@ -170,11 +167,9 @@ class AuthService {
           'message': body['message'],
         };
       } else if (response.statusCode == 400) {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       } else {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};
@@ -187,7 +182,7 @@ class AuthService {
         Uri.parse('$_baseUrl/changeUsername/${user.id}'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token
+          'Authorization': 'Bearer ${user.token}'
         },
         body: json.encode({
           'firstName': firstName,
@@ -199,11 +194,9 @@ class AuthService {
         final body = json.decode(response.body);
         return {'success': 'true', 'data': body['data']};
       } else if (response.statusCode == 400) {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       } else {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};
@@ -217,7 +210,7 @@ class AuthService {
         Uri.parse('$_baseUrl/changePassword/${user.id}'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token
+          'Authorization': 'Bearer ${user.token}'
         },
         body: json.encode({
           'password' : password,
@@ -229,11 +222,9 @@ class AuthService {
         final body = json.decode(response.body);
         return {'success': 'true', 'data': body['data']};
       } else if (response.statusCode == 400) {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       } else {
-        final body = json.decode(response.body);
-        return {'success': false, 'error': body['errors']};
+        return _handleError(response);
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};

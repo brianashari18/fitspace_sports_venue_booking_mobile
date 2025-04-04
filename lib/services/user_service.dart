@@ -21,17 +21,27 @@ class UserService {
     final firstName = prefs.getString('firstName');
     final lastName = prefs.getString('lastName');
 
-    if (id != null && email != null && token != null && firstName != null && lastName != null) {
-      return User(id: id, email: email, token: token, firstName: firstName, lastName: lastName);
+    if (id != null && email != null && token != null && firstName != null) {
+      return User(
+        id: id,
+        email: email,
+        token: token,
+        firstName: firstName,
+        lastName: lastName,
+      );
     }
+
 
     return null;
   }
 
   Future<void> removeUser() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('id');
-    prefs.remove('email');
-    prefs.remove('token');
+    await prefs.remove('id');
+    await prefs.remove('email');
+    await prefs.remove('token');
+    await prefs.remove('firstName');
+    await prefs.remove('lastName');
   }
+
 }
