@@ -9,6 +9,10 @@ class Venue {
   final String postalCode;
   final double latitude;
   final double longitude;
+  final double rating;
+  final List<String> fields;
+  final List<double> price;
+
 
   Venue({
     required this.id,
@@ -21,20 +25,30 @@ class Venue {
     required this.postalCode,
     required this.latitude,
     required this.longitude,
+    required this.rating,
+    required this.fields,
+    required this.price
   });
 
   factory Venue.fromJson(Map<String, dynamic> json) {
     return Venue(
       id: json['id'],
       name: json['name'],
-      phoneNumber: json['phone_number'],
+      phoneNumber: json['phoneNumber'],
       street: json['street'],
       district: json['district'],
-      cityOrRegency: json['city_or_regency'],
+      cityOrRegency: json['cityOrRegency'],
       province: json['province'],
-      postalCode: json['postal_code'],
+      postalCode: json['postalCode'],
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
+      rating: (json['rating'] as num).toDouble() ?? 0,
+      fields: (json['fields'] as List)
+          .map((item) => item['type'].toString())
+          .toList(),
+      price: (json['fields'] as List<dynamic>)
+          .map<double>((item) => (item['price'] as num).toDouble())
+          .toList(),
     );
   }
 
@@ -42,14 +56,16 @@ class Venue {
     return {
       'id': id,
       'name': name,
-      'phone_number': phoneNumber,
+      'phoneNumber': phoneNumber,
       'street': street,
       'district': district,
-      'city_or_regency': cityOrRegency,
+      'cityOrRegency': cityOrRegency,
       'province': province,
-      'postal_code': postalCode,
+      'postalCode': postalCode,
       'latitude': latitude,
       'longitude': longitude,
+      'rating': rating,
+      'fields': fields.map((type) => {'type': type}).toList(),
     };
   }
 }

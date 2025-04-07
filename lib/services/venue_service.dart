@@ -56,7 +56,6 @@ Future<Map<String,dynamic>> loadVenue(User user) async {
           headers: {'Authorization': 'Bearer ${user.token}'}
       );
 
-      print(response.body);
       if (response.statusCode == 200) {
         final body = json.decode(response.body);
         return {'success': 'true', 'data': body['data']};
