@@ -1,7 +1,11 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
+
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -12,10 +16,16 @@ class SignUpScreen extends StatefulWidget {
 
 class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
+  final AuthService _authService = AuthService();
+
 
   String? _emailError;
+  String? _firstNameError;
+  String? _lastNameError;
   String? _passwordError;
   String? _confirmPasswordError;
   bool _obscurePassword = true;
@@ -32,6 +42,8 @@ class SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     _emailController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _passwordController.dispose();
     _confirmPassController.dispose();
     super.dispose();
@@ -84,6 +96,76 @@ class SignUpScreenState extends State<SignUpScreen> {
                           color: AppColors.grey,
                         ),
                         errorText: _emailError,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        filled: true,
+                        fillColor: AppColors.whitePurple,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'First Name',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.darkGrey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      controller: _firstNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your first name',
+                        labelStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.grey,
+                        ),
+                        errorText: _firstNameError,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        filled: true,
+                        fillColor: AppColors.whitePurple,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Last Name (Optional)',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.darkGrey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      controller: _lastNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Enter your last name (optional)',
+                        labelStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.grey,
+                        ),
+                        errorText: _lastNameError,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -244,7 +326,6 @@ class SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 35),
                   Column(
                     children: [
-                      // Sign in button at the top
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -318,8 +399,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                               const SizedBox(width: 5),
                               InkWell(
                                 onTap: () {
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //     builder: (context) => const RegisterScreen()));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const SignInScreen()));
                                 },
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
@@ -366,19 +447,46 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   void _validateInputs() async {
     setState(() {
-      _isSignUp = true;
+      _isSignUp = true; // Set to true at the beginning
       _emailError = null;
+      _firstNameError = null;
+      _lastNameError = null;
       _passwordError = null;
       _confirmPasswordError = null;
     });
 
     final email = _emailController.text;
+    final firstName = _firstNameController.text;
+    final lastName = _lastNameController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPassController.text;
 
     if (email.isEmpty || !_isValidEmail(email)) {
       setState(() {
         _emailError = 'Enter a valid email address';
+        _isSignUp = false; // Set to false on error
+      });
+      return;
+    }
+
+    if (firstName.trim().isEmpty) {
+      setState(() {
+        _firstNameError = 'Enter a valid name';
+        _isSignUp = false; // Set to false on error
+      });
+      return;
+    } else if (firstName.length < 4) {
+      setState(() {
+        _firstNameError = 'Must be at least 4 characters';
+        _isSignUp = false; // Set to false on error
+      });
+      return;
+    }
+
+    if (lastName.trim().isNotEmpty &&  lastName.length < 4) {
+      setState(() {
+        _lastNameError = 'Must be at least 4 characters';
+        _isSignUp = false; // Set to false on error
       });
       return;
     }
@@ -386,13 +494,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (password.isEmpty) {
       setState(() {
         _passwordError = 'Password cannot be empty';
-      });
-      return;
-    }
-
-    if (!_isMinLength || !_hasUpperCase || !_hasLowerCase || !_hasNumber || !_hasSpecialCharacter) {
-      setState(() {
-        _passwordError = 'Password does not meet the complexity requirements';
+        _isSignUp = false; // Set to false on error
       });
       return;
     }
@@ -400,13 +502,38 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (password != confirmPassword) {
       setState(() {
         _confirmPasswordError = 'Passwords do not match';
+        _isSignUp = false; // Set to false on error
       });
       return;
     }
 
-    setState(() {
-      _isSignUp = false;
-    });
+    final result = await _authService.register(email, firstName, lastName, password, confirmPassword);
+    if (!mounted) return;
+
+    if (result['success'] == 'true') {
+      setState(() {
+        _isSignUp = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Registration successful!")),
+      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const SignInScreen()));
+    } else {
+      setState(() {
+        _isSignUp = false;
+      });
+      String errorMessage;
+      if (result['error'] is String) {
+        errorMessage = result['error'];
+      } else if (result['error'] is List) {
+        errorMessage = (result['error'] as List).join('\n');
+      } else {
+        errorMessage = 'An unknown error occurred.'; // Handle other cases, including null.
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
   }
 
   void _signUpWithGoogle() async{

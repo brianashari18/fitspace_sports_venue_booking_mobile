@@ -1,7 +1,13 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -13,6 +19,8 @@ class SignInScreen extends StatefulWidget {
 class SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+
 
   // final AuthService _apiService = AuthService();
   // final GoogleService _googleService = GoogleService();
@@ -236,8 +244,8 @@ class SignInScreenState extends State<SignInScreen> {
                               const SizedBox(width: 5),
                               InkWell(
                                 onTap: () {
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //     builder: (context) => const RegisterScreen()));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const SignUpScreen()));
                                 },
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
@@ -294,31 +302,39 @@ class SignInScreenState extends State<SignInScreen> {
       FocusScope.of(context).requestFocus(FocusNode());
     }
 
-    // Validasi Password
-    // if (_emailError == null && _passwordError == null) {
-    //   final result = await _apiService.login(email, password);
-    //   if (result['success'] == 'true') {
-    //     User user = result['user'];
-    //     ScaffoldMessenger.of(context).clearSnackBars();
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(content: Text('Sign In Successfully')));
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //       MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
-    //           (route) => false,
-    //     );
-    //   } else {
-    //     final errorMessage = result['error'];
-    //     ScaffoldMessenger.of(context).clearSnackBars();
-    //     ScaffoldMessenger.of(context)
-    //         .showSnackBar(SnackBar(content: Text(errorMessage)));
-    //   }
-    // } else {
-    //   print('Login Failed');
-    // }
+    final result = await _authService.login(email, password);
+
+    if (!mounted) return;
 
     setState(() {
       _isSignIn = false;
     });
+
+    if (result['success'] == 'true') {
+      User user = result['user'];
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Sign In Successfully')),
+      );
+
+      // Navigate to homepage or wherever you'd like
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
+        (route) => false,
+      );
+
+    } else {
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+
   }
 
   void _signInWithGoogle() async {
