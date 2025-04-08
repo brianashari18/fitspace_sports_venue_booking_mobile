@@ -1,7 +1,15 @@
+import 'dart:convert';
+
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
+import 'package:http/http.dart' as http;
 
 class UserService {
+
+  final _baseUrl =
+      "http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}/api/users/";
+
   Future<void> saveUser(User user) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt('id', user.id);
@@ -30,8 +38,6 @@ class UserService {
         lastName: lastName,
       );
     }
-
-
     return null;
   }
 

@@ -1,13 +1,10 @@
-// Full updated HomepageScreen using Venue model
-
 import 'dart:math';
-
 import 'package:fitspace_sports_venue_booking_mobile/screens/notification_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/venue_detail_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/filter_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
-
 import '../models/user_model.dart';
 import '../models/venue_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
@@ -208,46 +205,64 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   Widget _venueCard(Venue venue, {bool isHorizontal = false}) {
-    double? distance = _currentPosition != null ? _calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, venue.latitude, venue.longitude) : null;
+    double? distance = _currentPosition != null
+        ? _calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, venue.latitude, venue.longitude)
+        : null;
 
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
-        width: isHorizontal ? 230 : double.infinity,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(color: AppColors.whitePurple, borderRadius: BorderRadius.circular(10)),
-        child: isHorizontal
-            ? Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/dummy/venue_dummy.png',
-                width: double.infinity,
-                height: 100,
-                fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        // Navigate to Venue Detail screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VenueDetailScreen(user: widget.user, venue: venue),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Container(
+          width: isHorizontal ? 230 : double.infinity,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(color: AppColors.whitePurple, borderRadius: BorderRadius.circular(10)),
+          child: isHorizontal
+              ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/images/dummy/venue_dummy.png',
+                  width: double.infinity,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
-            ..._venueCardContent(venue, distance),
-          ],
-        )
-            : Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset('assets/images/dummy/venue_dummy.png', width: 120, height: 130, fit: BoxFit.cover),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: _venueCardContent(venue, distance),
+              const SizedBox(height: 5),
+              ..._venueCardContent(venue, distance),
+            ],
+          )
+              : Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  'assets/images/dummy/venue_dummy.png',
+                  width: 120,
+                  height: 130,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _venueCardContent(venue, distance),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -262,7 +277,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
           runSpacing: 5,
           alignment: WrapAlignment.start,
           children: venue.fields.isNotEmpty
-              ? venue.fields.map((tag) => fieldTag(tag)).toList()
+              ? venue.fields.map((tag) {
+            return fieldTag(tag['type']);  // Access 'type' from the map
+          }).toList()
               : [SizedBox(height: 25)],
         ),
       ),
@@ -283,7 +300,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       Row(
         children: [
           const Text('Start From: ', style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
-          Text(venue.price.isNotEmpty  ? 'IDR ${venue.price.reduce(min)}' : 'IDR N/A', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
+          Text(venue.fields.isNotEmpty ? 'IDR ${venue.fields.first['price']}' : 'IDR N/A', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
         ],
       ),
     ];
@@ -296,6 +313,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       child: Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
     );
   }
+
 
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -357,4 +375,4 @@ class _HomepageScreenState extends State<HomepageScreen> {
       ),
     );
   }
-} 
+}

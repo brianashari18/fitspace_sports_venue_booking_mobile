@@ -10,9 +10,8 @@ class Venue {
   final double latitude;
   final double longitude;
   final double rating;
-  final List<String> fields;
-  final List<double> price;
-
+  final List<Map<String, dynamic>> fields;
+  final Map<String, dynamic> owner;  // Store the owner as a map
 
   Venue({
     required this.id,
@@ -27,7 +26,7 @@ class Venue {
     required this.longitude,
     required this.rating,
     required this.fields,
-    required this.price
+    required this.owner,  // Use the owner map directly
   });
 
   factory Venue.fromJson(Map<String, dynamic> json) {
@@ -43,12 +42,8 @@ class Venue {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       rating: (json['rating'] as num).toDouble() ?? 0,
-      fields: (json['fields'] as List)
-          .map((item) => item['type'].toString())
-          .toList(),
-      price: (json['fields'] as List<dynamic>)
-          .map<double>((item) => (item['price'] as num).toDouble())
-          .toList(),
+      fields: List<Map<String, dynamic>>.from(json['fields'] as List),
+      owner: json['owner'],  // Directly assign the owner map
     );
   }
 
@@ -65,7 +60,8 @@ class Venue {
       'latitude': latitude,
       'longitude': longitude,
       'rating': rating,
-      'fields': fields.map((type) => {'type': type}).toList(),
+      'fields': fields,
+      'owner': owner,  // Directly assign the owner map to JSON
     };
   }
 }

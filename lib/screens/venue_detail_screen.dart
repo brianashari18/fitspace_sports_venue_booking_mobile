@@ -2,9 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import '../models/user_model.dart';
+import '../models/venue_model.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
+import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import '../models/user_model.dart';
+import '../models/venue_model.dart';
 
 class VenueDetailScreen extends StatefulWidget {
-  const VenueDetailScreen({super.key});
+  const VenueDetailScreen({super.key, required this.user, required this.venue});
+
+  final User user;
+  final Venue venue;
 
   final String text =
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
@@ -18,12 +30,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   double containerHeight = 0.0;
   String firstHalf = "";
   String secondHalf = "";
+  late Venue venue;
 
   bool flag = true;
 
   @override
   void initState() {
     super.initState();
+    venue = widget.venue;
 
     if (widget.text.length > 50) {
       firstHalf = widget.text.substring(0, 148);
@@ -45,6 +59,21 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
         containerHeight = size.height;
       });
     });
+
+    DateTime createdAtDate = DateTime.parse(widget.venue.owner['createdAt']);
+    DateTime currentDate = DateTime.now();
+    int daysDifference = currentDate.difference(createdAtDate).inDays;
+    String joinTime = "";
+    if (daysDifference >= 365) {
+      int years = daysDifference ~/ 365;
+      joinTime = "Joined $years ${years > 1 ? 'years' : 'year'} ago";
+    } else if (daysDifference >= 30) {
+      int months = daysDifference ~/ 30;
+      joinTime = "Joined $months ${months > 1 ? 'months' : 'month'} ago";
+    } else {
+      joinTime = "Joined $daysDifference ${daysDifference > 1 ? 'days' : 'day'} ago";
+    }
+
     return SafeArea(
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -143,15 +172,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
-                              children: [
-                                _buildButton('Mini Soccer'),
-                                _buildButton('Volleyball'),
-                                _buildButton('Swimming Pool'),
-                                _buildButton('Badminton'),
-                              ],
+                              children: venue.fields.isNotEmpty
+                                  ? venue.fields.map((field) {
+                                return _buildButton(field['type']);
+                              }).toList()
+                                  : [SizedBox(height: 25)],
                             ),
                           ),
-                          const Expanded(
+                           Expanded(
                             flex: 1,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -159,7 +187,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               children: [
                                 Icon(Icons.star, color: Colors.amber, size: 18),
                                 SizedBox(width: 4),
-                                Text('4.5',
+                                Text('${widget.venue.rating}',
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
@@ -178,15 +206,15 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Progresif Sports',
+                          Text(
+                            widget.venue.name,
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Row(
+                          Row(
                             children: [
                               Icon(
                                 Icons.location_on,
@@ -196,7 +224,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  'Jl. Soekarno-Hatta No.785A, Kab. Bandung',
+                                  '${widget.venue.street} ${widget.venue.cityOrRegency}',
                                   style: TextStyle(color: AppColors.grey),
                                   softWrap: true,
                                 ),
@@ -212,7 +240,6 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                           RichText(
                             text: TextSpan(
                               style: const TextStyle(color: Colors.black),
-                              // Gaya teks default
                               children: <TextSpan>[
                                 TextSpan(
                                   text: flag
@@ -221,7 +248,6 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 ),
                                 TextSpan(
                                   text: flag ? " Read More" : " Show Less",
-                                  // Perhatikan spasi di awal
                                   style: const TextStyle(
                                     color: Colors.blue,
                                     decoration: TextDecoration.underline,
@@ -242,7 +268,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
-                          const Row(
+                          Row(
                             children: [
                               CircleAvatar(
                                 radius: 20,
@@ -253,16 +279,15 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Feronica Maria',
-                                      style: TextStyle(
-                                          color: AppColors.darkGrey,
-                                          fontWeight: FontWeight.bold
-                                      )
+                                  Text(
+                                    '${widget.venue.owner['firstName']} ${widget.venue.owner['lastName']}',
+                                    style: TextStyle(
+                                        color: AppColors.darkGrey,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  Text('Joined 2 yrs ago',
-                                      style: TextStyle(
-                                          color: AppColors.darkGrey
-                                      )
+                                  Text(
+                                    joinTime,
+                                    style: TextStyle(color: AppColors.darkGrey),
                                   ),
                                 ],
                               ),
@@ -279,59 +304,29 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          ListView(
+                          ListView.builder(
                             shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.zero,
-                            children: [
-                              _cardCourt(
-                                title: 'Swimming Pool',
-                                price: 'Rp 35.000/hr',
-                                imagePaths: const [
-                                  'assets/images/dummy/venue_dummy.png'
+                            itemCount: venue.fields.length,
+                            itemBuilder: (context, index) {
+                              final field = venue.fields[index];
+                              return Column(
+                                children: [
+                                  _cardCourt(
+                                    title: field['type'],
+                                    price: 'Rp ${field['price']}/hr',
+                                    imagePaths: const [
+                                      'assets/images/dummy/venue_dummy.png'
+                                    ],
+                                    onBook: () {
+                                      print('Booked');
+                                    },
+                                  ),
+                                  const SizedBox(height: 8), // Control the gap between cards
                                 ],
-                                onBook: () {
-                                  print('Booked');
-                                },
-                              ),
-                              const SizedBox(height: 8),
-                              _cardCourt(
-                                title: 'Mini Soccer',
-                                price: 'Rp 45.000/hr',
-                                imagePaths: const [
-                                  'assets/images/dummy/venue_dummy.png'
-                                ],
-                                onBook: () {
-                                  print('Booked');
-                                },
-                              ),
-                              const SizedBox(height: 8),
-                              _cardCourt(
-                                title: 'Mini Soccer',
-                                price: 'Rp 45.000/hr',
-                                imagePaths: const [
-                                  'assets/images/dummy/venue_dummy.png',
-                                  'assets/images/dummy/venue_dummy.png'
-                                ],
-                                onBook: () {
-                                  print('Booked');
-                                },
-                              ),
-                              const SizedBox(height: 8),
-                              _cardCourt(
-                                title: 'Mini Soccer',
-                                price: 'Rp 45.000/hr',
-                                imagePaths: const [
-                                  'assets/images/dummy/venue_dummy.png',
-                                  'assets/images/dummy/venue_dummy.png',
-                                  'assets/images/dummy/venue_dummy.png'
-                                ],
-                                onBook: () {
-                                  print('Booked');
-                                },
-                              ),
-                            ],
-                          ),
+                              );
+                            },
+                          )
                         ],
                       ),
                     ],
@@ -356,6 +351,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
         text,
         style: TextStyle(color: Colors.blue[800]),
       ),
+    );
+  }
+
+  Widget fieldTag(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
+      child: Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
     );
   }
 
@@ -385,23 +388,6 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                     fit: BoxFit.cover,
                     width: 250,
                   ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'No more image',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.darkerPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               )
                   : ListView.builder(
@@ -419,46 +405,10 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                 },
               ),
             )
-                : Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 250,
-                  height: 120,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Image not available',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.darkerPrimaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Image not available',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.darkerPrimaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
+                : Container(),
+            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,3 +454,6 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     );
   }
 }
+
+
+
