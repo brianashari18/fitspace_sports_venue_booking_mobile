@@ -46,6 +46,7 @@ dependencies:
   geolocator: ^9.0.1
   booking_calendar: ^1.1.10
   flutter_rating_bar: ^4.0.1
+  google_maps_flutter: ^2.10.1
 
 dev_dependencies:
   flutter_test:

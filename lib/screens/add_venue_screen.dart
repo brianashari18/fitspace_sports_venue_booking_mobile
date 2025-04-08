@@ -1,35 +1,103 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 
-class AddVenueScreen extends StatefulWidget{
+class AddVenueScreen extends StatefulWidget {
   const AddVenueScreen({super.key});
 
   @override
   State<AddVenueScreen> createState() => _AddVenueScreenState();
 }
 
-class _AddVenueScreenState extends State<AddVenueScreen>{
-  final TextEditingController _currPassword = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+class _AddVenueScreenState extends State<AddVenueScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String? _currPasswordError;
-  String? _passwordError;
-  String? _confirmPasswordError;
-  bool _obscureCurrPassword = true;
-  bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
-  bool _isMinLength = false;
-  bool _hasUpperCase = false;
-  bool _hasLowerCase = false;
-  bool _hasNumber = false;
-  bool _hasSpecialCharacter = false;
+  var _enteredVenueName = '';
+  var _enteredPhoneNumber = '';
+  var _enteredStreet = '';
+  var _enteredProvince = '';
+  var _enteredCityOrRegency = '';
+  var _enteredDistrict = '';
+  var _enteredPostalCode = '';
+
+  String? _selectedCityOrRegency;
+
+  LatLng? _pickedLocation;
+  Set<Marker> _markers = {};
+
+  Future<void> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    final position = await Geolocator.getCurrentPosition();
+    setState(() {
+      _pickedLocation = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  void _onMapTapped(LatLng location) {
+    setState(() {
+      _pickedLocation = location;
+      _markers.clear();
+      _markers.add(
+        Marker(
+          markerId: MarkerId('picked-location'),
+          position: location,
+        ),
+      );
+    });
+  }
+
+  void _onSubmit(BuildContext context) {
+    bool isValid = _formKey.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    }
+
+    if (_pickedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select the location on map')));
+      return;
+    }
+
+    _formKey.currentState!.save();
+
+    print('Venue Name: $_enteredVenueName');
+    print('Phone Number: $_enteredPhoneNumber');
+    print('Street: $_enteredStreet');
+    print('Province: $_enteredProvince');
+    print('City/Regency: $_enteredCityOrRegency');
+    print('District: $_enteredDistrict');
+    print('Postal Code: $_enteredPostalCode');
+    print('Location: $_pickedLocation');
+  }
 
   @override
-  void dispose() {
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    getCurrentLocation();
   }
 
   @override
@@ -75,7 +143,9 @@ class _AddVenueScreenState extends State<AddVenueScreen>{
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(color: AppColors.base),
           child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _onSubmit(context);
+              },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
@@ -91,148 +161,463 @@ class _AddVenueScreenState extends State<AddVenueScreen>{
       body: Container(
         color: AppColors.whitePurple,
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Venue Detail',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: AppColors.darkGrey,
-                  fontWeight: FontWeight.w500
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add),
-              label: const Text('Add Photo'),
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFFF6F6F6),
-                foregroundColor: AppColors.grey,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(color: AppColors.grey)
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Venue Detail',
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.darkGrey,
+                      fontWeight: FontWeight.w500),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Enter venue name',
-                  labelStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.grey,
-                  ),
-                  border: OutlineInputBorder(
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  filled: true,
-                  fillColor: AppColors.whitePurple,
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Enter description',
-                  labelStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.grey,
+                  child: TextFormField(
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      labelText: 'Enter venue name',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        // Mengatur enabledBorder
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        // Menambahkan focusedBorder
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.darkGrey,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        //Menambahkan errorBorder
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.whitePurple,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                    ),
+                    validator: (value) {
+                      if (value == null ||
+                          value.trim().isEmpty ||
+                          value.length < 5) {
+                        return "Please enter a valid name";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _enteredVenueName = value!;
+                    },
                   ),
-                  border: OutlineInputBorder(
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  filled: true,
-                  fillColor: AppColors.whitePurple,
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  child: TextFormField(
+                    autocorrect: false,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      labelText: 'Enter phone number',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.darkGrey,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.whitePurple,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter a phone number";
+                      }
+                      if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return "Phone number must contain only digits";
+                      }
+                      if (value.length < 10) {
+                        return "Phone number must be at least 10 digits";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _enteredPhoneNumber = value!;
+                    },
+                  ),
                 ),
-              ),
+                const SizedBox(height: 30),
+                const Text(
+                  'Address Detail',
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.darkGrey,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextFormField(
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      labelText: 'Street Name',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.darkGrey,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.whitePurple,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter a street name";
+                      }
+                      if (value.length < 3) {
+                        return "Street name must be at least 3 characters";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _enteredStreet = value!;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextFormField(
+                    initialValue: 'Jawa Barat',
+                    autocorrect: false,
+                    enabled: false,
+                    style: const TextStyle(
+                      color: AppColors.darkGrey,
+                    ),
+                    decoration: InputDecoration(
+                      disabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.grey.withOpacity(0.1),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter a province";
+                      }
+                      if (value.length < 3) {
+                        return "Province name must be at least 3 characters";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _enteredProvince = value!;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    items: <String>[
+                      'Bandung',
+                      'Kabupaten Bandung',
+                      'Kabupaten Bandung Barat'
+                    ].map(
+                      (String value) {
+                        return DropdownMenuItem(
+                            value: value, child: Text(value));
+                      },
+                    ).toList(),
+                    iconEnabledColor: AppColors.grey,
+                    decoration: InputDecoration(
+                      labelText: 'City or Regency',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.whitePurple,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please select a city or regency";
+                      }
+                      return null;
+                    },
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedCityOrRegency = newValue;
+                      });
+                    },
+                    onSaved: (value) {
+                      _enteredCityOrRegency = value!;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextFormField(
+                    autocorrect: false,
+                    decoration: InputDecoration(
+                      labelText: 'District',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.darkGrey,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.whitePurple,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter a district name";
+                      }
+                      if (value.length < 3) {
+                        return "District name must be at least 3 characters";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _enteredDistrict = value!;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextFormField(
+                    autocorrect: false,
+                    keyboardType: const TextInputType.numberWithOptions(),
+                    decoration: InputDecoration(
+                      labelText: 'Postal Code',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.darkGrey,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          style: BorderStyle.solid,
+                          width: 1,
+                          color: AppColors.red,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.whitePurple,
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter a postal code";
+                      }
+                      if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                        return "Postal code must contain only digits";
+                      }
+                      if (value.length != 5) {
+                        return "Postal code must be 5 digits";
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _enteredPostalCode = value!;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _pickedLocation != null
+                          ? Text(
+                              'Latitude: ${_pickedLocation!.latitude}\nLongitude: ${_pickedLocation!.longitude}')
+                          : const SizedBox.shrink(),
+                      const SizedBox(height: 10,),
+                      SizedBox(
+                        height: 300,
+                        child: _pickedLocation == null
+                            ? const Center(child: CircularProgressIndicator())
+                            : GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                  target: _pickedLocation!,
+                                  zoom: 15,
+                                ),
+                                onTap: _onMapTapped,
+                                markers: _markers,
+                                gestureRecognizers: <Factory<
+                                    OneSequenceGestureRecognizer>>{
+                                  Factory<OneSequenceGestureRecognizer>(
+                                    () => EagerGestureRecognizer(),
+                                  ),
+                                },
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-
-          ],
+          ),
         ),
       ),
     );
-  }
-
-  void _checkPassword(String password) {
-    setState(() {
-      _isMinLength = password.length >= 8;
-      _hasUpperCase = password.contains(RegExp(r'[A-Z]'));
-      _hasLowerCase = password.contains(RegExp(r'[a-z]'));
-      _hasNumber = password.contains(RegExp(r'\d'));
-      _hasSpecialCharacter =
-          password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
-    });
-  }
-
-  void _resetPassword() async {
-    final newPassword = _newPasswordController.text;
-    final confirmPassword = _confirmPasswordController.text;
-
-    setState(() {
-      _passwordError = null;
-      _confirmPasswordError = null;
-    });
-
-    if (newPassword.isEmpty) {
-      setState(() {
-        _passwordError = 'Password cannot be empty';
-      });
-      return;
-    }
-
-    if (confirmPassword.isEmpty) {
-      setState(() {
-        _confirmPasswordError = 'Confirm Password cannot be empty';
-      });
-      return;
-    }
-
-    if (confirmPassword != confirmPassword) {
-      _confirmPasswordError = 'Passwords do not match';
-      FocusScope.of(context).requestFocus(FocusNode());
-    }
-
-    // Validasi Password
-    if (_passwordError == null &&
-        _confirmPasswordError == null &&
-        _isMinLength &&
-        _hasUpperCase &&
-        _hasLowerCase &&
-        _hasNumber &&
-        _hasSpecialCharacter) {
-
-      // final result = await _apiService.resetPassword(
-      //     newPassword, confirmPassword, widget.email);
-      //
-      // if (result['success'] == 'true') {
-      //   final message = result['message'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(message)));
-      //
-      //   Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //           builder: (context) => const ResetSuccessScreen()));
-      // } else {
-      //   final errorMessage = result['error'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(errorMessage)));
-      // }
-    }
   }
 }
