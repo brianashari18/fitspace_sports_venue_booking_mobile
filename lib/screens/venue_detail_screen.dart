@@ -468,14 +468,19 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
 
     List<dynamic> fieldsData = result['data'];  // Assuming response['data'] contains your fields
 
+    num tempRating = 0;
+    num tempTotal = 0;
     for (var field in fieldsData) {
       totalReview += field['reviews']?.length ?? 0;
       for(var rating in field['reviews']) {
-        totalRating += rating['rating'];
+        tempRating += rating['rating'];
+        print('temp : $tempRating');
       }
-
+      tempTotal += tempRating / 5;
+      print('tot : $tempTotal');
+      tempRating = 0;
     }
-    totalRating = totalRating / widget.venue.fields.length;
+    totalRating = tempTotal / widget.venue.fields.length;
 
     print("Total Reviews: $totalReview");
     print('res : ${result['data'][0]['reviews']}');
