@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/verification_screen.dart';
@@ -10,6 +11,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final AuthService _authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   bool _isContinue = false;
   String? _emailError;
@@ -100,13 +102,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Reset Password',
-                  style: TextStyle(
-                    color: AppColors.whitePurple,
-                    fontSize: 16,
-                  ),
-                ),
+                child: _isContinue
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        'Reset Password',
+                        style: TextStyle(
+                          color: AppColors.whitePurple,
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -117,7 +121,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   bool _isValidEmail(String email) {
     final RegExp emailRegex =
-    RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     return emailRegex.hasMatch(email);
   }
 
@@ -132,25 +136,25 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         _emailError = null;
       });
 
-      // final result = await _apiService.forgotPassword(email);
+      final result = await _authService.forgotPassword(email);
 
       setState(() {
         _isContinue = false;
       });
 
-      // if (result['success'] == 'true') {
-      //   final message = result['message'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(message)));
-      //   Navigator.of(context).push(
-      //     MaterialPageRoute(
-      //         builder: (context) => VerificationScreen(email: email)),
-      //   );
-      // } else {
-      //   final errorMessage = result['error'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(errorMessage)));
-      // }
+      if (result['success'] == 'true') {
+        final message = result['message'];
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (context) => VerificationScreen(email: email)),
+        );
+      } else {
+        final errorMessage = result['error'];
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
     } else {
       setState(() {
         _isContinue = false;

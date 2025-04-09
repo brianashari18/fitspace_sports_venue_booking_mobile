@@ -1,16 +1,23 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/reset_succes_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 
-class ResetPasswordScreen extends StatefulWidget{
-  const ResetPasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key, required this.email});
+
+  final String email;
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  final AuthService _authService = AuthService();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   String? _passwordError;
   String? _confirmPasswordError;
@@ -21,6 +28,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
   bool _hasLowerCase = false;
   bool _hasNumber = false;
   bool _hasSpecialCharacter = false;
+
+  bool _isSubmit = false;
 
   @override
   void dispose() {
@@ -74,10 +83,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
             const Text(
               'This password must be different than before',
               style: TextStyle(
-                fontSize: 16,
-                color: AppColors.darkGrey,
-                fontWeight: FontWeight.w500
-              ),
+                  fontSize: 16,
+                  color: AppColors.darkGrey,
+                  fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 10),
             Container(
@@ -128,10 +136,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
                 decoration: InputDecoration(
                   labelText: 'Confirm your new password',
                   labelStyle: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w500
-                  ),
+                      fontSize: 14,
+                      color: AppColors.grey,
+                      fontWeight: FontWeight.w500),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -166,14 +173,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Reset Password',
-                  style: TextStyle(
-                    color: AppColors.whitePurple,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  ),
-                ),
+                child: _isSubmit
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        'Reset Password',
+                        style: TextStyle(
+                          color: AppColors.whitePurple,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -194,17 +203,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
   }
 
   void _resetPassword() async {
-    final newPassword = _newPasswordController.text;
-    final confirmPassword = _confirmPasswordController.text;
-
     setState(() {
+      _isSubmit = true;
       _passwordError = null;
       _confirmPasswordError = null;
     });
 
-    if (newPassword.isEmpty) {
+    final newPassword = _newPasswordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    String? passwordError = _validatePassword(newPassword);
+    if (passwordError != null) {
       setState(() {
-        _passwordError = 'Password cannot be empty';
+        _passwordError = passwordError;
+        _isSubmit = false;
       });
       return;
     }
@@ -212,40 +224,75 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>{
     if (confirmPassword.isEmpty) {
       setState(() {
         _confirmPasswordError = 'Confirm Password cannot be empty';
+        _isSubmit = false;
       });
       return;
     }
 
-    if (confirmPassword != confirmPassword) {
-      _confirmPasswordError = 'Passwords do not match';
+    if (newPassword != confirmPassword) {
+      setState(() {
+        _confirmPasswordError = 'Passwords do not match';
+        _isSubmit = false;
+      });
       FocusScope.of(context).requestFocus(FocusNode());
+      return;
     }
 
-    // Validasi Password
-    if (_passwordError == null &&
-        _confirmPasswordError == null &&
-        _isMinLength &&
-        _hasUpperCase &&
-        _hasLowerCase &&
-        _hasNumber &&
-        _hasSpecialCharacter) {
+    try {
+      final result = await _authService.resetPassword(
+          newPassword, confirmPassword, widget.email);
 
-      // final result = await _apiService.resetPassword(
-      //     newPassword, confirmPassword, widget.email);
-      //
-      // if (result['success'] == 'true') {
-      //   final message = result['message'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(message)));
-      //
-      //   Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //           builder: (context) => const ResetSuccessScreen()));
-      // } else {
-      //   final errorMessage = result['error'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(errorMessage)));
-      // }
+      setState(() {
+        _isSubmit = false;
+      });
+
+      if (result['success'] == 'true') {
+        final message = result['message'];
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(message)));
+
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const ResetSuccesfullScreen()));
+      } else {
+        final errorMessage = result['error'];
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
+    } catch (e) {
+      setState(() {
+        _isSubmit = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An error occurred. Please try again.')));
+      print('Error resetting password: $e');
     }
+  }
+
+  String? _validatePassword(String password) {
+    if (password.isEmpty) {
+      return 'Password cannot be empty';
+    }
+
+    // if (password.length < 8) {
+    //   return 'Password must be at least 8 characters long';
+    // }
+    //
+    // if (!password.contains(RegExp(r'[A-Z]'))) {
+    //   return 'Password must contain at least one uppercase letter';
+    // }
+    //
+    // if (!password.contains(RegExp(r'[a-z]'))) {
+    //   return 'Password must contain at least one lowercase letter';
+    // }
+    //
+    // if (!password.contains(RegExp(r'[0-9]'))) {
+    //   return 'Password must contain at least one number';
+    // }
+    //
+    // if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+    //   return 'Password must contain at least one special character';
+    // }
+
+    return null; // Password valid
   }
 }

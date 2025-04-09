@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/forgot_password_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart';
@@ -147,9 +148,9 @@ class SignInScreenState extends State<SignInScreen> {
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       onTap: () {
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //     // builder: (context) =>
-                        //     // const ForgetPasswordScreen()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                            const ForgotPasswordScreen()));
                       },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
