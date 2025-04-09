@@ -26,7 +26,7 @@ class Venue {
     required this.longitude,
     required this.rating,
     required this.fields,
-    required this.owner,  // Use the owner map directly
+    required this.owner,
   });
 
   factory Venue.fromJson(Map<String, dynamic> json) {

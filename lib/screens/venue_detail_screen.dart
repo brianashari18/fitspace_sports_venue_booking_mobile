@@ -39,6 +39,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
 
   List<Field> fields = [];
   num totalReview = 0;
+  num totalRating = 0 ;
 
   @override
   void initState() {
@@ -193,7 +194,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               children: [
                                 Icon(Icons.star, color: Colors.amber, size: 18),
                                 SizedBox(width: 4),
-                                Text('${widget.venue.rating}',
+                                Text('$totalRating',
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
@@ -468,10 +469,16 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     List<dynamic> fieldsData = result['data'];  // Assuming response['data'] contains your fields
 
     for (var field in fieldsData) {
-      totalReview += field['reviews']?.length ?? 0;  // Null-safe check in case reviews is null
+      totalReview += field['reviews']?.length ?? 0;
+      for(var rating in field['reviews']) {
+        totalRating += rating['rating'];
+      }
+
     }
+    totalRating = totalRating / widget.venue.fields.length;
 
     print("Total Reviews: $totalReview");
+    print('res : ${result['data'][0]['reviews']}');
 
 
     if (result['success'] == true) {
