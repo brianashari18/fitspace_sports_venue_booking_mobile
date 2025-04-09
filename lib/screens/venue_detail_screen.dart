@@ -198,8 +198,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
                                 SizedBox(width: 4),
-                                Text(
-                                    totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)',
+                                Text( totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)',
                                     style: TextStyle(
                                         fontSize: 14, color: AppColors.grey)),
                               ],

@@ -10,6 +10,9 @@
         android:label="fitspace_sports_venue_booking_mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDj9YIpj3HhBUZ2dfyfEA3OzqHd-_zWZWU" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
