@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/field_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
@@ -11,6 +12,8 @@ import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import '../models/user_model.dart';
 import '../models/venue_model.dart';
+
+import 'package:fitspace_sports_venue_booking_mobile/services/field_service.dart';
 
 class VenueDetailScreen extends StatefulWidget {
   const VenueDetailScreen({super.key, required this.user, required this.venue});
@@ -31,14 +34,17 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   String firstHalf = "";
   String secondHalf = "";
   late Venue venue;
-
+  final FieldService _fieldService = FieldService();
   bool flag = true;
+
+  List<Field> fields = [];
+  num totalReview = 0;
 
   @override
   void initState() {
     super.initState();
     venue = widget.venue;
-
+    _loadFields();
     if (widget.text.length > 50) {
       firstHalf = widget.text.substring(0, 148);
       secondHalf = widget.text.substring(148, widget.text.length);
@@ -192,7 +198,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)),
                                 SizedBox(width: 4),
-                                Text('(102 Reviews)',
+                                Text(
+                                    totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)',
                                     style: TextStyle(
                                         fontSize: 14, color: AppColors.grey)),
                               ],
@@ -307,14 +314,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                           ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.zero,
-                            itemCount: venue.fields.length,
+                            itemCount: fields.length,
                             itemBuilder: (context, index) {
-                              final field = venue.fields[index];
+                              final field = fields[index];
                               return Column(
                                 children: [
                                   _cardCourt(
-                                    title: field['type'],
-                                    price: 'Rp ${field['price']}/hr',
+                                    title: field.type,
+                                    price: 'Rp ${field.price}/hr',
                                     imagePaths: const [
                                       'assets/images/dummy/venue_dummy.png'
                                     ],
@@ -453,6 +460,32 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       ),
     );
   }
+
+  Future<void> _loadFields() async {
+    final result = await _fieldService.loadFieldByVenueId(widget.user, widget.venue.id);
+
+    if (!mounted) return;  // Ensure widget is still in the widget tree
+
+    List<dynamic> fieldsData = result['data'];  // Assuming response['data'] contains your fields
+
+    for (var field in fieldsData) {
+      totalReview += field['reviews']?.length ?? 0;  // Null-safe check in case reviews is null
+    }
+
+    print("Total Reviews: $totalReview");
+
+
+    if (result['success'] == true) {
+      List<dynamic> data = result['data'];
+      setState(() {
+        fields = data.map((item) => Field.fromJson(item)).toList();
+      });
+    } else {
+      // Show error message if there is an issue loading fields
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['error'].toString())));
+    }
+  }
+
 }
 
 
