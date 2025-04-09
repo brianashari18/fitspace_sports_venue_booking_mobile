@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fitspace Mobile App',
       theme: ThemeData(useMaterial3: true, textTheme: GoogleFonts.robotoTextTheme()),
-      home: const SignInScreen(),
+      home: const SplashScreen(),
     );
   }
 }

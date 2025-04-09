@@ -1,6 +1,8 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/change_password_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/contact_us_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/my_account_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/about_us_screen.dart';
@@ -13,6 +15,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final UserService _userService = UserService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage('https://static.vecteezy.com/system/resources/previews/003/715/527/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'), // Replace with actual image URL
+                      backgroundImage: NetworkImage(
+                          'https://static.vecteezy.com/system/resources/previews/003/715/527/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'), // Replace with actual image URL
                     ),
                     SizedBox(width: 16),
                     Column(
@@ -200,12 +205,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       subtitle: subtitle != null
           ? Text(
-        subtitle,
-        style: const TextStyle(
-          fontSize: 12,
-          color: AppColors.grey,
-        ),
-      )
+              subtitle,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.grey,
+              ),
+            )
           : null,
       trailing: const Icon(
         Icons.arrow_forward_ios,
@@ -232,7 +237,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundColor: AppColors.darkerPrimaryColor.withOpacity(0.1),
+                  backgroundColor:
+                      AppColors.darkerPrimaryColor.withOpacity(0.1),
                   child: const Icon(
                     Icons.exit_to_app,
                     size: 50, // Icon size
@@ -272,7 +278,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
                       ),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -291,10 +298,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        _userService.removeUser();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const SignInScreen(),
+                          ),
+                          (route) => false,
+                        );
                       },
                       child: const Text(
                         'Logout',

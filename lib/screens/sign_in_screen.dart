@@ -1,4 +1,6 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
@@ -242,8 +244,8 @@ class SignInScreenState extends State<SignInScreen> {
                               const SizedBox(width: 5),
                               InkWell(
                                 onTap: () {
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //     builder: (context) => const RegisterScreen()));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const SignUpScreen()));
                                 },
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
@@ -341,7 +343,7 @@ class SignInScreenState extends State<SignInScreen> {
 
       // Navigate to homepage or wherever you'd like
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
+        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
         (route) => false,
       );
 
