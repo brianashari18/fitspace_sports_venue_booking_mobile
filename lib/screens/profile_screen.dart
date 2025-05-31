@@ -2,13 +2,18 @@ import 'package:fitspace_sports_venue_booking_mobile/screens/change_password_scr
 import 'package:fitspace_sports_venue_booking_mobile/screens/contact_us_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/my_account_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/google_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/about_us_screen.dart';
 
+import '../models/user_model.dart';
+
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -16,6 +21,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final UserService _userService = UserService();
+  final GoogleService _googleService = GoogleService();
 
   @override
   Widget build(BuildContext context) {
@@ -45,33 +51,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            const Card(
+             Card(
               color: AppColors.darkerPrimaryColor,
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 30,
                       backgroundImage: NetworkImage(
                           'https://static.vecteezy.com/system/resources/previews/003/715/527/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg'), // Replace with actual image URL
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Imelda Damayanti',
-                          style: TextStyle(
+                          '${widget.user.firstName} ${widget.user.lastName}',
+                          style: const TextStyle(
                             color: AppColors.baseColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          '@imeldamayanti123',
-                          style: TextStyle(
+                          widget.user.email,
+                          style: const TextStyle(
                             color: AppColors.baseColor,
                             fontSize: 14,
                           ),
@@ -303,6 +309,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       onPressed: () {
                         _userService.removeUser();
+                        _googleService.logout();
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => const SignInScreen(),

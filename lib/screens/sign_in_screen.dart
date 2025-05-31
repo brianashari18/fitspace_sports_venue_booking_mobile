@@ -2,6 +2,7 @@ import 'package:fitspace_sports_venue_booking_mobile/screens/forgot_password_scr
 import 'package:fitspace_sports_venue_booking_mobile/screens/homepage_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/google_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
@@ -21,10 +22,7 @@ class SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final AuthService _authService = AuthService();
-
-
-  // final AuthService _apiService = AuthService();
-  // final GoogleService _googleService = GoogleService();
+  final GoogleService _googleService = GoogleService();
 
   String? _emailError;
   String? _passwordError;
@@ -49,15 +47,9 @@ class SignInScreenState extends State<SignInScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/icons/fitspace.jpg',
-                    height: 150,
-                    width: 200,
-                  ),
                   const Text(
                     'Sign in to your account',
                     style: TextStyle(
@@ -214,10 +206,10 @@ class SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           icon: Transform.scale(
-                            scale: 1.5,
+                            scale: 1.5,  // Adjust this value to resize the logo
                             child: Image.asset(
-                              'assets/icons/google.png',
-                              height: 24,
+                              'assets/icons/google.png', // Google logo image
+                              height: 24, // Maintain original height
                             ),
                           ),
                           label: const Text(
@@ -310,29 +302,6 @@ class SignInScreenState extends State<SignInScreen> {
     }
 
     final result = await _authService.login(email, password);
-    if (!mounted) return;
-
-    // Validasi Password
-    if (_emailError == null && _passwordError == null) {
-      // final result = await _authService.login(email, password);
-      if (result['success'] == 'true') {
-        User user = result['user'];
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign In Successfully')));
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MainScreen(user: user)),
-              (route) => false,
-        );
-      } else {
-        final errorMessage = result['error'];
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(errorMessage)));
-      }
-    } else {
-      print('Login Failed');
-    }
 
     setState(() {
       _isSignIn = false;
@@ -366,21 +335,22 @@ class SignInScreenState extends State<SignInScreen> {
   }
 
   void _signInWithGoogle() async {
-    // final result = await _googleService.login();
-    // if (result['success'] == 'true') {
-    //   User user = result['user'];
-    //   ScaffoldMessenger.of(context).clearSnackBars();
-    //   ScaffoldMessenger.of(context)
-    //       .showSnackBar(const SnackBar(content: Text('Sign In Successfully')));
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //     MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
-    //         (route) => false,
-    //   );
-    // } else {
-    //   final errorMessage = result['error'];
-    //   ScaffoldMessenger.of(context).clearSnackBars();
-    //   ScaffoldMessenger.of(context)
-    //       .showSnackBar(SnackBar(content: Text(errorMessage)));
-    // }
+    final result = await _googleService.login();
+    if (result['success'] != false) {
+      User user = result['user'];
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Sign In Successfully')));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
+            (route) => false,
+      );
+    } else {
+      _googleService.logout();
+      final errorMessage = result['message'];
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
   }
 }

@@ -8,6 +8,10 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+dependencies {
+//    implementation platform('com.google.firebase:firebase-bom:33.14.0')
+}
+
 android {
     namespace = "com.example.fitspace_sports_venue_booking_mobile"
     compileSdk = 35
@@ -33,8 +37,17 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        debug {
+            keyAlias 'mykey'
+            keyPassword '12345678'
+            storeFile file('mykey.jks')
+            storePassword '12345678'
+        }
+    }
+
     buildTypes {
-        release {
+        debug {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug

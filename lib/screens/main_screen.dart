@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
       HomepageScreen(user: widget.user),
       const MainVenueScreen(),
       const BookingHistoryScreen(),
-      const ProfileScreen(),
+      ProfileScreen(user: widget.user),
     ];
   }
 

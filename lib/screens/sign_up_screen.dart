@@ -1,10 +1,14 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/google_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
+
+import '../models/user_model.dart';
+import 'main_screen.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -21,6 +25,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
   final AuthService _authService = AuthService();
+  final GoogleService _googleService = GoogleService();
 
 
   String? _emailError;
@@ -500,7 +505,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (password.isEmpty) {
       setState(() {
         _passwordError = 'Password cannot be empty';
-        _isSignUp = false; // Set to false on error
+        _isSignUp = false;
       });
       return;
     }
@@ -508,7 +513,7 @@ class SignUpScreenState extends State<SignUpScreen> {
     if (password != confirmPassword) {
       setState(() {
         _confirmPasswordError = 'Passwords do not match';
-        _isSignUp = false; // Set to false on error
+        _isSignUp = false;
       });
       return;
     }
@@ -524,7 +529,6 @@ class SignUpScreenState extends State<SignUpScreen> {
     }
 
     final result = await _authService.register(email, firstName, lastName, password, confirmPassword);
-    if (!mounted) return;
 
     if (result['success'] == 'true') {
       setState(() {
@@ -552,7 +556,23 @@ class SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _signUpWithGoogle() async{
-
+  void _signUpWithGoogle() async {
+    final result = await _googleService.login();
+    if (result['success'] != false) {
+      User user = result['user'];
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Sign In Successfully')));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MainScreen(user: user)),
+            (route) => false,
+      );
+    } else {
+      _googleService.logout();
+      final errorMessage = result['message'];
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(errorMessage)));
+    }
   }
 }
