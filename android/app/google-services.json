@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "156389780519",
-    "project_id": "abp-database",
-    "storage_bucket": "abp-database.firebasestorage.app"
+    "project_number": "123881503187",
+    "project_id": "fitspace-sports-venue-booking",
+    "storage_bucket": "fitspace-sports-venue-booking.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:156389780519:android:42d0c04b7783de7580f202",
+        "mobilesdk_app_id": "1:123881503187:android:8c3a29f1f5772b26d69726",
         "android_client_info": {
           "package_name": "com.example.fitspace_sports_venue_booking_mobile"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "123881503187-g21oq97dsjtjec22986e5vaj3h45ojr9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fitspace_sports_venue_booking_mobile",
+            "certificate_hash": "c7b21e81b7ad3bb12710283f7004aab10d20b822"
+          }
+        },
+        {
+          "client_id": "123881503187-uqi00lqi0ro076reg9f6rld1b76fjntk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyApqGlUmpmtfgg1ngvLZadmnzokAhnBBaY"
+          "current_key": "AIzaSyCfMR_wmQY6fevkIHoOFyUsEVqBaASHnWg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123881503187-uqi00lqi0ro076reg9f6rld1b76fjntk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

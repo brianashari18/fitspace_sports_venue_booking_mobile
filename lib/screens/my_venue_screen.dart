@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/add_venue_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.dart';
@@ -67,7 +68,10 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(color: AppColors.base),
           child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const AddVenueScreen(),));
+              },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
@@ -75,7 +79,11 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
                   backgroundColor: AppColors.darkerPrimaryColor),
               child: Text(
                 "Add Venue",
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(
                     fontWeight: FontWeight.bold, color: AppColors.base),
               )),
         ),
