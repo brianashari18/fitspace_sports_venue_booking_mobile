@@ -62,6 +62,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/icons/fitspace.jpg',
+                    height: 150,
+                    width: 200,
+                  ),
                   const Text(
                     'Create new account',
                     style: TextStyle(
@@ -195,6 +200,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     child: TextField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
+                      onChanged: _checkPassword,
                       decoration: InputDecoration(
                         labelText: 'Enter your password',
                         labelStyle: const TextStyle(
@@ -447,7 +453,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   void _validateInputs() async {
     setState(() {
-      _isSignUp = true; // Set to true at the beginning
+      _isSignUp = true;
       _emailError = null;
       _firstNameError = null;
       _lastNameError = null;
@@ -507,6 +513,16 @@ class SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
+    if (!_isChecked) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("You must agree to the User Agreement and Privacy Policy")),
+      );
+      setState(() {
+        _isSignUp = false;
+      });
+      return;
+    }
+
     final result = await _authService.register(email, firstName, lastName, password, confirmPassword);
     if (!mounted) return;
 
@@ -528,7 +544,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       } else if (result['error'] is List) {
         errorMessage = (result['error'] as List).join('\n');
       } else {
-        errorMessage = 'An unknown error occurred.'; // Handle other cases, including null.
+        errorMessage = 'An unknown error occurred.';
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),

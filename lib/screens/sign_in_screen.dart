@@ -49,9 +49,15 @@ class SignInScreenState extends State<SignInScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Image.asset(
+                    'assets/icons/fitspace.jpg',
+                    height: 150,
+                    width: 200,
+                  ),
                   const Text(
                     'Sign in to your account',
                     style: TextStyle(
@@ -208,10 +214,10 @@ class SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           icon: Transform.scale(
-                            scale: 1.5,  // Adjust this value to resize the logo
+                            scale: 1.5,
                             child: Image.asset(
-                              'assets/icons/google.png', // Google logo image
-                              height: 24, // Maintain original height
+                              'assets/icons/google.png',
+                              height: 24,
                             ),
                           ),
                           label: const Text(
@@ -304,31 +310,29 @@ class SignInScreenState extends State<SignInScreen> {
     }
 
     final result = await _authService.login(email, password);
-
     if (!mounted) return;
 
-
     // Validasi Password
-    // if (_emailError == null && _passwordError == null) {
-    //   final result = await _apiService.login(email, password);
-    //   if (result['success'] == 'true') {
-    //     User user = result['user'];
-    //     ScaffoldMessenger.of(context).clearSnackBars();
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(content: Text('Sign In Successfully')));
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //       MaterialPageRoute(builder: (context) => HomepageScreen(user: user)),
-    //           (route) => false,
-    //     );
-    //   } else {
-    //     final errorMessage = result['error'];
-    //     ScaffoldMessenger.of(context).clearSnackBars();
-    //     ScaffoldMessenger.of(context)
-    //         .showSnackBar(SnackBar(content: Text(errorMessage)));
-    //   }
-    // } else {
-    //   print('Login Failed');
-    // }
+    if (_emailError == null && _passwordError == null) {
+      // final result = await _authService.login(email, password);
+      if (result['success'] == 'true') {
+        User user = result['user'];
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sign In Successfully')));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MainScreen(user: user)),
+              (route) => false,
+        );
+      } else {
+        final errorMessage = result['error'];
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
+    } else {
+      print('Login Failed');
+    }
 
     setState(() {
       _isSignIn = false;

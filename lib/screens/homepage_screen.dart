@@ -147,7 +147,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
           ),
         ),
       ),
-      endDrawer: const FilterDrawer(),
+      endDrawer: FilterDrawer(onFilterApplied: (FilterOptions ) {  },),
     );
   }
 
