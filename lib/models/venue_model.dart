@@ -11,7 +11,7 @@ class Venue {
   final double longitude;
   final double rating;
   final List<Map<String, dynamic>> fields;
-  final Map<String, dynamic> owner;// Store the owner as a map
+  final Map<String, dynamic> owner;
 
   Venue({
     required this.id,
