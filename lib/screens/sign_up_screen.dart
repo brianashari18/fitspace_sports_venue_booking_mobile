@@ -69,9 +69,9 @@ class SignUpScreenState extends State<SignUpScreen> {
                 children: [
                   Image.asset(
                     'assets/icons/fitspace.jpg',
-                    height: 150,
-                    width: 200,
+                    scale: 4.5,
                   ),
+                  const SizedBox(height: 10),
                   const Text(
                     'Create new account',
                     style: TextStyle(
@@ -80,7 +80,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       color: AppColors.darkerPrimaryColor,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height:10),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -92,7 +92,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -115,7 +115,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -127,7 +127,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -150,7 +150,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -162,7 +162,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -185,7 +185,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -197,7 +197,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -234,7 +234,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -246,7 +246,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -282,7 +282,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
                   Row(
                     children: <Widget>[
                       Checkbox(
@@ -334,7 +334,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 10),
                   Column(
                     children: [
                       SizedBox(
@@ -393,7 +393,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 80),
+                      padding: const EdgeInsets.only(top: 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

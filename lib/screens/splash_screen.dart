@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/start_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SignInScreen()),
+          MaterialPageRoute(builder: (context) => const StartScreen()),
         );
       }
     } catch (e) {
@@ -42,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await Future.delayed(const Duration(seconds: 2));
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()),
+        MaterialPageRoute(builder: (context) => const StartScreen()),
       );
     }
   }

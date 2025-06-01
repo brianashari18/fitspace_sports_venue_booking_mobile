@@ -28,6 +28,7 @@ import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart
 import 'package:fitspace_sports_venue_booking_mobile/screens/splash_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/start_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/venue_detail_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +54,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fitspace Mobile App',
       theme: ThemeData(useMaterial3: true, textTheme: GoogleFonts.robotoTextTheme()),
-      home: HomepageScreen(user: User(id:1, email: "email", token: "token", firstName: "firstName")),
+      home: const AllRecommendCourtScreen(),
     );
   }
 }
+
+// HomepageScreen(user: User(id:1, email: "email", token: "token", firstName: "firstName")),

@@ -69,8 +69,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100},
-        {'type': 'Outdoor Stage', 'capacity': 1000},
+        {'type': 'Gallery', 'capacity': 100, 'price': 100000},
+        {'type': 'Outdoor Stage', 'capacity': 1000, 'price': 100000},
       ],
       owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
     ),
@@ -87,7 +87,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300},
+        {'type': 'Theater', 'capacity': 300, 'price': 100000},
       ],
       owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
     ),
@@ -104,7 +104,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800},
+        {'type': 'Event Space', 'capacity': 800, 'price': 100000},
       ],
       owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
     ),
@@ -121,7 +121,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150},
+        {'type': 'Conference Center', 'capacity': 150, 'price': 100000},
       ],
       owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
     ),
@@ -140,8 +140,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
     longitude: -74.0060,
     rating: 4.5,
     fields: [
-      {'type': 'Concert Hall', 'capacity': 500},
-      {'type': 'Conference Room', 'capacity': 200},
+      {'type': 'Concert Hall', 'capacity': 500, 'price': 100000},
+      {'type': 'Conference Room', 'capacity': 200, 'price': 100000},
     ],
     owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
   ),
@@ -158,8 +158,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100},
-        {'type': 'Outdoor Stage', 'capacity': 1000},
+        {'type': 'Gallery', 'capacity': 100, 'price': 100000},
+        {'type': 'Outdoor Stage', 'capacity': 1000, 'price': 100000},
       ],
       owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
     ),
@@ -176,7 +176,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300},
+        {'type': 'Theater', 'capacity': 300, 'price': 100000},
       ],
       owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
     ),
@@ -193,7 +193,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800},
+        {'type': 'Event Space', 'capacity': 800, 'price': 100000},
       ],
       owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
     ),
@@ -210,7 +210,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150},
+        {'type': 'Conference Center', 'capacity': 150, 'price': 100000},
       ],
       owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
     ),
@@ -229,8 +229,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
     longitude: -74.0060,
     rating: 4.5,
     fields: [
-      {'type': 'Concert Hall', 'capacity': 500},
-      {'type': 'Conference Room', 'capacity': 200},
+      {'type': 'Concert Hall', 'capacity': 500, 'price': 100000},
+      {'type': 'Conference Room', 'capacity': 200, 'price': 100000},
     ],
     owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
   ),
@@ -247,8 +247,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100},
-        {'type': 'Outdoor Stage', 'capacity': 1000},
+        {'type': 'Gallery', 'capacity': 100, 'price': 100000},
+        {'type': 'Outdoor Stage', 'capacity': 1000, 'price': 100000},
       ],
       owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
     ),
@@ -265,7 +265,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300},
+        {'type': 'Theater', 'capacity': 300, 'price': 100000},
       ],
       owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
     ),
@@ -282,7 +282,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800},
+        {'type': 'Event Space', 'capacity': 800, 'price': 100000},
       ],
       owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
     ),
@@ -299,7 +299,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150},
+        {'type': 'Conference Center', 'capacity': 150, 'price': 100000},
       ],
       owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
     ),
@@ -564,7 +564,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       Row(
         children: [
           const Text('Start From: ', style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
-          Text(venue.fields.isNotEmpty ? 'IDR ${venue.fields.first['price']}' : 'IDR N/A', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
+          Text(venue.fields.isNotEmpty ? 'IDR ${venue.fields[0]['price']}' : 'IDR N/A',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
         ],
       ),
     ];

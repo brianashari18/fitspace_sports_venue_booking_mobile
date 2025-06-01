@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/sign_up_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/carousel_widget.dart';
@@ -22,7 +23,12 @@ class StartScreen extends StatelessWidget {
                 width: double.infinity, // Full width
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.darkerPrimaryColor,
                     foregroundColor: Colors.white,
