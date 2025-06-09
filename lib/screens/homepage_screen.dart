@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:fitspace_sports_venue_booking_mobile/models/field_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/notification_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/venue_detail_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/filter_drawer.dart';
@@ -51,10 +52,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -74.0060,
       rating: 4.5,
       fields: [
-        {'type': 'Concert Hall', 'capacity': 500},
-        {'type': 'Conference Room', 'capacity': 200},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 2,
@@ -69,10 +69,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100},
-        {'type': 'Outdoor Stage', 'capacity': 1000},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 3,
@@ -87,9 +86,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 4,
@@ -104,9 +103,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 5,
@@ -121,9 +120,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
   ];
   List<Venue> nearbyVenues = [
@@ -139,11 +138,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
     latitude: 40.7128,
     longitude: -74.0060,
     rating: 4.5,
-    fields: [
-      {'type': 'Concert Hall', 'capacity': 500},
-      {'type': 'Conference Room', 'capacity': 200},
-    ],
-    owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
+      fields: [
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
+      ],
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
   ),
     Venue(
       id: 2,
@@ -157,11 +155,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
       latitude: 34.0522,
       longitude: -118.2437,
       rating: 4.2,
-      fields: [
-        {'type': 'Gallery', 'capacity': 100},
-        {'type': 'Outdoor Stage', 'capacity': 1000},
-      ],
-      owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
+        fields: [
+          Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
+        ],
+        owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 3,
@@ -176,9 +173,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 4,
@@ -193,9 +190,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 5,
@@ -210,9 +207,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
   ];
   List<Venue> recommendedVenues = [
@@ -228,11 +225,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
     latitude: 40.7128,
     longitude: -74.0060,
     rating: 4.5,
-    fields: [
-      {'type': 'Concert Hall', 'capacity': 500},
-      {'type': 'Conference Room', 'capacity': 200},
-    ],
-    owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
+      fields: [
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
+      ],
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
   ),
     Venue(
       id: 2,
@@ -247,10 +243,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100},
-        {'type': 'Outdoor Stage', 'capacity': 1000},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 3,
@@ -265,9 +260,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 4,
@@ -282,9 +277,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
     Venue(
       id: 5,
@@ -299,9 +294,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150},
+        Field(id: 1, venueId: 2, price: 100000, type: 'Futsal', fieldSchedules: [], review: [])
       ],
-      owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
+      owner: User(id: 1, email: 'test@example.com', token: '10293192jd1kdj1io2dj1oijd', firstName: 'firstName'),
     ),
   ];
   bool _isLoading = true;
@@ -470,7 +465,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   Widget _venueCard(Venue venue, {bool isHorizontal = false}) {
     double? distance = _currentPosition != null
-        ? _calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, venue.latitude, venue.longitude)
+        ? _calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, venue.latitude!, venue.longitude!)
         : null;
 
     return GestureDetector(
@@ -540,20 +535,20 @@ class _HomepageScreenState extends State<HomepageScreen> {
           spacing: 5,
           runSpacing: 5,
           alignment: WrapAlignment.start,
-          children: venue.fields.isNotEmpty
-              ? venue.fields.map((tag) {
-            return fieldTag(tag['type']);  // Access 'type' from the map
+          children: venue.fields!.isNotEmpty
+              ? venue.fields!.map((tag) {
+            return fieldTag(tag.type!);  // Access 'type' from the map
           }).toList()
               : [SizedBox(height: 25)],
         ),
       ),
       const SizedBox(height: 5),
-      Text(venue.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      Text(venue.name!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       const SizedBox(height: 5),
       Row(
         children: [
           const Icon(Icons.location_on, size: 20, color: AppColors.darkGrey),
-          Text(venue.cityOrRegency, style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
+          Text(venue.cityOrRegency!, style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
           const SizedBox(width: 5),
           const Text('|', style: TextStyle(color: AppColors.darkGrey)),
           const SizedBox(width: 5),
@@ -564,7 +559,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       Row(
         children: [
           const Text('Start From: ', style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
-          Text(venue.fields.isNotEmpty ? 'IDR ${venue.fields.first['price']}' : 'IDR N/A', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
+          Text(venue.fields!.isNotEmpty ? 'IDR ${venue.fields!.first.price}' : 'IDR N/A', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
         ],
       ),
     ];

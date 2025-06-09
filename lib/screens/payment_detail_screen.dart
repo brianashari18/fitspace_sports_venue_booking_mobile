@@ -27,15 +27,15 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
   int? _selectedTile;
 
   final List<Map<String, String>> _banks = [
-    {"name": "Bank BCA", "image": "assets/images/payment/va.png"},
-    {"name": "Bank Mandiri", "image": "assets/images/payment/va.png"},
-    {"name": "Bank BNI", "image": "assets/images/payment/va.png"},
-    {"name": "Bank BRI", "image": "assets/images/payment/va.png"},
-    {"name": "Bank CIMB Niaga", "image": "assets/images/payment/va.png"},
-    {"name": "Bank Danamon", "image": "assets/images/payment/va.png"},
-    {"name": "Bank Permata", "image": "assets/images/payment/va.png"},
-    {"name": "Bank Maybank Indonesia", "image": "assets/images/payment/va.png"},
-    {"name": "Bank OCBC NISP", "image": "assets/images/payment/va.png"},
+    {"name": "Bank BCA", "image": "assets/images/payments/va.png"},
+    {"name": "Bank Mandiri", "image": "assets/images/payments/va.png"},
+    {"name": "Bank BNI", "image": "assets/images/payments/va.png"},
+    {"name": "Bank BRI", "image": "assets/images/payments/va.png"},
+    {"name": "Bank CIMB Niaga", "image": "assets/images/payments/va.png"},
+    {"name": "Bank Danamon", "image": "assets/images/payments/va.png"},
+    {"name": "Bank Permata", "image": "assets/images/payments/va.png"},
+    {"name": "Bank Maybank Indonesia", "image": "assets/images/payments/va.png"},
+    {"name": "Bank OCBC NISP", "image": "assets/images/payments/va.png"},
   ];
 
   void _onSubmit() {
@@ -490,7 +490,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                         },
                         tilePadding: const EdgeInsets.all(0),
                         shape: const Border(),
-                        leading: Image.asset("assets/images/payment/qrish.png"),
+                        leading: Image.asset("assets/images/payments/qrish.png"),
                         title: Text(
                           "QR Code",
                           style: Theme.of(context)
@@ -509,7 +509,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                       ExpansionTile(
                         tilePadding: const EdgeInsets.all(0),
                         shape: const Border(),
-                        leading: Image.asset("assets/images/payment/va.png"),
+                        leading: Image.asset("assets/images/payments/va.png"),
                         title: Text(
                           "Virtual Account",
                           style: Theme.of(context)
@@ -561,7 +561,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                         shape: const Border(),
                         tilePadding: const EdgeInsets.all(0),
                         leading:
-                            Image.asset("assets/images/payment/credit.png"),
+                            Image.asset("assets/images/payments/credit.png"),
                         title: Text(
                           "Credit Card",
                           style: Theme.of(context)

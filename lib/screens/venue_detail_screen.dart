@@ -67,7 +67,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       });
     });
 
-    DateTime createdAtDate = DateTime.parse(widget.venue.owner['createdAt']);
+    // DateTime createdAtDate = DateTime.parse(widget.venue.owner['createdAt']);
+    DateTime createdAtDate = DateTime.now();
     DateTime currentDate = DateTime.now();
     int daysDifference = currentDate.difference(createdAtDate).inDays;
     String joinTime = "";
@@ -179,9 +180,9 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
-                              children: venue.fields.isNotEmpty
-                                  ? venue.fields.map((field) {
-                                return _buildButton(field['type']);
+                              children: venue.fields!.isNotEmpty
+                                  ? venue.fields!.map((field) {
+                                return _buildButton(field.type!);
                               }).toList()
                                   : [SizedBox(height: 25)],
                             ),
@@ -214,7 +215,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.venue.name,
+                            widget.venue.name!,
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -287,7 +288,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${widget.venue.owner['firstName']} ${widget.venue.owner['lastName']}',
+                                    '${widget.venue.owner!.firstName!} ${widget.venue.owner!.lastName!}',
                                     style: TextStyle(
                                         color: AppColors.darkGrey,
                                         fontWeight: FontWeight.bold),
@@ -320,7 +321,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               return Column(
                                 children: [
                                   _cardCourt(
-                                    title: field.type,
+                                    title: field.type!,
                                     price: 'Rp ${field.price}/hr',
                                     imagePaths: const [
                                       'assets/images/dummy/venue_dummy.png'
@@ -462,7 +463,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   }
 
   Future<void> _loadFields() async {
-    final result = await _fieldService.loadFieldByVenueId(widget.user, widget.venue.id);
+    final result = await _fieldService.loadFieldByVenueId(widget.user, widget.venue.id!);
 
     if (!mounted) return;  // Ensure widget is still in the widget tree
 
@@ -480,7 +481,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       print('tot : $tempTotal');
       tempRating = 0;
     }
-    totalRating = tempTotal / widget.venue.fields.length;
+    totalRating = tempTotal / widget.venue.fields!.length;
 
     print("Total Reviews: $totalReview");
     print('res : ${result['data'][0]['reviews']}');

@@ -42,9 +42,12 @@ class AuthService {
             id: userData['id'],
             email: email,
             token: token,
-            firstName: userData['firstName'],
-            lastName: userData['lastName'],
+            firstName: userData['first_name'],
+            lastName: userData['last_name'],
           );
+
+          print('USER $user');
+
           await _userService.saveUser(user);
 
           return {'success': 'true', 'user': user};
@@ -77,10 +80,10 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'email': email,
-          'firstName': firstName,
-          'lastName': lastName,
+          'first_name': firstName,
+          'last_name': lastName,
           'password': password,
-          'confirmPassword': confirmPassword
+          'confirm_password': confirmPassword
         }),
       );
 
@@ -157,8 +160,8 @@ class AuthService {
         Uri.parse('$_baseUrl/reset-password'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'newPassword': newPassword,
-          'confirmPassword': confirmPassword,
+          'new_password': newPassword,
+          'confirm_password': confirmPassword,
           'email': email
         }),
       );
@@ -188,8 +191,8 @@ class AuthService {
           'Authorization': 'Bearer ${user.token}'
         },
         body: json.encode({
-          'firstName': firstName,
-          'lastName' : lastName
+          'first_name': firstName,
+          'last_name' : lastName
         }),
       );
 
@@ -217,7 +220,7 @@ class AuthService {
         },
         body: json.encode({
           'password' : password,
-          'confirmPassword' : confirmPassword
+          'confirm_password' : confirmPassword
         }),
       );
 

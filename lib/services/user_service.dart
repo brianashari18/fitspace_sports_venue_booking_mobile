@@ -12,10 +12,10 @@ class UserService {
 
   Future<void> saveUser(User user) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('id', user.id);
-    prefs.setString('email', user.email);
-    prefs.setString('token', user.token);
-    prefs.setString('firstName', user.firstName);
+    prefs.setInt('id', user.id!);
+    prefs.setString('email', user.email!);
+    prefs.setString('token', user.token!);
+    prefs.setString('firstName', user.firstName!);
     if(user.lastName != null) {
       prefs.setString('lastName', user.lastName!);
     }

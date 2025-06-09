@@ -69,13 +69,18 @@ class GoogleService {
           final userBody = json.decode(responseUser.body);
           final userData = userBody['data'];
 
+          print('body $userBody');
+
           final user = User(
             id: userData['id'],
             email: userData['email'],
             token: token,
-            firstName: userData['firstName'],
-            lastName: userData['lastName'],
+            firstName: userData['first_name'],
+            lastName: userData['last_name'],
           );
+
+          print('USER ${user.firstName}');
+
           await _userService.saveUser(user);
 
           return {

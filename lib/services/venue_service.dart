@@ -9,12 +9,11 @@ class VenueService{
   final _baseUrl =
       "http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}/api/venues";
 
-  // Create Venue
   Future<Map<String, dynamic>> create(User user, String name, String phoneNumber, String street, String district,
       String cityOrRegency, String province, String postalCode, double latitude, double longitude ) async{
     try{
       final response = await http.post(
-        Uri.parse('$_baseUrl/'),
+        Uri.parse('$_baseUrl/createVenue'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${user.token}'

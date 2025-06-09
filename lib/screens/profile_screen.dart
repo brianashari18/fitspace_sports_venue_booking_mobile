@@ -1,6 +1,7 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/change_password_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/contact_us_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/my_account_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/my_venue_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/sign_in_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/google_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
@@ -51,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-             Card(
+            Card(
               color: AppColors.darkerPrimaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -76,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          widget.user.email,
+                          widget.user.email!,
                           style: const TextStyle(
                             color: AppColors.baseColor,
                             fontSize: 14,
@@ -125,7 +126,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.inventory_2_outlined,
                       title: 'My Venue',
                       subtitle: 'Manage your listed venues and bookings',
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const MyVenueScreen(),
+                        ));
+                      },
                     ),
                     _buildListTile(
                       icon: Icons.exit_to_app,

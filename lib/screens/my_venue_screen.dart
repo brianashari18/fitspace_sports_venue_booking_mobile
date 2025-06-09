@@ -1,7 +1,11 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/add_venue_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.dart';
+
+import '../models/venue_model.dart';
 
 class MyVenueScreen extends StatefulWidget {
   const MyVenueScreen({super.key});
@@ -11,6 +15,9 @@ class MyVenueScreen extends StatefulWidget {
 }
 
 class _MyVenueScreenState extends State<MyVenueScreen> {
+  final _venueService = VenueService();
+  final _userService = UserService();
+
   List<Map<String, dynamic>> venues = [
     {
       'name': 'Progresif Sports',
@@ -23,6 +30,16 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
       'tags': ['Football', 'Basketball'],
     }
   ];
+
+  var _myVenues = [];
+
+  var _isLoad = true;
+
+  @override
+  void initState() {
+    _loadVenues();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,5 +127,30 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
         ),
       ),
     );
+  }
+
+  void _loadVenues() async {
+    final user = await _userService.getUser();
+    if (user == null) {
+      setState(() {
+        _isLoad = false;
+      });
+      return;
+    }
+
+    final result = await _venueService.loadVenue(user);
+    print('res : $result');
+
+    if (result['success'] == 'true') {
+      List<dynamic> data = result['data'];
+      setState(() {
+        _myVenues = data.map((item) => Venue.fromJson(item)).toList();
+        print(_myVenues);
+        _isLoad = false;
+      });
+    } else {
+      setState(() => _isLoad = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['error'].toString())));
+    }
   }
 }
