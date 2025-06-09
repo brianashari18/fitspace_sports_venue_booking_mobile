@@ -45,10 +45,10 @@ class Venue {
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
       rating: (json['rating'] as num).toDouble() ?? 0,
-      fields: List<dynamic>.from(json['fields'] as List).map((e) {
-        return Field.fromJson(json['fields']);
-      },).toList(),
-      owner: User.fromJson(json['user']),
+      fields: json['fields'] != null
+          ? List<Field>.from(json['fields'].map((e) => Field.fromJson(e)))
+          : [],
+      owner: json['owner'] != null ? User.fromJson(json['owner']) : User.empty(),
     );
   }
 
@@ -68,5 +68,10 @@ class Venue {
       'fields': fields?.map((e) => Field().toJson(),).toList(),
       'owner': owner,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Venue{id: $id, name: $name, phoneNumber: $phoneNumber, street: $street, district: $district, cityOrRegency: $cityOrRegency, province: $province, postalCode: $postalCode, latitude: $latitude, longitude: $longitude, rating: $rating, owner: $owner, fields: $fields}';
   }
 }

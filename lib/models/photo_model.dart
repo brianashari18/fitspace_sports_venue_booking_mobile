@@ -10,7 +10,7 @@ class Photo {
     return Photo(
       id: json['id'],
       fieldId: json['field_id'],
-      photoUrl: json['photo_url'],
+      photoUrl: json['photoUrl'],
       description: json['description']
     );
   }
@@ -22,5 +22,10 @@ class Photo {
       'photo_url': photoUrl,
       'description': description,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Photo{id: $id, fieldId: $fieldId, photoUrl: $photoUrl, description: $description}';
   }
 }

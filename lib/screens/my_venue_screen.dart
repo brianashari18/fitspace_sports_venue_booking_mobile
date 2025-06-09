@@ -138,7 +138,7 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
       return;
     }
 
-    final result = await _venueService.loadVenue(user);
+    final result = await _venueService.loadVenues(user);
     print('res : $result');
 
     if (result['success'] == 'true') {

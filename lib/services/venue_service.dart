@@ -48,7 +48,7 @@ class VenueService{
   }
 
   // Get All venue
-Future<Map<String,dynamic>> loadVenue(User user) async {
+Future<Map<String,dynamic>> loadVenues(User user) async {
     try {
       final response = await http.get(
           Uri.parse(_baseUrl),

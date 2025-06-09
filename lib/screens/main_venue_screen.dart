@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.dart';
@@ -10,6 +15,11 @@ class MainVenueScreen extends StatefulWidget {
 }
 
 class _MainVenueScreenState extends State<MainVenueScreen> {
+  final _venueService = VenueService();
+  final _userService = UserService();
+
+  List<Venue> _venues = [];
+
   List<Map<String, dynamic>> venues = [
     {
       'name': 'Progresif Sports',
@@ -54,6 +64,17 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
   ];
 
   @override
+  void initState() {
+    _loadVenues();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.whitePurple,
@@ -94,20 +115,25 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
       ),
       body: SafeArea(
         child: ListView.builder(
-          itemCount: venues.length,
+          itemCount: _venues.length,
           itemBuilder: (context, index) {
-            var venue = venues[index];
+            Venue venue = _venues[index];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CardVenueWidget(
-                imagePath: venue['imagePath'],
-                tags: List<String>.from(venue['tags']),
-                rating: venue['rating'],
-                name: venue['name'],
-                location: venue['location'],
-                price: venue['price'],
-                latitude: venue['latitude'],
-                longitude: venue['longitude'],
+                imagePath: venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : '',
+                tags: List<String>.from(venue.fields!.map((e) => e.type,)),
+                rating: venue.rating!,
+                name: venue.name!,
+                location: venue.cityOrRegency!,
+                price: venue.fields != null && venue.fields!.isNotEmpty
+                    ? venue.fields!
+                    .map((e) => e.price)
+                    .reduce((a, b) => min(a!, b!))!.toDouble()
+                    : 0,
+
+                latitude: venue.latitude,
+                longitude: venue.longitude,
               ),
             );
           },
@@ -115,4 +141,40 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
       ),
     );
   }
+
+  void _loadVenues() async {
+    final user = await _userService.getUser();
+
+    if (user == null) {
+      return;
+    }
+
+    final result = await _venueService.loadVenues(user);
+
+    if (result['success'] == 'true') {
+      final data = result['data'];
+      print('Data: $data');
+
+
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        setState(() {
+          _venues = List<Venue>.from(data.map((e) => Venue.fromJson(e)));
+          for (var venue in _venues) {
+            print(venue);
+          }
+        });
+      }
+    } else {
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+  }
+
 }

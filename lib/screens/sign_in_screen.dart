@@ -50,6 +50,11 @@ class SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Image.asset(
+                    'assets/icons/fitspace.jpg',
+                    scale: 4.5,
+                  ),
+                  const SizedBox(height: 20),
                   const Text(
                     'Sign in to your account',
                     style: TextStyle(
@@ -166,7 +171,7 @@ class SignInScreenState extends State<SignInScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 35),
+                  const SizedBox(height: 150),
                   Column(
                     children: [
                       // Sign in button at the top

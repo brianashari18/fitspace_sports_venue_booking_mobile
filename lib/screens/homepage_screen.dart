@@ -406,7 +406,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
           ),
         ),
       ),
-      endDrawer: const FilterDrawer(),
     );
   }
 
@@ -594,7 +593,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   Future<void> _loadVenues() async {
-    final result = await _venueService.loadVenue(widget.user);
+    final result = await _venueService.loadVenues(widget.user);
     print('res : $result');
 
     if (!mounted) return;

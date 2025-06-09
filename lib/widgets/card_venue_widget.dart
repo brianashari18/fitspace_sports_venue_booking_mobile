@@ -8,7 +8,7 @@ class CardVenueWidget extends StatefulWidget {
   final double rating;
   final String name;
   final String location;
-  final String price;
+  final double price;
   final double? latitude;
   final double? longitude;
 
@@ -72,11 +72,25 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  widget.imagePath,
+                child: Image.network(
+                  'http://192.168.18.11:8080${widget.imagePath}',
                   width: double.infinity,
                   height: 100,
                   fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+
                 ),
               ),
               const SizedBox(height: 10),
@@ -168,7 +182,7 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
                         ),
                       ),
                       Text(
-                        widget.price,
+                        '${widget.price}',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

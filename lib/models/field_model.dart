@@ -26,30 +26,23 @@ class Field {
 
   factory Field.fromJson(Map<String, dynamic> json) {
     return Field(
-        id: json['id'],
-        venueId: json['venueId'],
-        price: json['price'],
-        type: json['type'],
-        gallery: List<Map<String, dynamic>>.from(json['gallery'])
-            .map(
-              (e) => Photo.fromJson(e),
-            )
-            .toList(),
-        fieldSchedules: List<Map<String, dynamic>>.from(json['fieldSchedules'])
-            .map(
-              (e) => FieldSchedule.fromJson(e),
-            )
-            .toList(),
-        review: List<Map<String, dynamic>>.from(json['reviews'])
-            .map(
-              (e) => Review.fromJson(e),
-            )
-            .toList(),
-        bookings: List<Map<String, dynamic>>.from(json['bookings'])
-            .map(
-              (e) => Booking.fromJson(e),
-            )
-            .toList());
+      id: json['id'],
+      venueId: json['venueId'],
+      price: json['price'],
+      type: json['type'],
+      gallery: json['gallery'] != null
+          ? List<Photo>.from(json['gallery'].map((e) => Photo.fromJson(e)))
+          : [], // If gallery is null, return an empty list
+      fieldSchedules: json['field_schedules'] != null
+          ? List<FieldSchedule>.from(json['field_schedules'].map((e) => FieldSchedule.fromJson(e)))
+          : [], // If field_schedules is null, return an empty list
+      review: json['reviews'] != null
+          ? List<Review>.from(json['reviews'].map((e) => Review.fromJson(e)))
+          : [], // If reviews is null, return an empty list
+      bookings: json['bookings'] != null
+          ? List<Booking>.from(json['bookings'].map((e) => Booking.fromJson(e)))
+          : [], // If bookings is null, return an empty list
+    );
   }
 
   Map<String, dynamic> toJson() {

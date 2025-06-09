@@ -13,6 +13,16 @@ class User {
     this.lastName,
   });
 
+  factory User.empty() {
+    return User(
+      id: 0,
+      email: '',
+      token: '',
+      firstName: '',
+      lastName: ''
+    );
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
         id: json['id'],
