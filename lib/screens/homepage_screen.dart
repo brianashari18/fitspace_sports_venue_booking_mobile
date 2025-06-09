@@ -19,6 +19,7 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen> {
   String? selectedLocation;
+  String? selectedField;
   TextEditingController searchController = TextEditingController();
   List<String> selectedSports = [];
   Position? _currentPosition;
@@ -44,15 +45,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '123-456-7890',
       street: '123 Main St',
       district: 'Central District',
-      cityOrRegency: 'City A',
+      cityOrRegency: 'Kota Bandung',
       province: 'Province A',
       postalCode: '12345',
-      latitude: 40.7128,
-      longitude: -74.0060,
+      latitude: -6.969090300826367,
+      longitude: 107.62818918160181,
       rating: 4.5,
       fields: [
-        {'type': 'Concert Hall', 'capacity': 500},
-        {'type': 'Conference Room', 'capacity': 200},
+        {'type': 'Futsal', 'capacity': 500, 'price': 250000},
+        {'type': 'Basketball', 'capacity': 200, 'price': 450000},
       ],
       owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
     ),
@@ -62,15 +63,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '987-654-3210',
       street: '456 Park Ave',
       district: 'East District',
-      cityOrRegency: 'City B',
+      cityOrRegency: 'Kabupaten Bandung',
       province: 'Province B',
       postalCode: '67890',
       latitude: 34.0522,
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100, 'price': 100000},
-        {'type': 'Outdoor Stage', 'capacity': 1000, 'price': 100000},
+        {'type': 'Badminton', 'capacity': 100, 'price': 100000},
+        {'type': 'Volleyball', 'capacity': 1000, 'price': 300000},
       ],
       owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
     ),
@@ -80,14 +81,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '555-123-4567',
       street: '789 Sunset Blvd',
       district: 'West District',
-      cityOrRegency: 'City C',
+      cityOrRegency: 'Kabupaten Bandung Barat',
       province: 'Province C',
       postalCode: '23456',
       latitude: 51.5074,
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300, 'price': 100000},
+        {'type': 'Badminton', 'capacity': 300, 'price': 100000},
       ],
       owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
     ),
@@ -97,14 +98,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '222-333-4444',
       street: '321 Ocean Ave',
       district: 'South District',
-      cityOrRegency: 'City D',
+      cityOrRegency: 'Kota Bandung',
       province: 'Province D',
       postalCode: '34567',
       latitude: 48.8566,
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800, 'price': 100000},
+        {'type': 'Basketball', 'capacity': 800, 'price': 500000},
       ],
       owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
     ),
@@ -114,52 +115,52 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '666-777-8888',
       street: '654 River Rd',
       district: 'North District',
-      cityOrRegency: 'City E',
+      cityOrRegency: 'Kabupaten Bandung',
       province: 'Province E',
       postalCode: '45678',
       latitude: 35.6895,
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150, 'price': 100000},
+        {'type': 'Futsal', 'capacity': 150, 'price': 150000},
       ],
       owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
     ),
   ];
   List<Venue> nearbyVenues = [
     Venue(
-    id: 1,
-    name: 'Venue One',
-    phoneNumber: '123-456-7890',
-    street: '123 Main St',
-    district: 'Central District',
-    cityOrRegency: 'City A',
-    province: 'Province A',
-    postalCode: '12345',
-    latitude: 40.7128,
-    longitude: -74.0060,
-    rating: 4.5,
-    fields: [
-      {'type': 'Concert Hall', 'capacity': 500, 'price': 100000},
-      {'type': 'Conference Room', 'capacity': 200, 'price': 100000},
-    ],
-    owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
-  ),
+      id: 1,
+      name: 'Venue One',
+      phoneNumber: '123-456-7890',
+      street: '123 Main St',
+      district: 'Central District',
+      cityOrRegency: 'Kota Bandung',
+      province: 'Province A',
+      postalCode: '12345',
+      latitude: 40.7128,
+      longitude: -74.0060,
+      rating: 4.5,
+      fields: [
+        {'type': 'Futsal', 'capacity': 500, 'price': 250000},
+        {'type': 'Basketball', 'capacity': 200, 'price': 450000},
+      ],
+      owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
+    ),
     Venue(
       id: 2,
       name: 'Venue Two',
       phoneNumber: '987-654-3210',
       street: '456 Park Ave',
       district: 'East District',
-      cityOrRegency: 'City B',
+      cityOrRegency: 'Kabupaten Bandung',
       province: 'Province B',
       postalCode: '67890',
       latitude: 34.0522,
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100, 'price': 100000},
-        {'type': 'Outdoor Stage', 'capacity': 1000, 'price': 100000},
+        {'type': 'Badminton', 'capacity': 100, 'price': 100000},
+        {'type': 'Volleyball', 'capacity': 1000, 'price': 300000},
       ],
       owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
     ),
@@ -169,14 +170,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '555-123-4567',
       street: '789 Sunset Blvd',
       district: 'West District',
-      cityOrRegency: 'City C',
+      cityOrRegency: 'Kabupaten Bandung Barat',
       province: 'Province C',
       postalCode: '23456',
       latitude: 51.5074,
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300, 'price': 100000},
+        {'type': 'Badminton', 'capacity': 300, 'price': 100000},
       ],
       owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
     ),
@@ -186,14 +187,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '222-333-4444',
       street: '321 Ocean Ave',
       district: 'South District',
-      cityOrRegency: 'City D',
+      cityOrRegency: 'Kota Bandung',
       province: 'Province D',
       postalCode: '34567',
       latitude: 48.8566,
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800, 'price': 100000},
+        {'type': 'Basketball', 'capacity': 800, 'price': 500000},
       ],
       owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
     ),
@@ -203,52 +204,52 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '666-777-8888',
       street: '654 River Rd',
       district: 'North District',
-      cityOrRegency: 'City E',
+      cityOrRegency: 'Kabupaten Bandung',
       province: 'Province E',
       postalCode: '45678',
       latitude: 35.6895,
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150, 'price': 100000},
+        {'type': 'Futsal', 'capacity': 150, 'price': 150000},
       ],
       owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
     ),
   ];
   List<Venue> recommendedVenues = [
     Venue(
-    id: 1,
-    name: 'Venue One',
-    phoneNumber: '123-456-7890',
-    street: '123 Main St',
-    district: 'Central District',
-    cityOrRegency: 'City A',
-    province: 'Province A',
-    postalCode: '12345',
-    latitude: 40.7128,
-    longitude: -74.0060,
-    rating: 4.5,
-    fields: [
-      {'type': 'Concert Hall', 'capacity': 500, 'price': 100000},
-      {'type': 'Conference Room', 'capacity': 200, 'price': 100000},
-    ],
-    owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
-  ),
+      id: 1,
+      name: 'Venue One',
+      phoneNumber: '123-456-7890',
+      street: '123 Main St',
+      district: 'Central District',
+      cityOrRegency: 'Kota Bandung',
+      province: 'Province A',
+      postalCode: '12345',
+      latitude: 40.7128,
+      longitude: -74.0060,
+      rating: 4.5,
+      fields: [
+        {'type': 'Futsal', 'capacity': 500, 'price': 250000},
+        {'type': 'Basketball', 'capacity': 200, 'price': 450000},
+      ],
+      owner: {'name': 'Owner One', 'contact': 'owner1@example.com'},
+    ),
     Venue(
       id: 2,
       name: 'Venue Two',
       phoneNumber: '987-654-3210',
       street: '456 Park Ave',
       district: 'East District',
-      cityOrRegency: 'City B',
+      cityOrRegency: 'Kabupaten Bandung',
       province: 'Province B',
       postalCode: '67890',
       latitude: 34.0522,
       longitude: -118.2437,
       rating: 4.2,
       fields: [
-        {'type': 'Gallery', 'capacity': 100, 'price': 100000},
-        {'type': 'Outdoor Stage', 'capacity': 1000, 'price': 100000},
+        {'type': 'Badminton', 'capacity': 100, 'price': 100000},
+        {'type': 'Volleyball', 'capacity': 1000, 'price': 300000},
       ],
       owner: {'name': 'Owner Two', 'contact': 'owner2@example.com'},
     ),
@@ -258,14 +259,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '555-123-4567',
       street: '789 Sunset Blvd',
       district: 'West District',
-      cityOrRegency: 'City C',
+      cityOrRegency: 'Kabupaten Bandung Barat',
       province: 'Province C',
       postalCode: '23456',
       latitude: 51.5074,
       longitude: -0.1278,
       rating: 4.8,
       fields: [
-        {'type': 'Theater', 'capacity': 300, 'price': 100000},
+        {'type': 'Badminton', 'capacity': 300, 'price': 100000},
       ],
       owner: {'name': 'Owner Three', 'contact': 'owner3@example.com'},
     ),
@@ -275,14 +276,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '222-333-4444',
       street: '321 Ocean Ave',
       district: 'South District',
-      cityOrRegency: 'City D',
+      cityOrRegency: 'Kota Bandung',
       province: 'Province D',
       postalCode: '34567',
       latitude: 48.8566,
       longitude: 2.3522,
       rating: 4.3,
       fields: [
-        {'type': 'Event Space', 'capacity': 800, 'price': 100000},
+        {'type': 'Basketball', 'capacity': 800, 'price': 500000},
       ],
       owner: {'name': 'Owner Four', 'contact': 'owner4@example.com'},
     ),
@@ -292,18 +293,26 @@ class _HomepageScreenState extends State<HomepageScreen> {
       phoneNumber: '666-777-8888',
       street: '654 River Rd',
       district: 'North District',
-      cityOrRegency: 'City E',
+      cityOrRegency: 'Kabupaten Bandung',
       province: 'Province E',
       postalCode: '45678',
       latitude: 35.6895,
       longitude: 139.6917,
       rating: 4.6,
       fields: [
-        {'type': 'Conference Center', 'capacity': 150, 'price': 100000},
+        {'type': 'Futsal', 'capacity': 150, 'price': 150000},
       ],
       owner: {'name': 'Owner Five', 'contact': 'owner5@example.com'},
     ),
   ];
+
+  List<String> fieldTypes = [
+    'Futsal',
+    'Basketball',
+    'Badminton',
+    'Volleyball'
+  ];
+
   bool _isLoading = true;
 
   @override
@@ -323,20 +332,32 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Location', style: TextStyle(color: AppColors.grey, fontSize: 16, fontWeight: FontWeight.bold)),
+                      const Text('Location',
+                          style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, size: 30, color: AppColors.darkerPrimaryColor),
+                          const Icon(Icons.location_on,
+                              size: 30, color: AppColors.darkerPrimaryColor),
                           DropdownButton<String>(
                             value: selectedLocation,
                             hint: const Text('Select Location'),
                             onChanged: (newValue) {
                               setState(() {
                                 selectedLocation = newValue;
+                                _filterVenuesByLocation();
                               });
                             },
-                            items: ['Kota Bandung', 'Kabupaten Bandung', 'Bandung Barat']
-                                .map<DropdownMenuItem<String>>((location) => DropdownMenuItem<String>(value: location, child: Text(location)))
+                            items: [
+                              'Kota Bandung',
+                              'Kabupaten Bandung',
+                              'Kabupaten Bandung Barat'
+                            ]
+                                .map<DropdownMenuItem<String>>(
+                                    (location) => DropdownMenuItem<String>(
+                                    value: location, child: Text(location)))
                                 .toList(),
                             underline: const SizedBox.shrink(),
                           ),
@@ -348,8 +369,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     radius: 20,
                     backgroundColor: AppColors.grey.withOpacity(0.5),
                     child: IconButton(
-                      icon: const Icon(Icons.notifications, size: 25, color: Colors.black),
-                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen())),
+                      icon: const Icon(Icons.notifications,
+                          size: 25, color: Colors.black),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                              const NotificationScreen())),
                     ),
                   ),
                 ],
@@ -360,19 +386,26 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Expanded(
                     child: TextField(
                       controller: searchController,
+                      onChanged: (query) => _filterVenuesBySearch(query),
                       decoration: InputDecoration(
                         hintText: 'Search',
                         filled: true,
                         fillColor: AppColors.grey.withOpacity(0.3),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-                        prefixIcon: const Icon(Icons.search, size: 24, color: Colors.black),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none),
+                        prefixIcon: const Icon(Icons.search,
+                            size: 24, color: Colors.black),
                       ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Container(
-                    decoration: BoxDecoration(color: AppColors.darkerPrimaryColor, borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(
+                        color: AppColors.darkerPrimaryColor,
+                        borderRadius: BorderRadius.circular(10)),
                     child: IconButton(
                       icon: const Icon(Icons.tune, size: 30, color: Colors.white),
                       onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
@@ -383,26 +416,21 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 ],
               ),
               const SizedBox(height: 20),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+              SizedBox(
+                height: 40,
                 child: Row(
-                  children: [
-                    _buildButton('Futsal'),
-                    const SizedBox(width: 10),
-                    _buildButton('Basketball'),
-                    const SizedBox(width: 10),
-                    _buildButton('Badminton'),
-                    const SizedBox(width: 10),
-                    _buildButton('Volleyball'),
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: fieldTypes.map((fieldType) {
+                    return _buildButton(fieldType);
+                  }).toList(),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               Expanded(
                 child: ListView(
                   children: [
                     _buildNearbySection(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     _buildRecommendedSection(),
                   ],
                 ),
@@ -411,7 +439,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
           ),
         ),
       ),
-      endDrawer: FilterDrawer(onFilterApplied: (FilterOptions ) {  },),
+      endDrawer: FilterDrawer(onFilterApplied: (FilterOptions) {
+        // You would likely apply these filters here to the venues list
+        // and then call _applyFilters() to update nearbyVenues and recommendedVenues.
+      }),
     );
   }
 
@@ -422,24 +453,87 @@ class _HomepageScreenState extends State<HomepageScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Nearby Court', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black)),
+            const Text('Nearby Court',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black)),
             TextButton(
               onPressed: () => setState(() => showAllNearby = !showAllNearby),
-              child: Text(showAllNearby ? 'See Less' : 'See All', style: const TextStyle(fontSize: 16, color: AppColors.darkerPrimaryColor)),
+              child: Text(showAllNearby ? 'See Less' : 'See All',
+                  style: const TextStyle(
+                      fontSize: 16, color: AppColors.darkerPrimaryColor)),
             ),
           ],
         ),
-        SingleChildScrollView(
+        nearbyVenues.isEmpty
+            ? const SizedBox(
+          height: 230,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.sentiment_dissatisfied, size: 40, color: AppColors.darkGrey),
+                SizedBox(height: 10),
+                Text(
+                  'No nearby venues found',
+                  style: TextStyle(fontSize: 16, color: AppColors.darkGrey),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        )
+            : SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: (showAllNearby ? nearbyVenues : nearbyVenues.take(10)).map((venue) => Padding(
+            children: (showAllNearby ? nearbyVenues : nearbyVenues.take(10))
+                .map((venue) => Padding(
               padding: const EdgeInsets.only(right: 10),
               child: _venueCard(venue, isHorizontal: true),
-            )).toList(),
+            ))
+                .toList(),
           ),
         ),
       ],
     );
+  }
+
+  void _applyFilters() {
+    List<Venue> tempFilteredVenues = List.from(venues);
+    if (selectedSports.isNotEmpty) {
+      tempFilteredVenues = tempFilteredVenues.where((venue) {
+        return venue.fields.any((field) => selectedSports.contains(field['type']));
+      }).toList();
+    }
+
+    if (selectedLocation != null && selectedLocation!.isNotEmpty) {
+      tempFilteredVenues = tempFilteredVenues.where((venue) {
+        return venue.cityOrRegency == selectedLocation;
+      }).toList();
+    }
+
+    if (searchController.text.isNotEmpty) {
+      final query = searchController.text.toLowerCase();
+      tempFilteredVenues = tempFilteredVenues.where((venue) {
+        return venue.name.toLowerCase().contains(query) ||
+            venue.district.toLowerCase().contains(query) ||
+            venue.cityOrRegency.toLowerCase().contains(query);
+      }).toList();
+    }
+
+    setState(() {
+      nearbyVenues = tempFilteredVenues;
+      recommendedVenues = tempFilteredVenues.take(5).toList(); // Take top 5 for recommended
+    });
+  }
+
+  void _filterVenuesByLocation() {
+    _applyFilters();
+  }
+
+  void _filterVenuesBySearch(String query) {
+    _applyFilters();
   }
 
   Widget _buildRecommendedSection() {
@@ -449,20 +543,51 @@ class _HomepageScreenState extends State<HomepageScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Recommended for You', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.black)),
+            const Text('Recommended for You',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black)),
             TextButton(
-              onPressed: () => setState(() => showAllRecommended = !showAllRecommended),
-              child: Text(showAllRecommended ? 'See Less' : 'See All', style: const TextStyle(fontSize: 16, color: AppColors.darkerPrimaryColor)),
+              onPressed: () =>
+                  setState(() => showAllRecommended = !showAllRecommended),
+              child: Text(showAllRecommended ? 'See Less' : 'See All',
+                  style: const TextStyle(
+                      fontSize: 16, color: AppColors.darkerPrimaryColor)),
             ),
           ],
         ),
+        recommendedVenues.isEmpty
+            ? const SizedBox(
+          height: 230,
+          width: double.infinity,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.sentiment_dissatisfied, size: 40, color: AppColors.darkGrey),
+                SizedBox(height: 10),
+                Text(
+                  'No recommended venue available',
+                  style: TextStyle(fontSize: 16, color: AppColors.darkGrey),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        )
+            :
         Column(
-          children: (showAllRecommended ? recommendedVenues : recommendedVenues.take(10)).map((venue) => Column(
+          children: (showAllRecommended
+              ? recommendedVenues
+              : recommendedVenues.take(10))
+              .map((venue) => Column(
             children: [
               _venueCard(venue),
               const SizedBox(height: 10),
             ],
-          )).toList(),
+          ))
+              .toList(),
         ),
       ],
     );
@@ -470,12 +595,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   Widget _venueCard(Venue venue, {bool isHorizontal = false}) {
     double? distance = _currentPosition != null
-        ? _calculateDistance(_currentPosition!.latitude, _currentPosition!.longitude, venue.latitude, venue.longitude)
+        ? _calculateDistance(_currentPosition!.latitude,
+        _currentPosition!.longitude, venue.latitude, venue.longitude)
         : null;
 
     return GestureDetector(
       onTap: () {
-        // Navigate to Venue Detail screen
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -489,7 +614,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
         child: Container(
           width: isHorizontal ? 230 : double.infinity,
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: AppColors.whitePurple, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+              color: AppColors.whitePurple,
+              borderRadius: BorderRadius.circular(10)),
           child: isHorizontal
               ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -542,30 +669,40 @@ class _HomepageScreenState extends State<HomepageScreen> {
           alignment: WrapAlignment.start,
           children: venue.fields.isNotEmpty
               ? venue.fields.map((tag) {
-            return fieldTag(tag['type']);  // Access 'type' from the map
+            return fieldTag(tag['type']);
           }).toList()
-              : [SizedBox(height: 25)],
+              : [const SizedBox(height: 25)],
         ),
       ),
       const SizedBox(height: 5),
-      Text(venue.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      Text(venue.name,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       const SizedBox(height: 5),
       Row(
         children: [
           const Icon(Icons.location_on, size: 20, color: AppColors.darkGrey),
-          Text(venue.cityOrRegency, style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
-          const SizedBox(width: 5),
-          const Text('|', style: TextStyle(color: AppColors.darkGrey)),
-          const SizedBox(width: 5),
-          Text(distance != null ? "${distance.toStringAsFixed(2)} km" : "Loading...", style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
+          Text(venue.cityOrRegency,
+              style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
         ],
       ),
       const SizedBox(height: 5),
       Row(
         children: [
-          const Text('Start From: ', style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
-          Text(venue.fields.isNotEmpty ? 'IDR ${venue.fields[0]['price']}' : 'IDR N/A',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.darkerPrimaryColor)),
+          Text(distance != null ? "${distance.toStringAsFixed(2)} km" : "Loading...",
+              style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
+          const SizedBox(width: 5),
+          const Text('|', style: TextStyle(color: AppColors.darkGrey)),
+          const SizedBox(width: 5),
+          const Text('Start From: ',
+              style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
+          Text(
+              venue.fields.isNotEmpty
+                  ? 'IDR ${venue.fields[0]['price']}'
+                  : 'IDR N/A',
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.darkerPrimaryColor)),
         ],
       ),
     ];
@@ -574,11 +711,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Widget fieldTag(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
       child: Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
     );
   }
-
 
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -590,7 +727,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       if (permission == LocationPermission.denied) return;
     }
 
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position =
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() => _currentPosition = position);
   }
 
@@ -615,7 +753,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       });
     } else {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['error'].toString())));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(result['error'].toString())));
     }
   }
 
@@ -624,7 +763,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          isSelected ? selectedSports.remove(text) : selectedSports.add(text);
+          if (isSelected) {
+            selectedSports.remove(text);
+          } else {
+            selectedSports.clear();
+            selectedSports.add(text);
+          }
+          selectedField = selectedSports.isNotEmpty ? selectedSports.first : null;
+          _applyFilters(); // Apply all filters
         });
       },
       child: Container(
