@@ -4,7 +4,7 @@ class Review {
   final int? id;
   final int? fieldId;
   final int? userId;
-  final double? rating;
+  final int? rating;
   final String? comment;
 
   Review({this.id, this.fieldId, this.userId, this.rating, this.comment});

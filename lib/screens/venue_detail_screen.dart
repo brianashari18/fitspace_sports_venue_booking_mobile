@@ -1,15 +1,11 @@
+import 'dart:math';
+
 import 'package:fitspace_sports_venue_booking_mobile/models/field_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
-import '../models/user_model.dart';
-import '../models/venue_model.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
-import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:intl/intl.dart';
 import '../models/user_model.dart';
 import '../models/venue_model.dart';
 
@@ -20,9 +16,6 @@ class VenueDetailScreen extends StatefulWidget {
 
   final User user;
   final Venue venue;
-
-  final String text =
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
   @override
   State<VenueDetailScreen> createState() => VenueDetailScreenState();
@@ -39,18 +32,22 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
 
   List<Field> fields = [];
   num totalReview = 0;
-  num totalRating = 0 ;
+  num totalRating = 0;
+
+  String text = '';
 
   @override
   void initState() {
     super.initState();
     venue = widget.venue;
+    text =
+        "Selamat datang di ${venue.name!}, venue serba-ada yang dikelola langsung oleh pemilik berpengalaman untuk menjamin kenyamanan dan kualitas layanan terbaik. Terletak strategis di ${venue.street!}, Kecamatan ${venue.district!}, ${venue.cityOrRegency!}, ${venue.province!} (kode pos ${venue.postalCode!}), venue kami mudah diakses baik via transportasi umum maupun kendaraan pribadi—Di sini tersedia berbagai lapangan bertipe ${venue.fields!.map((field) => field.type).join(', ')} dengan harga sewa mulai dari ${venue.fields != null && venue.fields!.isNotEmpty ? venue.fields!.map((e) => e.price).reduce((a, b) => min(a!, b!))!.toDouble() : 0} per sesi, lengkap dengan fasilitas pendukung dan area tunggu yang nyaman. Dengan rating rata-rata ${venue.rating!} (berdasarkan ulasan pelanggan), setiap kunjungan Anda akan terekam momen seru dan kepuasan optimal. Untuk reservasi atau informasi lebih lanjut, hubungi kami di ${venue.phoneNumber!}—siap melayani Anda setiap hari, 24 jam. Ayo, booking sekarang dan jadikan acara olahraga atau hiburan Anda semakin berkesan!";
     _loadFields();
-    if (widget.text.length > 50) {
-      firstHalf = widget.text.substring(0, 148);
-      secondHalf = widget.text.substring(148, widget.text.length);
+    if (text.length > 50) {
+      firstHalf = text.substring(0, 148);
+      secondHalf = text.substring(148, text.length);
     } else {
-      firstHalf = widget.text;
+      firstHalf = text;
       secondHalf = "";
     }
   }
@@ -60,15 +57,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     double topHeight = AppSize.getHeight(context) * 0.3;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox renderBox =
-      _containerKey.currentContext?.findRenderObject() as RenderBox;
+          _containerKey.currentContext?.findRenderObject() as RenderBox;
       final size = renderBox.size;
       setState(() {
         containerHeight = size.height;
       });
     });
 
-    // DateTime createdAtDate = DateTime.parse(widget.venue.owner['createdAt']);
-    DateTime createdAtDate = DateTime.now();
+    DateTime createdAtDate = widget.venue.owner!.joinedAt!;
     DateTime currentDate = DateTime.now();
     int daysDifference = currentDate.difference(createdAtDate).inDays;
     String joinTime = "";
@@ -79,7 +75,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       int months = daysDifference ~/ 30;
       joinTime = "Joined $months ${months > 1 ? 'months' : 'month'} ago";
     } else {
-      joinTime = "Joined $daysDifference ${daysDifference > 1 ? 'days' : 'day'} ago";
+      joinTime =
+          "Joined $daysDifference ${daysDifference > 1 ? 'days' : 'day'} ago";
     }
 
     return SafeArea(
@@ -136,9 +133,11 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                 child: Container(
                   height: AppSize.getHeight(context) * 0.4,
                   width: double.infinity,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/dummy/venue_dummy.png'),
+                      image: NetworkImage(
+                        'http://192.168.18.11:8080${widget.venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -152,8 +151,9 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                   decoration: const BoxDecoration(
                       color: AppColors.whitePurple,
                       borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(20))),
-                  padding: const EdgeInsets.all(16),
+                          BorderRadius.vertical(top: Radius.circular(20))),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                   child: Column(
                     children: [
                       Container(
@@ -169,7 +169,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -182,27 +182,32 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                               runSpacing: 8,
                               children: venue.fields!.isNotEmpty
                                   ? venue.fields!.map((field) {
-                                return _buildButton(field.type!);
-                              }).toList()
-                                  : [SizedBox(height: 25)],
+                                      return _buildButton(field.type!);
+                                    }).toList()
+                                  : [const SizedBox(height: 25)],
                             ),
                           ),
-                           Expanded(
-                            flex: 1,
+                          Expanded(
+                            flex: 2,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(Icons.star, color: Colors.amber, size: 18),
-                                SizedBox(width: 4),
-                                Text('$totalRating',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                SizedBox(width: 4),
-                                Text( totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)',
-                                    style: TextStyle(
-                                        fontSize: 14, color: AppColors.grey)),
+                                const Icon(Icons.star, color: Colors.amber),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${totalRating.toStringAsFixed(2)} ${totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)'}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                        color:
+                                            AppColors.darkGrey.withOpacity(0.6),
+                                        fontSize: AppSize.getWidth(context) *
+                                            12 /
+                                            360,
+                                      ),
+                                ),
                               ],
                             ),
                           ),
@@ -216,44 +221,71 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                         children: [
                           Text(
                             widget.venue.name!,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  fontSize:
+                                      AppSize.getWidth(context) * 22 / 360,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
                               Icon(
                                 Icons.location_on,
-                                size: 16,
                                 color: AppColors.grey,
+                                size: AppSize.getWidth(context) * 20 / 360,
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   '${widget.venue.street} ${widget.venue.cityOrRegency}',
-                                  style: TextStyle(color: AppColors.grey),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: AppColors.grey,
+                                          fontSize: AppSize.getWidth(context) *
+                                              14 /
+                                              360),
                                   softWrap: true,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Description',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    color: AppColors.darkGrey,
+                                    fontSize:
+                                        AppSize.getWidth(context) * 14 / 360,
+                                    fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           RichText(
+                            textAlign: TextAlign.justify,
                             text: TextSpan(
                               style: const TextStyle(color: Colors.black),
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: flag
-                                      ? "$firstHalf  "
-                                      : ("$firstHalf$secondHalf   "),
-                                ),
+                                    text: flag
+                                        ? "$firstHalf  "
+                                        : ("$firstHalf$secondHalf   "),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(
+                                            color: AppColors.darkGrey,
+                                            fontSize:
+                                                AppSize.getWidth(context) *
+                                                    12 /
+                                                    360)),
                                 TextSpan(
                                   text: flag ? " Read More" : " Show Less",
                                   style: const TextStyle(
@@ -271,31 +303,55 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          const Text(
+                          Text(
                             'Uploader',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    color: AppColors.darkGrey,
+                                    fontSize:
+                                        AppSize.getWidth(context) * 14 / 360,
+                                    fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              CircleAvatar(
+                              const CircleAvatar(
                                 radius: 20,
                                 backgroundColor: AppColors.grey,
-                                child: Text('FM'),
+                                backgroundImage: NetworkImage(
+                                  'https://static.vecteezy.com/system/resources/previews/003/715/527/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector.jpg',
+                                ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     '${widget.venue.owner!.firstName!} ${widget.venue.owner!.lastName!}',
-                                    style: TextStyle(
-                                        color: AppColors.darkGrey,
-                                        fontWeight: FontWeight.bold),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(
+                                            color: AppColors.darkGrey,
+                                            fontSize:
+                                                AppSize.getWidth(context) *
+                                                    14 /
+                                                    360,
+                                            fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     joinTime,
-                                    style: TextStyle(color: AppColors.darkGrey),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium!
+                                        .copyWith(
+                                            color: AppColors.darkGrey,
+                                            fontSize:
+                                                AppSize.getWidth(context) *
+                                                    12 /
+                                                    360),
                                   ),
                                 ],
                               ),
@@ -305,12 +361,16 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                           const Divider(
                             color: AppColors.grey,
                           ),
-                          const Text(
+                          Text(
                             'Available Court',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  fontSize:
+                                      AppSize.getWidth(context) * 22 / 360,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           ListView.builder(
                             shrinkWrap: true,
@@ -322,15 +382,16 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 children: [
                                   _cardCourt(
                                     title: field.type!,
-                                    price: 'Rp ${field.price}/hr',
-                                    imagePaths: const [
-                                      'assets/images/dummy/venue_dummy.png'
-                                    ],
+                                    price: field.price!,
+                                    imagePaths: field.gallery!
+                                        .map((photo) => photo.photoUrl!)
+                                        .toList(),
                                     onBook: () {
                                       print('Booked');
                                     },
                                   ),
-                                  const SizedBox(height: 8), // Control the gap between cards
+                                  const SizedBox(height: 8),
+                                  // Control the gap between cards
                                 ],
                               );
                             },
@@ -357,7 +418,9 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       ),
       child: Text(
         text,
-        style: TextStyle(color: Colors.blue[800]),
+        style: Theme.of(context).textTheme.labelMedium!.copyWith(
+            color: Colors.blue[800],
+            fontSize: AppSize.getWidth(context) * 12 / 360),
       ),
     );
   }
@@ -365,14 +428,16 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   Widget fieldTag(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
-      child: Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
+      decoration: BoxDecoration(
+          color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
+      child:
+          Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
     );
   }
 
   Widget _cardCourt({
     required String title,
-    required String price,
+    required int price,
     required VoidCallback? onBook,
     required List<String> imagePaths,
   }) {
@@ -385,34 +450,88 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
           children: [
             imagePaths.isNotEmpty
                 ? SizedBox(
-              width: double.infinity,
-              height: 120,
-              child: imagePaths.length == 1
-                  ? Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    imagePaths[0],
-                    fit: BoxFit.cover,
-                    width: 250,
-                  ),
-                ],
-              )
-                  : ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: imagePaths.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Image.asset(
-                      imagePaths[index],
-                      fit: BoxFit.cover,
-                      width: 250,
-                    ),
-                  );
-                },
-              ),
-            )
+                    width: double.infinity,
+                    height: 120,
+                    child: imagePaths.length == 1
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    'http://192.168.18.11:8080${imagePaths[0]}',
+                                    fit: BoxFit.cover,
+                                    width: 250,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    (loadingProgress
+                                                            .expectedTotalBytes ??
+                                                        1)
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: imagePaths.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    'http://192.168.18.11:8080${imagePaths[index]}',
+                                    fit: BoxFit.cover,
+                                    width: 250,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    (loadingProgress
+                                                            .expectedTotalBytes ??
+                                                        1)
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  )
                 : Container(),
             const SizedBox(height: 12),
             Row(
@@ -423,15 +542,16 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          fontSize: AppSize.getWidth(context) * 12 / 360,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      price,
-                      style: const TextStyle(
-                        color: AppColors.darkerPrimaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      "Rp${NumberFormat('#,###', 'id_ID').format(price)}/hr",
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                          color: AppColors.darkerPrimaryColor,
+                          fontSize: AppSize.getWidth(context) * 18 / 360,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -463,17 +583,19 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
   }
 
   Future<void> _loadFields() async {
-    final result = await _fieldService.loadFieldByVenueId(widget.user, widget.venue.id!);
+    final result =
+        await _fieldService.loadFieldByVenueId(widget.user, widget.venue.id!);
 
-    if (!mounted) return;  // Ensure widget is still in the widget tree
+    if (!mounted) return; // Ensure widget is still in the widget tree
 
-    List<dynamic> fieldsData = result['data'];  // Assuming response['data'] contains your fields
+    List<dynamic> fieldsData =
+        result['data']; // Assuming response['data'] contains your fields
 
     num tempRating = 0;
     num tempTotal = 0;
     for (var field in fieldsData) {
       totalReview += field['reviews']?.length ?? 0;
-      for(var rating in field['reviews']) {
+      for (var rating in field['reviews']) {
         tempRating += rating['rating'];
         print('temp : $tempRating');
       }
@@ -486,7 +608,6 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     print("Total Reviews: $totalReview");
     print('res : ${result['data'][0]['reviews']}');
 
-
     if (result['success'] == true) {
       List<dynamic> data = result['data'];
       setState(() {
@@ -494,11 +615,8 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
       });
     } else {
       // Show error message if there is an issue loading fields
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['error'].toString())));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(result['error'].toString())));
     }
   }
-
 }
-
-
-

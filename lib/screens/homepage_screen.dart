@@ -13,6 +13,7 @@ import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key, required this.user});
+
   final User user;
 
   @override
@@ -42,283 +43,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   List<Venue> _venues = [];
+  List<Venue> _nearbyVenues = [];
+  List<Venue> _recommendedVenues = [];
 
-  List<Venue> venues = [
-    Venue(
-      id: 1,
-      name: 'Venue One',
-      phoneNumber: '123-456-7890',
-      street: '123 Main St',
-      district: 'Central District',
-      cityOrRegency: 'Kota Bandung',
-      province: 'Province A',
-      postalCode: '12345',
-      latitude: -6.969090300826367,
-      longitude: 107.62818918160181,
-      rating: 4.5,
-      fields: [
-        Field(type: 'Futsal' , price: 250000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'One', email: 'owner1@example.com'),
-    ),
-    Venue(
-      id: 2,
-      name: 'Venue Two',
-      phoneNumber: '987-654-3210',
-      street: '456 Park Ave',
-      district: 'East District',
-      cityOrRegency: 'Kabupaten Bandung',
-      province: 'Province B',
-      postalCode: '67890',
-      latitude: 34.0522,
-      longitude: -118.2437,
-      rating: 4.2,
-      fields: [
-        Field(type: 'Badminton' , price: 100000),
-        Field(type: 'Volleyball' , price: 300000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Two', email: 'owner2@example.com'),
-    ),
-    Venue(
-      id: 3,
-      name: 'Venue Three',
-      phoneNumber: '555-123-4567',
-      street: '789 Sunset Blvd',
-      district: 'West District',
-      cityOrRegency: 'Kabupaten Bandung Barat',
-      province: 'Province C',
-      postalCode: '23456',
-      latitude: 51.5074,
-      longitude: -0.1278,
-      rating: 4.8,
-      fields: [
-        Field(type: 'Badminton' , price: 100000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Three', email: 'owner3@example.com'),
-    ),
-    Venue(
-      id: 4,
-      name: 'Venue Four',
-      phoneNumber: '222-333-4444',
-      street: '321 Ocean Ave',
-      district: 'South District',
-      cityOrRegency: 'Kota Bandung',
-      province: 'Province D',
-      postalCode: '34567',
-      latitude: 48.8566,
-      longitude: 2.3522,
-      rating: 4.3,
-      fields: [
-        Field(type: 'Basketball' , price: 500000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Four', email: 'owner4@example.com'),
-    ),
-    Venue(
-      id: 5,
-      name: 'Venue Five',
-      phoneNumber: '666-777-8888',
-      street: '654 River Rd',
-      district: 'North District',
-      cityOrRegency: 'Kabupaten Bandung',
-      province: 'Province E',
-      postalCode: '45678',
-      latitude: 35.6895,
-      longitude: 139.6917,
-      rating: 4.6,
-      fields: [
-        Field(type: 'Futsal' , price: 150000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Five', email: 'owner5@example.com'),
-    ),
-  ];
-
-  List<Venue> nearbyVenues = [
-    Venue(
-      id: 1,
-      name: 'Venue One',
-      phoneNumber: '123-456-7890',
-      street: '123 Main St',
-      district: 'Central District',
-      cityOrRegency: 'Kota Bandung',
-      province: 'Province A',
-      postalCode: '12345',
-      latitude: -6.969090300826367,
-      longitude: 107.62818918160181,
-      rating: 4.5,
-      fields: [
-        Field(type: 'Futsal' , price: 250000),
-        Field(type: 'Basketball' , price: 450000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'One', email: 'owner1@example.com'),
-    ),
-    Venue(
-      id: 2,
-      name: 'Venue Two',
-      phoneNumber: '987-654-3210',
-      street: '456 Park Ave',
-      district: 'East District',
-      cityOrRegency: 'Kabupaten Bandung',
-      province: 'Province B',
-      postalCode: '67890',
-      latitude: 34.0522,
-      longitude: -118.2437,
-      rating: 4.2,
-      fields: [
-        Field(type: 'Badminton' , price: 100000),
-        Field(type: 'Volleyball' , price: 300000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Two', email: 'owner2@example.com'),
-    ),
-    Venue(
-      id: 3,
-      name: 'Venue Three',
-      phoneNumber: '555-123-4567',
-      street: '789 Sunset Blvd',
-      district: 'West District',
-      cityOrRegency: 'Kabupaten Bandung Barat',
-      province: 'Province C',
-      postalCode: '23456',
-      latitude: 51.5074,
-      longitude: -0.1278,
-      rating: 4.8,
-      fields: [
-        Field(type: 'Badminton' , price: 100000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Three', email: 'owner3@example.com'),
-    ),
-    Venue(
-      id: 4,
-      name: 'Venue Four',
-      phoneNumber: '222-333-4444',
-      street: '321 Ocean Ave',
-      district: 'South District',
-      cityOrRegency: 'Kota Bandung',
-      province: 'Province D',
-      postalCode: '34567',
-      latitude: 48.8566,
-      longitude: 2.3522,
-      rating: 4.3,
-      fields: [
-        Field(type: 'Basketball' , price: 500000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Four', email: 'owner4@example.com'),
-    ),
-    Venue(
-      id: 5,
-      name: 'Venue Five',
-      phoneNumber: '666-777-8888',
-      street: '654 River Rd',
-      district: 'North District',
-      cityOrRegency: 'Kabupaten Bandung',
-      province: 'Province E',
-      postalCode: '45678',
-      latitude: 35.6895,
-      longitude: 139.6917,
-      rating: 4.6,
-      fields: [
-        Field(type: 'Futsal' , price: 150000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Five', email: 'owner5@example.com'),
-    ),
-  ];
-
-  List<Venue> recommendedVenues = [
-    Venue(
-      id: 1,
-      name: 'Venue One',
-      phoneNumber: '123-456-7890',
-      street: '123 Main St',
-      district: 'Central District',
-      cityOrRegency: 'Kota Bandung',
-      province: 'Province A',
-      postalCode: '12345',
-      latitude: 40.7128,
-      longitude: -74.0060,
-      rating: 4.5,
-      fields: [
-        Field(type: 'Futsal' , price: 250000),
-        Field(type: 'Basketball' , price: 450000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'One', email: 'owner1@example.com'),
-    ),
-    Venue(
-      id: 2,
-      name: 'Venue Two',
-      phoneNumber: '987-654-3210',
-      street: '456 Park Ave',
-      district: 'East District',
-      cityOrRegency: 'Kabupaten Bandung',
-      province: 'Province B',
-      postalCode: '67890',
-      latitude: 34.0522,
-      longitude: -118.2437,
-      rating: 4.2,
-      fields: [
-        Field(type: 'Badminton' , price: 100000),
-        Field(type: 'Volleyball' , price: 300000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Two', email: 'owner2@example.com'),
-    ),
-    Venue(
-      id: 3,
-      name: 'Venue Three',
-      phoneNumber: '555-123-4567',
-      street: '789 Sunset Blvd',
-      district: 'West District',
-      cityOrRegency: 'Kabupaten Bandung Barat',
-      province: 'Province C',
-      postalCode: '23456',
-      latitude: 51.5074,
-      longitude: -0.1278,
-      rating: 4.8,
-      fields: [
-        Field(type: 'Badminton' , price: 100000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Three', email: 'owner3@example.com'),
-    ),
-    Venue(
-      id: 4,
-      name: 'Venue Four',
-      phoneNumber: '222-333-4444',
-      street: '321 Ocean Ave',
-      district: 'South District',
-      cityOrRegency: 'Kota Bandung',
-      province: 'Province D',
-      postalCode: '34567',
-      latitude: 48.8566,
-      longitude: 2.3522,
-      rating: 4.3,
-      fields: [
-        Field(type: 'Basketball' , price: 500000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Four', email: 'owner4@example.com'),
-    ),
-    Venue(
-      id: 5,
-      name: 'Venue Five',
-      phoneNumber: '666-777-8888',
-      street: '654 River Rd',
-      district: 'North District',
-      cityOrRegency: 'Kabupaten Bandung',
-      province: 'Province E',
-      postalCode: '45678',
-      latitude: 35.6895,
-      longitude: 139.6917,
-      rating: 4.6,
-      fields: [
-        Field(type: 'Futsal' , price: 150000),
-      ],
-      owner: User(firstName: 'Owner', lastName: 'Five', email: 'owner5@example.com'),
-    ),
-  ];
-
-
-  List<String> fieldTypes = [
-    'Futsal',
-    'Basketball',
-    'Badminton',
-    'Volleyball'
-  ];
+  List<String> fieldTypes = ['Futsal', 'Basketball', 'Badminton', 'Volleyball'];
 
   bool _isLoading = true;
 
@@ -362,9 +90,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               'Kabupaten Bandung',
                               'Kabupaten Bandung Barat'
                             ]
-                                .map<DropdownMenuItem<String>>(
-                                    (location) => DropdownMenuItem<String>(
-                                    value: location, child: Text(location)))
+                                .map<DropdownMenuItem<String>>((location) =>
+                                    DropdownMenuItem<String>(
+                                        value: location, child: Text(location)))
                                 .toList(),
                             underline: const SizedBox.shrink(),
                           ),
@@ -382,7 +110,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                              const NotificationScreen())),
+                                  const NotificationScreen())),
                     ),
                   ),
                 ],
@@ -414,8 +142,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         color: AppColors.darkerPrimaryColor,
                         borderRadius: BorderRadius.circular(10)),
                     child: IconButton(
-                      icon: const Icon(Icons.tune, size: 30, color: Colors.white),
-                      onPressed: () => _scaffoldKey.currentState!.openEndDrawer(),
+                      icon:
+                          const Icon(Icons.tune, size: 30, color: Colors.white),
+                      onPressed: () =>
+                          _scaffoldKey.currentState!.openEndDrawer(),
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                     ),
@@ -473,44 +203,51 @@ class _HomepageScreenState extends State<HomepageScreen> {
             ),
           ],
         ),
-        nearbyVenues.isEmpty
-            ? const SizedBox(
-          height: 230,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.sentiment_dissatisfied, size: 40, color: AppColors.darkGrey),
-                SizedBox(height: 10),
-                Text(
-                  'No nearby venues found',
-                  style: TextStyle(fontSize: 16, color: AppColors.darkGrey),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        )
-            : SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: (showAllNearby ? nearbyVenues : nearbyVenues.take(10))
-                .map((venue) => Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: _venueCard(venue, isHorizontal: true),
-            ))
-                .toList(),
-          ),
-        ),
+        _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _nearbyVenues.isEmpty
+                ? const SizedBox(
+                    height: 230,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.sentiment_dissatisfied,
+                              size: 40, color: AppColors.darkGrey),
+                          SizedBox(height: 10),
+                          Text(
+                            'No nearby venues found',
+                            style: TextStyle(
+                                fontSize: 16, color: AppColors.darkGrey),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: (showAllNearby
+                              ? _nearbyVenues
+                              : _nearbyVenues.take(10))
+                          .map((venue) => Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _venueCard(venue, isHorizontal: true),
+                              ))
+                          .toList(),
+                    ),
+                  ),
       ],
     );
   }
 
   void _applyFilters() {
-    List<Venue> tempFilteredVenues = List.from(venues);
+    List<Venue> tempFilteredVenues = List.from(_venues);
     if (selectedSports.isNotEmpty) {
       tempFilteredVenues = tempFilteredVenues.where((venue) {
-        return venue.fields!.any((field) => selectedSports.contains(field.type!));
+        return venue.fields!
+            .any((field) => selectedSports.contains(field.type!));
       }).toList();
     }
 
@@ -530,8 +267,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
     }
 
     setState(() {
-      nearbyVenues = tempFilteredVenues;
-      recommendedVenues = tempFilteredVenues.take(5).toList(); // Take top 5 for recommended
+      _nearbyVenues = tempFilteredVenues;
+      _recommendedVenues =
+          tempFilteredVenues.take(5).toList(); // Take top 5 for recommended
     });
   }
 
@@ -564,38 +302,41 @@ class _HomepageScreenState extends State<HomepageScreen> {
             ),
           ],
         ),
-        recommendedVenues.isEmpty
-            ? const SizedBox(
-          height: 230,
-          width: double.infinity,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.sentiment_dissatisfied, size: 40, color: AppColors.darkGrey),
-                SizedBox(height: 10),
-                Text(
-                  'No recommended venue available',
-                  style: TextStyle(fontSize: 16, color: AppColors.darkGrey),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        )
-            :
-        Column(
-          children: (showAllRecommended
-              ? recommendedVenues
-              : recommendedVenues.take(10))
-              .map((venue) => Column(
-            children: [
-              _venueCard(venue),
-              const SizedBox(height: 10),
-            ],
-          ))
-              .toList(),
-        ),
+        _isLoading
+            ? Center(child: const CircularProgressIndicator())
+            : _recommendedVenues.isEmpty
+                ? const SizedBox(
+                    height: 230,
+                    width: double.infinity,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.sentiment_dissatisfied,
+                              size: 40, color: AppColors.darkGrey),
+                          SizedBox(height: 10),
+                          Text(
+                            'No recommended venue available',
+                            style: TextStyle(
+                                fontSize: 16, color: AppColors.darkGrey),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Column(
+                    children: (showAllRecommended
+                            ? _recommendedVenues
+                            : _recommendedVenues.take(10))
+                        .map((venue) => Column(
+                              children: [
+                                _venueCard(venue),
+                                const SizedBox(height: 10),
+                              ],
+                            ))
+                        .toList(),
+                  ),
       ],
     );
   }
@@ -605,7 +346,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
     double? distance = _currentPosition != null
         ? _calculateDistance(_currentPosition!.latitude,
-        _currentPosition!.longitude, venue.latitude!, venue.longitude!)
+            _currentPosition!.longitude, venue.latitude!, venue.longitude!)
         : null;
 
     return GestureDetector(
@@ -613,7 +354,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VenueDetailScreen(user: widget.user, venue: venue),
+            builder: (context) =>
+                VenueDetailScreen(user: widget.user, venue: venue),
           ),
         );
       },
@@ -628,41 +370,73 @@ class _HomepageScreenState extends State<HomepageScreen> {
               borderRadius: BorderRadius.circular(10)),
           child: isHorizontal
               ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/images/dummy/venue_dummy.png',
-                  width: double.infinity,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(height: 5),
-              ..._venueCardContent(venue, distance),
-            ],
-          )
-              : Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  'assets/images/dummy/venue_dummy.png',
-                  width: 120,
-                  height: 130,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _venueCardContent(venue, distance),
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'http://192.168.18.11:8080${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                          width: double.infinity,
+                          height: 100,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          (loadingProgress.expectedTotalBytes ??
+                                              1)
+                                      : null,
+                                ),
+                              );
+                            }
+                          },
+                        )),
+                    const SizedBox(height: 5),
+                    ..._venueCardContent(venue, distance),
+                  ],
+                )
+              : Row(
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          'http://192.168.18.11:8080${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                          width: 120,
+                          height: 130,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          (loadingProgress.expectedTotalBytes ??
+                                              1)
+                                      : null,
+                                ),
+                              );
+                            }
+                          },
+                        )),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _venueCardContent(venue, distance),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -678,8 +452,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
           alignment: WrapAlignment.start,
           children: venue.fields!.isNotEmpty
               ? venue.fields!.map((tag) {
-            return fieldTag(tag.type!);
-          }).toList()
+                  return fieldTag(tag.type!);
+                }).toList()
               : [const SizedBox(height: 25)],
         ),
       ),
@@ -697,7 +471,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
       const SizedBox(height: 5),
       Row(
         children: [
-          Text(distance != null ? "${distance.toStringAsFixed(2)} km" : "Loading...",
+          Text(
+              distance != null
+                  ? "${distance.toStringAsFixed(2)} km"
+                  : "Loading...",
               style: const TextStyle(fontSize: 14, color: AppColors.darkGrey)),
           const SizedBox(width: 5),
           const Text('|', style: TextStyle(color: AppColors.darkGrey)),
@@ -705,9 +482,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
           const Text('Start From: ',
               style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
           Text(
-              venue.fields!.isNotEmpty
-                  ? 'IDR ${venue.fields![0].price}'
-                  : 'IDR N/A',
+              '${venue.fields != null && venue.fields!.isNotEmpty ? venue.fields!.map((e) => e.price).reduce((a, b) => min(a!, b!))!.toDouble() : 0}',
               style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -722,7 +497,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
           color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
-      child: Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
+      child:
+          Text(text, style: TextStyle(color: Colors.blue[800], fontSize: 12)),
     );
   }
 
@@ -736,13 +512,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
       if (permission == LocationPermission.denied) return;
     }
 
-    Position position =
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     setState(() => _currentPosition = position);
   }
 
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    double distanceInMeters = Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
+  double _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) {
+    double distanceInMeters =
+        Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
     return distanceInMeters / 1000;
   }
 
@@ -755,15 +533,21 @@ class _HomepageScreenState extends State<HomepageScreen> {
     if (result['success'] == 'true') {
       List<dynamic> data = result['data'];
       setState(() {
-        venues = data.map((item) => Venue.fromJson(item)).toList();
-        nearbyVenues = venues;
-        recommendedVenues = venues.take(3).toList();
+        _venues = data.map((item) => Venue.fromJson(item)).toList();
+        _nearbyVenues = _venues;
+        _recommendedVenues = _venues.take(3).toList();
         _isLoading = false;
       });
     } else {
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(result['error'].toString())));
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
     }
   }
 
@@ -778,7 +562,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
             selectedSports.clear();
             selectedSports.add(text);
           }
-          selectedField = selectedSports.isNotEmpty ? selectedSports.first : null;
+          selectedField =
+              selectedSports.isNotEmpty ? selectedSports.first : null;
           _applyFilters(); // Apply all filters
         });
       },
@@ -808,7 +593,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
     if (result['success'] == 'true') {
       final data = result['data'];
       print('Data: $data');
-
 
       // Check if the widget is still mounted before calling setState
       if (mounted) {

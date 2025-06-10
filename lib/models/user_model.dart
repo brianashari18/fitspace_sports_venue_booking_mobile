@@ -4,23 +4,24 @@ class User {
   final String? firstName;
   final String? lastName;
   final String? token;
+  final DateTime? joinedAt;
 
-  User({
-    this.id,
-    this.email,
-    this.token,
-    this.firstName,
-    this.lastName,
-  });
+  User(
+      {this.id,
+      this.email,
+      this.token,
+      this.firstName,
+      this.lastName,
+      this.joinedAt});
 
   factory User.empty() {
     return User(
-      id: 0,
-      email: '',
-      token: '',
-      firstName: '',
-      lastName: ''
-    );
+        id: 0,
+        email: '',
+        token: '',
+        firstName: '',
+        lastName: '',
+        joinedAt: DateTime.now());
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -29,7 +30,10 @@ class User {
         email: json['email'],
         token: json['token'],
         firstName: json['first_name'],
-        lastName: json['last_name']);
+        lastName: json['last_name'],
+        joinedAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : DateTime.now());
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +42,8 @@ class User {
       'email': email,
       'token': token,
       'first_name': firstName,
-      'last_name': lastName
+      'last_name': lastName,
+      'created_at': joinedAt
     };
   }
 }

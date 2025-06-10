@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
@@ -8,7 +9,9 @@ import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.dart';
 
 class MainVenueScreen extends StatefulWidget {
-  const MainVenueScreen({super.key});
+  const MainVenueScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<MainVenueScreen> createState() => _MainVenueScreenState();
@@ -143,13 +146,7 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
   }
 
   void _loadVenues() async {
-    final user = await _userService.getUser();
-
-    if (user == null) {
-      return;
-    }
-
-    final result = await _venueService.loadVenues(user);
+    final result = await _venueService.loadVenues(widget.user);
 
     if (result['success'] == 'true') {
       final data = result['data'];
