@@ -34,4 +34,29 @@ class FieldService {
     }
   }
 
+  Future<Map<String, dynamic>> loadField(User user, int fieldId) async {
+    try {
+
+      final response = await http.get(
+          Uri.parse('$_baseUrl/venues/fields/$fieldId'),
+          headers: {'Authorization': 'Bearer ${user.token}'}
+      );
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        return {
+          'success': true,
+          'data': body['data'],
+        };
+      } else if (response.statusCode == 400) {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      } else {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Error: $e'};
+    }
+  }
 }

@@ -1,14 +1,32 @@
 import 'dart:math';
 
 import 'package:fitspace_sports_venue_booking_mobile/screens/payment_success_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/booking_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+import '../models/field_model.dart';
+import '../models/user_model.dart';
+import '../models/venue_model.dart';
 
 class PaymentConfirmationScreen extends StatefulWidget {
-  const PaymentConfirmationScreen({super.key, required this.detail});
+  const PaymentConfirmationScreen(
+      {super.key,
+      required this.detail,
+      required this.user,
+      required this.venue,
+      required this.field,
+      required this.timeSlot,
+      required this.date});
 
   final Map<String, String> detail;
+  final User user;
+  final Venue venue;
+  final Field field;
+  final String timeSlot;
+  final DateTime date;
 
   @override
   State<PaymentConfirmationScreen> createState() =>
@@ -16,11 +34,9 @@ class PaymentConfirmationScreen extends StatefulWidget {
 }
 
 class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
-  void _onSubmit() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const PaymentSuccessScreen(),
-    ));
-  }
+  final _bookingService = BookingService();
+
+  var _isSubmit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +81,13 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        "assets/images/dummy/pool_dummy.png",
+                      SizedBox(
                         height: 70,
+                        width: 70,
+                        child: Image.network(
+                          'http://192.168.18.11:8080${widget.field.gallery![0].photoUrl != null ? widget.field.gallery![0].photoUrl! : ''}',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       const SizedBox(
                         width: 10,
@@ -81,7 +101,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                "Oasis Siliwangi",
+                                widget.venue.name!,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -100,7 +120,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                                     width: 5,
                                   ),
                                   Text(
-                                    "Bandung" + " | " + "Swimming Pool",
+                                    "${widget.venue.cityOrRegency!} | ${widget.field.type!}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge!
@@ -121,7 +141,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                                     width: 5,
                                   ),
                                   Text(
-                                    "17 Aug" + ", " + "14.00 - 15.00",
+                                    "${widget.date.day} ${DateFormat('MMMM').format(widget.date).substring(0, 3)}, ${widget.timeSlot}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge!
@@ -158,7 +178,8 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                     "Price",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  Text("Rp 30.000",
+                  Text(
+                      'Rp ${NumberFormat('#,###', 'id_ID').format(widget.field.price!)}',
                       style: Theme.of(context).textTheme.bodyMedium)
                 ],
               ),
@@ -172,7 +193,9 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                     "Service Fee",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  Text("Rp 500", style: Theme.of(context).textTheme.bodyMedium)
+                  Text(
+                      "Rp ${NumberFormat('#,###', 'id_ID').format(widget.field.price! * 0.01)}",
+                      style: Theme.of(context).textTheme.bodyMedium)
                 ],
               ),
               const SizedBox(
@@ -185,7 +208,8 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                     "Application Fee",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  Text("Rp 1.000",
+                  Text(
+                      "Rp ${NumberFormat('#,###', 'id_ID').format(widget.field.price! * 0.02)}",
                       style: Theme.of(context).textTheme.bodyMedium)
                 ],
               ),
@@ -203,7 +227,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Rp 31.500",
+                    "Rp ${NumberFormat('#,###', 'id_ID').format(widget.field.price! + widget.field.price! * 0.01 + widget.field.price! * 0.02)}",
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!
@@ -242,7 +266,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Rp 31.500",
+                    "Rp ${NumberFormat('#,###', 'id_ID').format(widget.field.price! + widget.field.price! * 0.01 + widget.field.price! * 0.02)}",
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: AppColors.darkGrey, fontWeight: FontWeight.bold),
                   )
@@ -255,16 +279,55 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                           borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(horizontal: 40),
                       backgroundColor: AppColors.darkerPrimaryColor),
-                  child: Text(
-                    "Pay",
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.bold, color: AppColors.base),
-                  ))
+                  child: _isSubmit
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Text(
+                          "Pay",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.base),
+                        ))
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _onSubmit() async {
+    setState(() {
+      _isSubmit = true;
+    });
+
+    final result = await _bookingService.create(
+        widget.user, widget.venue, widget.field, widget.date, widget.timeSlot);
+
+    if (result['success'] == true) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => PaymentSuccessScreen(
+          user: widget.user,
+          venue: widget.venue,
+        ),
+      ));
+    } else {
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+
+    setState(() {
+      _isSubmit = false;
+    });
   }
 }
 
@@ -328,7 +391,7 @@ Widget paymentDetailWidget(BuildContext context, String paymentMethod,
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              "${generateVirtualAccount()}",
+              generateVirtualAccount(),
               style: Theme.of(context).textTheme.titleMedium!,
             ),
           ),

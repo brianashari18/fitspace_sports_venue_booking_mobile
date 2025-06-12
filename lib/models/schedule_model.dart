@@ -7,27 +7,23 @@ class Schedule {
   final int? id;
   final DateTime? date;
   final String? timeSlot;
-  final List<Booking>? bookings;
-  final List<FieldSchedule>? fieldSchedule;
 
   Schedule(
-      {this.id, this.date, this.timeSlot, this.bookings, this.fieldSchedule});
+      {this.id, this.date, this.timeSlot});
+
+  factory Schedule.empty() {
+    return Schedule(
+      id: null,
+      date: null,
+      timeSlot: null,
+    );
+  }
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
     return Schedule(
         id: json['id'],
         date: DateTime.parse(json['date'] as String),
-        timeSlot: json['time_slot'],
-        bookings: List<Map<String, dynamic>>.from(json['bookings'])
-            .map(
-              (e) => Booking.fromJson(e),
-            )
-            .toList(),
-        fieldSchedule: List<Map<String, dynamic>>.from(json['field_schedule'])
-            .map(
-              (e) => FieldSchedule.fromJson(e),
-            )
-            .toList());
+        timeSlot: json['time_slot']);
   }
 
   Map<String, dynamic> toJson() {
@@ -35,16 +31,11 @@ class Schedule {
       'id': id,
       'date': date!.toIso8601String(),
       'time_slot': timeSlot,
-      'bookings': bookings
-          ?.map(
-            (e) => Booking().toJson(),
-          )
-          .toList(),
-      'field_schedule': fieldSchedule
-          ?.map(
-            (e) => FieldSchedule().toJson(),
-          )
-          .toList()
     };
+  }
+
+  @override
+  String toString() {
+    return 'Schedule(id: $id, date: $date, timeSlot: $timeSlot)';
   }
 }

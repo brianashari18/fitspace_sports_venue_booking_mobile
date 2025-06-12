@@ -1,10 +1,28 @@
 import 'package:fitspace_sports_venue_booking_mobile/screens/payment_confirmation_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+import '../models/field_model.dart';
+import '../models/user_model.dart';
+import '../models/venue_model.dart';
 
 class PaymentDetailScreen extends StatefulWidget {
-  const PaymentDetailScreen({super.key});
+  const PaymentDetailScreen(
+      {super.key,
+      required this.user,
+      required this.venue,
+      required this.field,
+      required this.date,
+      required this.timeSlot});
+
+  final User user;
+  final Venue venue;
+  final Field field;
+  final DateTime date;
+  final String timeSlot;
 
   @override
   State<PaymentDetailScreen> createState() => _PaymentDetailScreenState();
@@ -26,7 +44,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
 
   int? _selectedTile;
 
-  final List<Map<String, String>> _banks = [
+  final List<Map<String, String>> test = [
     {"name": "Bank BCA", "image": "assets/images/payments/va.png"},
     {"name": "Bank Mandiri", "image": "assets/images/payments/va.png"},
     {"name": "Bank BNI", "image": "assets/images/payments/va.png"},
@@ -34,8 +52,33 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
     {"name": "Bank CIMB Niaga", "image": "assets/images/payments/va.png"},
     {"name": "Bank Danamon", "image": "assets/images/payments/va.png"},
     {"name": "Bank Permata", "image": "assets/images/payments/va.png"},
-    {"name": "Bank Maybank Indonesia", "image": "assets/images/payments/va.png"},
+    {
+      "name": "Bank Maybank Indonesia",
+      "image": "assets/images/payments/va.png"
+    },
     {"name": "Bank OCBC NISP", "image": "assets/images/payments/va.png"},
+  ];
+
+  final List<Map<String, String>> _banks = [
+    {
+      "name": "Bank BCA",
+      "image":
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/1200px-Bank_Central_Asia.svg.png"
+    },
+    {
+      "name": "Bank Mandiri",
+      "image":
+          "https://www.bankmandiri.co.id/image/layout_set_logo?img_id=31567&t=1732986257988"
+    },
+    {
+      "name": "Bank BNI",
+      "image": "https://cdn.prod.website-files.com/64199d190fc7afa82666d89c/6491bee525769f3d615b7ac3_bni_bank.webp"
+    },
+    {
+      "name": "Bank BRI",
+      "image": "https://bri.co.id/o/bri-corporate-theme/images/bri-logo.png"
+    },
+    {"name": "Bank BSI", "image": "https://www.bankbsi.co.id/img/logo.png"},
   ];
 
   void _onSubmit() {
@@ -49,8 +92,8 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
 
     if (_enteredPaymentMethod == "bank") {
       if (_enteredBank.trim().isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Please choose your virtual account")));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Please choose your virtual account")));
         return;
       }
     }
@@ -74,10 +117,19 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
       "Bank": _enteredBank,
       "CreditNumber": _enteredCreditNumber,
       "ExpDate": _enteredExpDate,
-      "Cvv": _enteredCvv
+      "Cvv": _enteredCvv,
     };
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentConfirmationScreen(detail: paymentDetail,),));
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PaymentConfirmationScreen(
+        detail: paymentDetail,
+        user: widget.user,
+        venue: widget.venue,
+        field: widget.field,
+        date: widget.date,
+        timeSlot: widget.timeSlot,
+      ),
+    ));
   }
 
   @override
@@ -128,7 +180,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "Rp 30.000",
+                    "Rp ${NumberFormat('#,###', 'id_ID').format(widget.field.price!)}",
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         color: AppColors.darkGrey, fontWeight: FontWeight.bold),
                   )
@@ -172,9 +224,13 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        "assets/images/dummy/pool_dummy.png",
+                      SizedBox(
                         height: 70,
+                        width: 70,
+                        child: Image.network(
+                          'http://192.168.18.11:8080${widget.field.gallery![0].photoUrl != null ? widget.field.gallery![0].photoUrl! : ''}',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       const SizedBox(
                         width: 10,
@@ -188,7 +244,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                "Oasis Siliwangi",
+                                widget.venue.name!,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge!
@@ -207,7 +263,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                                     width: 5,
                                   ),
                                   Text(
-                                    "Bandung" + " | " + "Swimming Pool",
+                                    "${widget.venue.cityOrRegency!} | ${widget.field.type!}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge!
@@ -228,7 +284,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                                     width: 5,
                                   ),
                                   Text(
-                                    "17 Aug" + ", " + "14.00 - 15.00",
+                                    "${widget.date.day} ${DateFormat('MMMM').format(widget.date).substring(0, 3)}, ${widget.timeSlot}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge!
@@ -490,7 +546,8 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                         },
                         tilePadding: const EdgeInsets.all(0),
                         shape: const Border(),
-                        leading: Image.asset("assets/images/payments/qrish.png"),
+                        leading:
+                            Image.asset("assets/images/payments/qrish.png"),
                         title: Text(
                           "QR Code",
                           style: Theme.of(context)
@@ -517,8 +574,9 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                               .titleMedium!
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
-                        subtitle:
-                            _enteredBank.trim().isNotEmpty ? Text(_enteredBank) : null,
+                        subtitle: _enteredBank.trim().isNotEmpty
+                            ? Text(_enteredBank)
+                            : null,
                         trailing: Icon(
                           Icons.radio_button_checked,
                           color: _selectedTile == 1
@@ -539,9 +597,40 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                             itemBuilder: (context, index) {
                               final bank = _banks[index];
                               return ListTile(
-                                leading: Image.asset(bank["image"]!),
+                                leading: Container(
+                                  width: AppSize.getWidth(context) * 28 / 360,
+                                  height: AppSize.getWidth(context) * 28 / 360,
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: AppColors.whitePurple
+                                  ),
+                                  child: Image.network(bank["image"]!, fit: BoxFit.contain,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  }),
+                                ),
                                 title: Text(bank["name"]!),
-                                trailing: _enteredBank == bank["name"] && _enteredPaymentMethod == "bank"
+                                trailing: _enteredBank == bank["name"] &&
+                                        _enteredPaymentMethod == "bank"
                                     ? const Icon(Icons.check,
                                         color: Colors.blue)
                                     : null,

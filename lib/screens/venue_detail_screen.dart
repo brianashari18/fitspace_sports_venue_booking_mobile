@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:fitspace_sports_venue_booking_mobile/models/field_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/book_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/booking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
@@ -196,7 +198,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                 const Icon(Icons.star, color: Colors.amber),
                                 const SizedBox(width: 4),
                                 Text(
-                                  '${totalRating.toStringAsFixed(2)} ${totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)'}',
+                                  '${totalRating.toStringAsFixed(1)} ${totalReview > 1 ? '($totalReview Reviews)' : '($totalReview Review)'}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -387,7 +389,14 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                                         .map((photo) => photo.photoUrl!)
                                         .toList(),
                                     onBook: () {
-                                      print('Booked');
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) => BookScreen(
+                                          user: widget.user,
+                                          venue: venue,
+                                          field: field,
+                                        ),
+                                      ));
                                     },
                                   ),
                                   const SizedBox(height: 8),
@@ -599,7 +608,7 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
         tempRating += rating['rating'];
         print('temp : $tempRating');
       }
-      tempTotal += tempRating / 5;
+      tempTotal += tempRating / field['reviews']?.length;
       print('tot : $tempTotal');
       tempRating = 0;
     }
@@ -611,7 +620,10 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     if (result['success'] == true) {
       List<dynamic> data = result['data'];
       setState(() {
-        fields = data.map((item) => Field.fromJson(item)).toList();
+        fields = data.map((item) {
+          print(item);
+          return Field.fromJson(item);
+        }).toList();
       });
     } else {
       // Show error message if there is an issue loading fields
