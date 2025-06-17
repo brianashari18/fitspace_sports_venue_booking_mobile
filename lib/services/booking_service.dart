@@ -41,4 +41,59 @@ class BookingService {
       return {'success': false, 'error': 'Error: $e'};
     }
   }
+
+  Future<Map<String, dynamic>> get(User user) async {
+    try {
+      final response = await http.get(
+          Uri.parse('$_baseUrl/user/bookings/all'),
+          headers: {
+            'Authorization': 'Bearer ${user.token}'
+          });
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        return {
+          'success': true,
+          'data': body['data'],
+        };
+      } else if (response.statusCode == 400) {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      } else {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> cancel(User user, int bookingId) async {
+    try {
+      final response = await http.patch(
+          Uri.parse('$_baseUrl/bookings/$bookingId/update'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${user.token}'
+          },
+          body: jsonEncode({'status': 'canceled'})
+      );
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        return {
+          'success': true,
+          'data': body['data'],
+        };
+      } else if (response.statusCode == 400) {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      } else {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Error: $e'};
+    }
+  }
 }

@@ -32,19 +32,23 @@ class Venue {
     this.owner,
   });
 
+  factory Venue.empty() {
+    return Venue();
+  }
+
   factory Venue.fromJson(Map<String, dynamic> json) {
     return Venue(
-      id: json['id'],
-      name: json['name'],
-      phoneNumber: json['phone_number'],
-      street: json['street'],
-      district: json['district'],
-      cityOrRegency: json['city_or_regency'],
-      province: json['province'],
-      postalCode: json['postal_code'],
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
-      rating: (json['rating'] as num).toDouble() ?? 0,
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      phoneNumber: json['phone_number'] as String?,
+      street: json['street'] as String?,
+      district: json['district'] as String?,
+      cityOrRegency: json['city_or_regency'] as String?,
+      province: json['province'] as String?,
+      postalCode: json['postal_code'] as String?,
+      latitude: json['latitude'] != null ? (json['latitude'] as num).toDouble() : null,
+      longitude: json['longitude'] != null ? (json['longitude'] as num).toDouble() : null,
+      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : 0.0,
       fields: json['fields'] != null
           ? List<Field>.from(json['fields'].map((e) => Field.fromJson(e)))
           : [],

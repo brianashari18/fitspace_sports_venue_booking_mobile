@@ -1,9 +1,13 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.dart';
 
 class AllNearbyCourtScreen extends StatefulWidget{
-  const AllNearbyCourtScreen({super.key});
+  const AllNearbyCourtScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<AllNearbyCourtScreen> createState() => _AllNearbyCourtScreenState();
@@ -99,14 +103,8 @@ class _AllNearbyCourtScreenState extends State<AllNearbyCourtScreen>{
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CardVenueWidget(
-                imagePath: venue['imagePath'],
-                tags: List<String>.from(venue['tags']),
-                rating: venue['rating'],
-                name: venue['name'],
-                location: venue['location'],
-                price: venue['price'],
-                latitude: venue['latitude'],
-                longitude: venue['longitude'],
+                user: widget.user,
+                venue: venue as Venue,
               ),
             );
           },

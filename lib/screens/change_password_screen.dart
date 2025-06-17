@@ -1,15 +1,20 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 
 class ChangePasswordScreen extends StatefulWidget{
-  const ChangePasswordScreen({super.key});
+  const ChangePasswordScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
-  final TextEditingController _currPassword = TextEditingController();
+  final _authService = AuthService();
+  final TextEditingController _currPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
@@ -88,7 +93,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextField(
-                controller: _currPassword,
+                controller: _currPasswordController,
                 obscureText: _obscureCurrPassword,
                 onChanged: _checkPassword,
                 decoration: InputDecoration(
@@ -235,13 +240,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
   }
 
   void _resetPassword() async {
+    final currPassword = _currPasswordController.text;
     final newPassword = _newPasswordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
     setState(() {
+      _currPasswordError = null;
       _passwordError = null;
       _confirmPasswordError = null;
     });
+
+    if (currPassword.isEmpty) {
+      setState(() {
+        _currPasswordError = 'Password cannot be empty';
+      });
+      return;
+    }
 
     if (newPassword.isEmpty) {
       setState(() {
@@ -257,13 +271,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
       return;
     }
 
-    if (confirmPassword != confirmPassword) {
+    if (newPassword != confirmPassword) {
       _confirmPasswordError = 'Passwords do not match';
       FocusScope.of(context).requestFocus(FocusNode());
     }
 
-    // Validasi Password
-    if (_passwordError == null &&
+    if (_currPasswordError == null && _passwordError == null &&
         _confirmPasswordError == null &&
         _isMinLength &&
         _hasUpperCase &&
@@ -271,22 +284,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>{
         _hasNumber &&
         _hasSpecialCharacter) {
 
-      // final result = await _apiService.resetPassword(
-      //     newPassword, confirmPassword, widget.email);
-      //
-      // if (result['success'] == 'true') {
-      //   final message = result['message'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(message)));
-      //
-      //   Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //           builder: (context) => const ResetSuccessScreen()));
-      // } else {
-      //   final errorMessage = result['error'];
-      //   ScaffoldMessenger.of(context)
-      //       .showSnackBar(SnackBar(content: Text(errorMessage)));
-      // }
+      final result = await _authService.changePassword(widget.user, currPassword, newPassword, confirmPassword);
+
+      if (result['success'] == 'true') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password updated successfully')),
+        );
+      } else {
+        final errorMessage = result['error'] is String
+            ? result['error']
+            : (result['error'] as List).join('\n');
+
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+      }
     }
   }
 }

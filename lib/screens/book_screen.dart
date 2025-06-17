@@ -363,6 +363,8 @@ class _BookScreenState extends State<BookScreen> {
                                                 _selectedDate.day;
                                           }).toList();
 
+                                          print("TODAY: $fsToday");
+
                                           final List<FieldSchedule> sortedFs =
                                               List.from(fsToday)
                                                 ..sort((a, b) {
@@ -376,6 +378,12 @@ class _BookScreenState extends State<BookScreen> {
                                                   return aStartHour
                                                       .compareTo(bStartHour);
                                                 });
+
+                                          if (!sortedFs.isNotEmpty && !(index < sortedFs.length)) {
+                                            print('Error: The list is empty or index is out of range');
+                                            return Container();
+                                          }
+
 
                                           final selectedFs = sortedFs[index];
 

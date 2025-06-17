@@ -1,8 +1,6 @@
-import 'dart:math';
 
 import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
-import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
@@ -19,52 +17,11 @@ class MainVenueScreen extends StatefulWidget {
 
 class _MainVenueScreenState extends State<MainVenueScreen> {
   final _venueService = VenueService();
-  final _userService = UserService();
+  final _searchController = TextEditingController();
 
   List<Venue> _venues = [];
-
-  List<Map<String, dynamic>> venues = [
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 1',
-      'price': 'IDR 100K',
-      'rating': 4.5,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 12.9716,
-      'longitude': 77.5946,
-      'tags': ['Football', 'Basketball'],
-    },
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 2',
-      'price': 'IDR 150K',
-      'rating': 4.8,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 13.0827,
-      'longitude': 80.2707,
-      'tags': ['Badminton', 'Volleyball'],
-    },
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 2',
-      'price': 'IDR 150K',
-      'rating': 4.8,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 13.0827,
-      'longitude': 80.2707,
-      'tags': ['Badminton', 'Volleyball'],
-    },
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 1',
-      'price': 'IDR 100K',
-      'rating': 4.5,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 12.9716,
-      'longitude': 77.5946,
-      'tags': ['Football', 'Basketball'],
-    },
-  ];
+  List<Venue> _searchedVenues = [];
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -74,6 +31,7 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -84,10 +42,24 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.baseColor,
         automaticallyImplyLeading: false,
-        title: const SafeArea(
+        title: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
-            child: Align(
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+            child: _isSearching
+                ? TextField(
+              controller: _searchController,
+              onChanged: (value) {
+              _applyFilters(value);
+              },
+              autofocus: true,
+              style: const TextStyle(color: AppColors.darkGrey),
+              decoration: const InputDecoration(
+                hintText: 'Search...',
+                hintStyle: TextStyle(color: AppColors.darkGrey),
+                border: InputBorder.none,
+              ),
+            )
+                : const Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Find a Venue',
@@ -104,39 +76,48 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 15),
             child: IconButton(
-              icon: const Icon(
-                Icons.search,
+              icon: Icon(
+                _isSearching ? Icons.clear : Icons.search,
                 color: AppColors.darkGrey,
                 size: 30,
               ),
               onPressed: () {
-
+                setState(() {
+                  if (_isSearching) {
+                    _isSearching = false;
+                    _searchController.clear();
+                    _searchedVenues.clear();
+                  } else {
+                    _isSearching = true;
+                  }
+                });
               },
             ),
           ),
         ],
       ),
       body: SafeArea(
-        child: ListView.builder(
+        child: _searchedVenues.isNotEmpty ? ListView.builder(
+          itemCount: _searchedVenues.length,
+          itemBuilder: (context, index) {
+            Venue venue = _searchedVenues[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: CardVenueWidget(
+                user: widget.user,
+                venue: venue,
+              ),
+            );
+          },
+        ) : ListView.builder(
           itemCount: _venues.length,
           itemBuilder: (context, index) {
             Venue venue = _venues[index];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CardVenueWidget(
-                imagePath: venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : '',
-                tags: List<String>.from(venue.fields!.map((e) => e.type,)),
-                rating: venue.rating!,
-                name: venue.name!,
-                location: venue.cityOrRegency!,
-                price: venue.fields != null && venue.fields!.isNotEmpty
-                    ? venue.fields!
-                    .map((e) => e.price)
-                    .reduce((a, b) => min(a!, b!))!.toDouble()
-                    : 0,
-
-                latitude: venue.latitude,
-                longitude: venue.longitude,
+                user: widget.user,
+                venue: venue,
               ),
             );
           },
@@ -172,6 +153,24 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
         SnackBar(content: Text(errorMessage)),
       );
     }
+  }
+
+  void _applyFilters(String query) {
+    List<Venue> tempFilteredVenues = List.from(_venues);
+
+    if (_searchController.text.isNotEmpty) {
+      final query = _searchController.text.toLowerCase();
+      tempFilteredVenues = tempFilteredVenues.where((venue) {
+        return venue.name!.toLowerCase().contains(query) ||
+            venue.district!.toLowerCase().contains(query) ||
+            venue.cityOrRegency!.toLowerCase().contains(query);
+      }).toList();
+    }
+
+    setState(() {
+      _searchedVenues = tempFilteredVenues;
+      print(_searchedVenues);
+    });
   }
 
 }

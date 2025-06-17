@@ -210,7 +210,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> changePassword(
-      User user, String password, String confirmPassword) async {
+      User user, String currentPassword, String newPassword, String confirmPassword) async {
     try {
       final response = await http.patch(
         Uri.parse('$_baseUrl/changePassword/${user.id}'),
@@ -219,8 +219,9 @@ class AuthService {
           'Authorization': 'Bearer ${user.token}'
         },
         body: json.encode({
-          'password' : password,
-          'confirm_password' : confirmPassword
+          'current_password' : currentPassword,
+          'new_password' : newPassword,
+          'confirmation_password' : confirmPassword
         }),
       );
 

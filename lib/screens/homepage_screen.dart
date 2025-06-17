@@ -1,5 +1,8 @@
 import 'dart:math';
 import 'package:fitspace_sports_venue_booking_mobile/models/field_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/models/filter_drawer_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/all_nearby_court_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/screens/all_recommend_court_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/notification_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/venue_detail_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
@@ -7,6 +10,7 @@ import 'package:fitspace_sports_venue_booking_mobile/widgets/filter_drawer.dart'
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:intl/intl.dart';
 import '../models/user_model.dart';
 import '../models/venue_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
@@ -176,10 +180,53 @@ class _HomepageScreenState extends State<HomepageScreen> {
           ),
         ),
       ),
-      endDrawer: FilterDrawer(onFilterApplied: (FilterOptions) {
-        // You would likely apply these filters here to the venues list
-        // and then call _applyFilters() to update nearbyVenues and recommendedVenues.
+      endDrawer: FilterDrawer(onFilterApplied: (FilterOptions filterOptions) {
+        setState(() {
+          final tempFilteredVenues = _venues.where((venue) {
+            bool matchesPrice = true;
+            if (filterOptions.minPrice != null || filterOptions.maxPrice != null) {
+              matchesPrice = venue.fields!.any((field) {
+                bool priceMatches = true;
+                if (filterOptions.minPrice != null) {
+                  priceMatches = field.price! >= filterOptions.minPrice!;
+                }
+                if (filterOptions.maxPrice != null) {
+                  priceMatches = priceMatches && field.price! <= filterOptions.maxPrice!;
+                }
+                return priceMatches;
+              });
+            }
+
+            bool matchesRating = true;
+            if (filterOptions.ratingSort != null) {
+              matchesRating = true;
+            }
+
+            bool matchesName = true;
+            if (filterOptions.nameSort != null) {
+              matchesName = true;
+            }
+
+            return matchesPrice;
+          }).toList();
+
+          if (filterOptions.ratingSort == 'Ascending') {
+            tempFilteredVenues.sort((a, b) => a.rating!.compareTo(b.rating!));
+          } else if (filterOptions.ratingSort == 'Descending') {
+            tempFilteredVenues.sort((a, b) => b.rating!.compareTo(a.rating!));
+          }
+
+          if (filterOptions.nameSort == 'Ascending') {
+            tempFilteredVenues.sort((a, b) => a.name!.compareTo(b.name!));
+          } else if (filterOptions.nameSort == 'Descending') {
+            tempFilteredVenues.sort((a, b) => b.name!.compareTo(a.name!));
+          }
+
+          _nearbyVenues = tempFilteredVenues;
+          _recommendedVenues = tempFilteredVenues.take(5).toList();
+        });
       }),
+
     );
   }
 
@@ -196,9 +243,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black)),
             TextButton(
-              onPressed: () => setState(() => showAllNearby = !showAllNearby),
-              child: Text(showAllNearby ? 'See Less' : 'See All',
-                  style: const TextStyle(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AllNearbyCourtScreen(user: widget.user),
+                ));
+              },
+              child: const Text('See All',
+                  style: TextStyle(
                       fontSize: 16, color: AppColors.darkerPrimaryColor)),
             ),
           ],
@@ -294,10 +345,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black)),
             TextButton(
-              onPressed: () =>
-                  setState(() => showAllRecommended = !showAllRecommended),
-              child: Text(showAllRecommended ? 'See Less' : 'See All',
-                  style: const TextStyle(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllRecommendCourtScreen(user: widget.user,),));
+              },
+              child: const Text('See All',
+                  style: TextStyle(
                       fontSize: 16, color: AppColors.darkerPrimaryColor)),
             ),
           ],
@@ -482,7 +534,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
           const Text('Start From: ',
               style: TextStyle(fontSize: 12, color: AppColors.darkGrey)),
           Text(
-              '${venue.fields != null && venue.fields!.isNotEmpty ? venue.fields!.map((e) => e.price).reduce((a, b) => min(a!, b!))!.toDouble() : 0}',
+              'Rp${NumberFormat('#,###', 'id_ID').format(venue.fields != null && venue.fields!.isNotEmpty ? venue.fields!.map((e) => e.price).reduce((a, b) => min(a!, b!))!.toDouble() : 0)}',
               style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,

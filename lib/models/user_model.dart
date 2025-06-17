@@ -46,4 +46,9 @@ class User {
       'created_at': joinedAt
     };
   }
+
+  @override
+  String toString() {
+    return 'User(id: $id, email: $email, firstName: $firstName, lastName: $lastName, createdAt: $joinedAt)';
+  }
 }

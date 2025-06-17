@@ -15,8 +15,11 @@ class _FilterDrawerState extends State<FilterDrawer> {
   TextEditingController minPriceController = TextEditingController();
   TextEditingController maxPriceController = TextEditingController();
 
-  String? ratingSort = 'Ascending';
-  String? nameSort = 'Ascending';
+  String? ratingSort;
+  String? nameSort;
+
+  bool? _onChoosedRatingAsc;
+  bool? _onChoosedNameAsc;
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +99,11 @@ class _FilterDrawerState extends State<FilterDrawer> {
                           onPressed: () {
                             setState(() {
                               ratingSort = 'Ascending';
+                              _onChoosedRatingAsc = true;
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white54,
+                            backgroundColor: _onChoosedRatingAsc == null ? Colors.white60 : (_onChoosedRatingAsc! ? Colors.white10 : Colors.white60),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -116,10 +120,11 @@ class _FilterDrawerState extends State<FilterDrawer> {
                           onPressed: () {
                             setState(() {
                               ratingSort = 'Descending';
+                              _onChoosedRatingAsc = false;
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white54,
+                            backgroundColor: _onChoosedRatingAsc == null ? Colors.white60 : (_onChoosedRatingAsc! ? Colors.white60 : Colors.white10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -153,10 +158,11 @@ class _FilterDrawerState extends State<FilterDrawer> {
                           onPressed: () {
                             setState(() {
                               nameSort = 'Ascending';
+                              _onChoosedNameAsc = true;
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white54,
+                            backgroundColor: _onChoosedNameAsc == null ? Colors.white60 : (_onChoosedNameAsc! ? Colors.white10 : Colors.white60),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -173,10 +179,11 @@ class _FilterDrawerState extends State<FilterDrawer> {
                           onPressed: () {
                             setState(() {
                               nameSort = 'Descending';
+                              _onChoosedNameAsc = false;
                             });
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white54,
+                            backgroundColor: _onChoosedNameAsc == null ? Colors.white60 : (_onChoosedNameAsc! ? Colors.white60 : Colors.white10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -258,6 +265,8 @@ class _FilterDrawerState extends State<FilterDrawer> {
     double? maxPrice = maxPriceController.text.isNotEmpty
         ? double.tryParse(maxPriceController.text)
         : null;
+
+    print('min: $minPrice, max: $maxPrice, rat: $ratingSort, nam: $nameSort');
 
     widget.onFilterApplied(FilterOptions(
       minPrice: minPrice,

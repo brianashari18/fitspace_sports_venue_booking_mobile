@@ -1,46 +1,30 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/booking_service.dart';
+import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:intl/intl.dart';
+
+import '../models/booking_model.dart';
 
 class BookingHistoryScreen extends StatefulWidget {
-  const BookingHistoryScreen({super.key});
+  const BookingHistoryScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<BookingHistoryScreen> createState() => _BookingHistoryScreenState();
 }
 
 class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
-  final List<Map<String, String>> bookingData = [
-    {
-      'status': 'Completed',
-      'venueName': 'Oasis Siliwangi',
-      'location': 'Bandung',
-      'field': 'Swimming Pool',
-      'date': '17 Aug',
-      'time': '14.00-15.00',
-      'price': 'Rp 31.500',
-      'image': 'assets/images/dummy/venue_dummy.png',
-    },
-    {
-      'status': 'Waiting for Payment',
-      'venueName': 'Oasis Siliwangi',
-      'location': 'Bandung',
-      'field': 'Swimming Pool',
-      'date': '17 Aug',
-      'time': '14.00-15.00',
-      'price': 'Rp 31.500',
-      'image': 'assets/images/dummy/venue_dummy.png',
-    },
-    {
-      'status': 'Canceled',
-      'venueName': 'Oasis Siliwangi',
-      'location': 'Bandung',
-      'field': 'Swimming Pool',
-      'date': '17 Aug',
-      'time': '14.00-15.00',
-      'price': 'Rp 31.500',
-      'image': 'assets/images/dummy/venue_dummy.png',
-    },
-  ];
+  final _bookingService = BookingService();
+  List<Booking> _orders = [];
+
+  @override
+  void initState() {
+    _getOrders();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,60 +51,82 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
         ),
       ),
       body: ListView.builder(
-        itemCount: bookingData.length,
+        itemCount: _orders.length,
         itemBuilder: (context, index) {
-          return BookingCard(
-            status: bookingData[index]['status']!,
-            venueName: bookingData[index]['venueName']!,
-            location: bookingData[index]['location']!,
-            field: bookingData[index]['field']!,
-            date: bookingData[index]['date']!,
-            time: bookingData[index]['time']!,
-            price: bookingData[index]['price']!,
-            image: bookingData[index]['image']!,
-          );
+          final order = _orders[index];
+          return BookingCard(order: order, onCancelled: () {
+            _cancelOrder(order);
+          },);
         },
       ),
     );
   }
+
+  void _getOrders() async {
+    final result = await _bookingService.get(widget.user);
+
+    if (result['success'] == true) {
+      final data = result['data'];
+      setState(() {
+        _orders = List<Booking>.from(data.map((e) => Booking.fromJson(e)));
+      });
+
+      for (var order in _orders) {
+        print(order);
+      }
+    } else {
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+  }
+
+  void _cancelOrder(Booking order) async {
+    final result = await _bookingService.cancel(widget.user, order.id!);
+
+    if (result['success'] == true) {
+      _getOrders();
+    } else {
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+  }
 }
 
 class BookingCard extends StatelessWidget {
-  final String status;
-  final String venueName;
-  final String location;
-  final String field;
-  final String date;
-  final String time;
-  final String price;
-  final String image;
+  final Booking order;
+  final void Function() onCancelled;
 
   const BookingCard({
     super.key,
-    required this.status,
-    required this.venueName,
-    required this.location,
-    required this.field,
-    required this.date,
-    required this.time,
-    required this.price,
-    required this.image,
+    required this.order, required this.onCancelled,
   });
 
   @override
   Widget build(BuildContext context) {
     Color statusColor;
     Color textColor;
-    switch (status) {
-      case 'Completed':
+    switch (order.status!.toLowerCase()) {
+      case 'finished':
         statusColor = AppColors.green;
         textColor = AppColors.darkGreen;
         break;
-      case 'Waiting for Payment':
+      case 'ongoing':
         statusColor = AppColors.yellow;
         textColor = AppColors.darkYellow;
         break;
-      case 'Canceled':
+      case 'canceled':
         statusColor = AppColors.red;
         textColor = AppColors.darkRed;
         break;
@@ -141,13 +147,14 @@ class BookingCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    status,
+                    '${order.status!.substring(0, 1).toUpperCase()}${order.status!.substring(1, order.status!.length).toLowerCase()}',
                     style: TextStyle(
                       color: textColor,
                       fontSize: 12,
@@ -155,7 +162,7 @@ class BookingCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  price,
+                  'Rp ${NumberFormat('#,###', 'id_ID').format(order.field!.price!)}',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -170,15 +177,28 @@ class BookingCard extends StatelessWidget {
             ),
             Row(
               children: [
-                Container(
-                  width: 90,
-                  height: 90,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    image: DecorationImage(
-                      image: AssetImage(image),
-                      fit: BoxFit.cover,
-                    ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    'http://192.168.18.11:8080${order.field!.gallery![0].photoUrl != null ? order.field!.gallery![0].photoUrl! : ''}',
+                    width: 90,
+                    height: 90,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                : null,
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -187,12 +207,11 @@ class BookingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        venueName,
+                        order.field!.venue!.name!,
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.darkGrey
-                        ),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.darkGrey),
                       ),
                       const SizedBox(height: 4),
                       Row(
@@ -204,7 +223,7 @@ class BookingCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '$location, | ,$field',
+                            '${order.field!.venue!.cityOrRegency!} | ${order.field!.type!}',
                             style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.darkGrey,
@@ -222,7 +241,7 @@ class BookingCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '$date, $time',
+                            '${order.schedule!.date!.day} ${DateFormat('MMMM').format(order.schedule!.date!).substring(0, 3)}, ${order.schedule!.timeSlot!}',
                             style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.darkGrey,
@@ -230,6 +249,26 @@ class BookingCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      order.status! == 'ongoing'
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12))
+                              ),
+                              onPressed: onCancelled,
+                              child: Text(
+                                'Cancel Order',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(
+                                      color: AppColors.whitePurple,
+                                      fontSize:
+                                          AppSize.getWidth(context) * 14 / 360,
+                                    ),
+                              ))
+                          : Container()
                     ],
                   ),
                 ),

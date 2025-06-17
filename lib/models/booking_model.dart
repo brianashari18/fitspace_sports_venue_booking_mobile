@@ -1,20 +1,17 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/field_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/schedule_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 
 class Booking {
   final int? id;
   final String? status;
-  final int? customerId;
-  final int? scheduleId;
-  final int? fieldId;
   final User? customer;
+  final Field? field;
   final Schedule? schedule;
 
   Booking({this.id,
     this.status,
-    this.customerId,
-    this.scheduleId,
-    this.fieldId,
+    this.field,
     this.customer,
     this.schedule});
 
@@ -22,22 +19,23 @@ class Booking {
     return Booking(
         id: json['id'],
         status: json['status'],
-        customerId: json['customer_id'],
-        scheduleId: json['schedule_id'],
-        fieldId: json['field_id'],
-        customer: json['customer'],
-        schedule: json['schedule']);
+        field: json['field'] != null ? Field.fromJson(json['field']) : Field.empty(),
+        customer: json['customer'] != null ? User.fromJson(json['customer']) : User.empty(),
+        schedule: json['schedule'] != null ? Schedule.fromJson(json['schedule']) : Schedule.empty());
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'status': status,
-      'customer_id': customerId,
-      'schedule_id': scheduleId,
-      'field_id': fieldId,
+      'field': field,
       'customer': customer,
       'schedule': schedule,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Booking(id: $id, status: $status, field: $field, customer: $customer, schedule: $schedule)';
   }
 }

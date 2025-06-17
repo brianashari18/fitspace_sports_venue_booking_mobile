@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MyAccountScreen(),
+                            builder: (context) => MyAccountScreen(user: widget.user,),
                           ),
                         );
                       },
@@ -117,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ChangePasswordScreen(),
+                            builder: (context) => ChangePasswordScreen(user: widget.user,),
                           ),
                         );
                       },
@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       subtitle: 'Manage your listed venues and bookings',
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const MyVenueScreen(),
+                          builder: (context) => MyVenueScreen(user: widget.user,),
                         ));
                       },
                     ),

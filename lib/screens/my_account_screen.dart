@@ -1,20 +1,31 @@
+import 'package:fitspace_sports_venue_booking_mobile/screens/main_screen.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/auth_service.dart';
+import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 
+import '../models/user_model.dart';
+
 class MyAccountScreen extends StatefulWidget {
-  const MyAccountScreen({super.key});
+  const MyAccountScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<MyAccountScreen> createState() => _MyAccountScreenState();
 }
 
 class _MyAccountScreenState extends State<MyAccountScreen> {
+  final _authService = AuthService();
+  final _userService = UserService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
 
   String? _firstNameError;
   String? _lastNameError;
+
+  bool _isSubmit = false;
 
   @override
   void dispose() {
@@ -88,18 +99,18 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Username',
-                    style: TextStyle(
+                  Text(
+                    '${widget.user.firstName!} ${widget.user.lastName!}',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppColors.darkGrey,
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    'email@example.com',
-                    style: TextStyle(
+                  Text(
+                    widget.user.email!,
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.grey,
                     ),
@@ -182,6 +193,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
             const SizedBox(height: 40),
             SizedBox(
               width: double.infinity,
+              height: 50,
               child: ElevatedButton(
                 onPressed: _updateProfile,
                 style: ElevatedButton.styleFrom(
@@ -191,7 +203,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
+                child: _isSubmit ? const Center(child: CircularProgressIndicator()) : const Text(
                   'Update Profile',
                   style: TextStyle(
                     color: AppColors.whitePurple,
@@ -207,21 +219,51 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     );
   }
 
-  void _updateProfile() {
+  void _updateProfile() async {
     setState(() {
+      _isSubmit = true;
       _firstNameError = _firstNameController.text.isEmpty
           ? 'First name cannot be empty'
           : null;
-      _lastNameError = _lastNameController.text.isEmpty
-          ? 'Last name cannot be empty'
-          : null;
     });
 
-    if (_firstNameController.text.isNotEmpty &&
-        _lastNameController.text.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
-      );
+    if (_firstNameController.text.isNotEmpty) {
+
+      final result = await _authService.changeUsername(widget.user, _firstNameController.text, _lastNameController.text);
+
+      if (result['success'] == 'true') {
+        setState(() {
+
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+
+        final user = User(
+          id: widget.user.id!,
+          email: widget.user.email!,
+          token: widget.user.token!,
+          firstName: _firstNameController.text,
+          lastName: _lastNameController.text,
+        );
+
+        await _userService.saveUser(user);
+
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainScreen(user: user),), (route) => false,);
+      } else {
+        final errorMessage = result['error'] is String
+            ? result['error']
+            : (result['error'] as List).join('\n');
+
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+      }
+
+      setState(() {
+        _isSubmit = false;
+      });
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/add_venue_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
@@ -8,7 +9,9 @@ import 'package:fitspace_sports_venue_booking_mobile/widgets/card_venue_widget.d
 import '../models/venue_model.dart';
 
 class MyVenueScreen extends StatefulWidget {
-  const MyVenueScreen({super.key});
+  const MyVenueScreen({super.key, required this.user});
+
+  final User user;
 
   @override
   State<MyVenueScreen> createState() => _MyVenueScreenState();
@@ -16,7 +19,6 @@ class MyVenueScreen extends StatefulWidget {
 
 class _MyVenueScreenState extends State<MyVenueScreen> {
   final _venueService = VenueService();
-  final _userService = UserService();
 
   List<Map<String, dynamic>> venues = [
     {
@@ -113,14 +115,8 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CardVenueWidget(
-                imagePath: venue['imagePath'],
-                tags: List<String>.from(venue['tags']),
-                rating: venue['rating'],
-                name: venue['name'],
-                location: venue['location'],
-                price: venue['price'],
-                latitude: venue['latitude'],
-                longitude: venue['longitude'],
+                user: widget.user,
+                venue: venue as Venue,
               ),
             );
           },
@@ -130,15 +126,7 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
   }
 
   void _loadVenues() async {
-    final user = await _userService.getUser();
-    if (user == null) {
-      setState(() {
-        _isLoad = false;
-      });
-      return;
-    }
-
-    final result = await _venueService.loadVenues(user);
+    final result = await _venueService.loadVenues(widget.user);
     print('res : $result');
 
     if (result['success'] == 'true') {
