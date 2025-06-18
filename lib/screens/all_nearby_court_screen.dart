@@ -105,6 +105,7 @@ class _AllNearbyCourtScreenState extends State<AllNearbyCourtScreen>{
               child: CardVenueWidget(
                 user: widget.user,
                 venue: venue as Venue,
+                sign: 'book',
               ),
             );
           },

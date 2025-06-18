@@ -20,21 +20,7 @@ class MyVenueScreen extends StatefulWidget {
 class _MyVenueScreenState extends State<MyVenueScreen> {
   final _venueService = VenueService();
 
-  List<Map<String, dynamic>> venues = [
-    {
-      'name': 'Progresif Sports',
-      'location': 'Location 1',
-      'price': 'IDR 100K',
-      'rating': 4.5,
-      'imagePath': 'assets/images/dummy/venue_dummy.png',
-      'latitude': 12.9716,
-      'longitude': 77.5946,
-      'tags': ['Football', 'Basketball'],
-    }
-  ];
-
   var _myVenues = [];
-
   var _isLoad = true;
 
   @override
@@ -87,9 +73,13 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
           padding: const EdgeInsets.all(20),
           decoration: const BoxDecoration(color: AppColors.base),
           child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
+              onPressed: () async {
+                final back = await Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const AddVenueScreen(),));
+
+                if (back) {
+                  _loadVenues();
+                }
               },
               style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -108,15 +98,36 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
         ),
       ),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: venues.length,
+        child: _myVenues.isEmpty ? const Center(
+          child: SizedBox(
+            height: 230,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.sentiment_dissatisfied,
+                    size: 40, color: AppColors.darkGrey),
+                SizedBox(height: 10),
+                Text(
+                  'No venues found',
+                  style: TextStyle(
+                      fontSize: 16, color: AppColors.darkGrey),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ) : ListView.builder(
+          itemCount: _myVenues.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            var venue = venues[index];
+            var venue = _myVenues[index];
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CardVenueWidget(
                 user: widget.user,
                 venue: venue as Venue,
+                sign: 'owner',
               ),
             );
           },
@@ -126,14 +137,14 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
   }
 
   void _loadVenues() async {
-    final result = await _venueService.loadVenues(widget.user);
-    print('res : $result');
+    final result = await _venueService.loadVenuesByOwner(widget.user);
+    print('venues: $result');
 
     if (result['success'] == 'true') {
       List<dynamic> data = result['data'];
       setState(() {
         _myVenues = data.map((item) => Venue.fromJson(item)).toList();
-        print(_myVenues);
+        print('myvenues: $_myVenues');
         _isLoad = false;
       });
     } else {

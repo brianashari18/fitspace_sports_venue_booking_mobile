@@ -462,44 +462,39 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
                     width: double.infinity,
                     height: 120,
                     child: imagePaths.length == 1
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    'http://192.168.18.11:8080${imagePaths[0]}',
-                                    fit: BoxFit.cover,
-                                    width: 250,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      } else {
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                        .cumulativeBytesLoaded /
-                                                    (loadingProgress
-                                                            .expectedTotalBytes ??
-                                                        1)
-                                                : null,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                        ? Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              'http://192.168.18.11:8080${imagePaths[0]}',
+                              fit: BoxFit.cover,
+                              width: 250,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress
+                                                  .expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              (loadingProgress
+                                                      .expectedTotalBytes ??
+                                                  1)
+                                          : null,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        )
                         : ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: imagePaths.length,
@@ -600,23 +595,6 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
     List<dynamic> fieldsData =
         result['data']; // Assuming response['data'] contains your fields
 
-    num tempRating = 0;
-    num tempTotal = 0;
-    for (var field in fieldsData) {
-      totalReview += field['reviews']?.length ?? 0;
-      for (var rating in field['reviews']) {
-        tempRating += rating['rating'];
-        print('temp : $tempRating');
-      }
-      tempTotal += tempRating / field['reviews']?.length;
-      print('tot : $tempTotal');
-      tempRating = 0;
-    }
-    totalRating = tempTotal / widget.venue.fields!.length;
-
-    print("Total Reviews: $totalReview");
-    print('res : ${result['data'][0]['reviews']}');
-
     if (result['success'] == true) {
       List<dynamic> data = result['data'];
       setState(() {
@@ -624,6 +602,31 @@ class VenueDetailScreenState extends State<VenueDetailScreen> {
           print(item);
           return Field.fromJson(item);
         }).toList();
+
+        totalReview = 0;
+        num tempRating = 0;
+        num tempTotal = 0;
+
+        for (var field in fields) {
+          var reviews = field.review;
+          if (reviews != null && reviews.isNotEmpty) {
+            totalReview += reviews.length;
+            for (var review in reviews) {
+              tempRating += review.rating!;
+            }
+            tempTotal += tempRating / reviews.length;
+            tempRating = 0;
+          }
+        }
+
+        if (fields.isNotEmpty) {
+          totalRating = tempTotal / fields.length;
+        } else {
+          totalRating = 0;
+        }
+
+        print("Total Reviews: $totalReview");
+        print("Total Rating: $totalRating");
       });
     } else {
       // Show error message if there is an issue loading fields

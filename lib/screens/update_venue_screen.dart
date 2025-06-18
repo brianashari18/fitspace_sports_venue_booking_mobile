@@ -1,3 +1,4 @@
+import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/venue_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
@@ -7,14 +8,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
-class AddVenueScreen extends StatefulWidget {
-  const AddVenueScreen({super.key});
+class UpdateVenueScreen extends StatefulWidget {
+  const UpdateVenueScreen({super.key, required this.venue});
+
+  final Venue venue;
 
   @override
-  State<AddVenueScreen> createState() => _AddVenueScreenState();
+  State<UpdateVenueScreen> createState() => _UpdateVenueScreenState();
 }
 
-class _AddVenueScreenState extends State<AddVenueScreen> {
+class _UpdateVenueScreenState extends State<UpdateVenueScreen> {
   final _formKey = GlobalKey<FormState>();
   final _venueService = VenueService();
   final _userService = UserService();
@@ -35,6 +38,16 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
 
   @override
   void initState() {
+    _enteredVenueName = widget.venue.name!;
+    _enteredPhoneNumber = widget.venue.phoneNumber!;
+    _enteredStreet = widget.venue.street!;
+    _enteredDistrict = widget.venue.district!;
+    _enteredCityOrRegency = widget.venue.cityOrRegency!;
+    _enteredProvince = widget.venue.province!;
+    _enteredPostalCode = widget.venue.postalCode!;
+    _enteredLatitude = widget.venue.latitude!;
+    _enteredLongitude = widget.venue.longitude!;
+
     _getCurrentLocation();
     super.initState();
   }
@@ -63,7 +76,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
                 ),
                 const Spacer(),
                 const Text(
-                  'Add Venue',
+                  'Update Venue',
                   style: TextStyle(
                     color: AppColors.darkGrey,
                     fontSize: 24,
@@ -129,6 +142,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
                           ),
                           child: TextFormField(
                             autocorrect: false,
+                            initialValue: _enteredVenueName,
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -205,6 +219,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
                           ),
                           child: TextFormField(
                             autocorrect: false,
+                            initialValue: _enteredPhoneNumber,
                             keyboardType: TextInputType.number,
                             style: Theme
                                 .of(context)
@@ -289,6 +304,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextFormField(
+                            initialValue: _enteredStreet,
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -533,6 +549,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextFormField(
+                            initialValue: _enteredDistrict,
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -608,6 +625,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: TextFormField(
+                            initialValue: _enteredPostalCode,
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -798,7 +816,7 @@ class _AddVenueScreenState extends State<AddVenueScreen> {
     if (result['success'] == 'true') {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Add Venue Successfully')),
+        const SnackBar(content: Text('Update Venue Successfully')),
       );
 
       Navigator.of(context).pop();

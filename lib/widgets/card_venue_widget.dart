@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:fitspace_sports_venue_booking_mobile/screens/my_venue_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:geolocator/geolocator.dart';
@@ -12,11 +13,13 @@ import '../screens/venue_detail_screen.dart';
 class CardVenueWidget extends StatefulWidget {
   final User user;
   final Venue venue;
+  final String sign;
 
   const CardVenueWidget({
     super.key,
     required this.user,
     required this.venue,
+    required this.sign,
   });
 
   @override
@@ -52,8 +55,9 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                VenueDetailScreen(user: widget.user, venue: widget.venue),
+            builder: (context) => widget.sign == 'owner'
+                ? MyVenueDetailScreen(user: widget.user, venue: widget.venue)
+                : VenueDetailScreen(user: widget.user, venue: widget.venue),
           ),
         );
       },
@@ -80,7 +84,10 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          'http://192.168.18.11:8080${widget.venue.fields![0].gallery![0].photoUrl != null ? widget.venue.fields![0].gallery![0].photoUrl! : ''}',
+                          widget.venue.fields!.isEmpty ||
+                                  widget.venue.fields![0].gallery!.isEmpty
+                              ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg'
+                              : 'http://192.168.18.11:8080${widget.venue.fields![0].gallery![0].photoUrl != null ? widget.venue.fields![0].gallery![0].photoUrl! : ''}',
                           width: double.infinity,
                           height: 100,
                           fit: BoxFit.cover,
@@ -107,40 +114,43 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Wrap(
-                                  spacing: 5,
-                                  runSpacing: 5,
-                                  children: List<String>.from(
-                                      widget.venue.fields!.map(
-                                    (e) => e.type,
-                                  )).map((tag) => fieldTag(tag)).toList(),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Row(
+                          widget.venue.fields!.isEmpty
+                              ? Container()
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Icon(
-                                      Icons.star,
-                                      size: 16,
-                                      color: Colors.amber,
+                                    Expanded(
+                                      child: Wrap(
+                                        spacing: 5,
+                                        runSpacing: 5,
+                                        children: List<String>.from(
+                                            widget.venue.fields!.map(
+                                          (e) => e.type,
+                                        )).map((tag) => fieldTag(tag)).toList(),
+                                      ),
                                     ),
-                                    Text(
-                                      '${widget.venue.rating}',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.darkGrey,
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            size: 16,
+                                            color: Colors.amber,
+                                          ),
+                                          Text(
+                                            '${widget.venue.rating}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.darkGrey,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
                           const SizedBox(height: 5),
                           Text(
                             widget.venue.name!,
@@ -185,23 +195,26 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
                             ],
                           ),
                           const SizedBox(height: 5),
-                          Row(
-                            children: [
-                              const Text(
-                                'Start From: ',
-                                style: TextStyle(
-                                    fontSize: 12, color: AppColors.darkGrey),
-                              ),
-                              Text(
-                                'Rp${NumberFormat('#,###', 'id_ID').format(widget.venue.fields != null && widget.venue.fields!.isNotEmpty ? widget.venue.fields!.map((e) => e.price).reduce((a, b) => min(a!, b!))!.toDouble() : 0)}',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.darkerPrimaryColor,
+                          widget.venue.fields!.isEmpty
+                              ? Container()
+                              : Row(
+                                  children: [
+                                    const Text(
+                                      'Start From: ',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.darkGrey),
+                                    ),
+                                    Text(
+                                      'Rp${NumberFormat('#,###', 'id_ID').format(widget.venue.fields != null && widget.venue.fields!.isNotEmpty ? widget.venue.fields!.map((e) => e.price).reduce((a, b) => min(a!, b!))!.toDouble() : 0)}',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.darkerPrimaryColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ],

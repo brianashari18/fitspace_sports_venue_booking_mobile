@@ -184,14 +184,16 @@ class _HomepageScreenState extends State<HomepageScreen> {
         setState(() {
           final tempFilteredVenues = _venues.where((venue) {
             bool matchesPrice = true;
-            if (filterOptions.minPrice != null || filterOptions.maxPrice != null) {
+            if (filterOptions.minPrice != null ||
+                filterOptions.maxPrice != null) {
               matchesPrice = venue.fields!.any((field) {
                 bool priceMatches = true;
                 if (filterOptions.minPrice != null) {
                   priceMatches = field.price! >= filterOptions.minPrice!;
                 }
                 if (filterOptions.maxPrice != null) {
-                  priceMatches = priceMatches && field.price! <= filterOptions.maxPrice!;
+                  priceMatches =
+                      priceMatches && field.price! <= filterOptions.maxPrice!;
                 }
                 return priceMatches;
               });
@@ -226,7 +228,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
           _recommendedVenues = tempFilteredVenues.take(5).toList();
         });
       }),
-
     );
   }
 
@@ -346,7 +347,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     color: Colors.black)),
             TextButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => AllRecommendCourtScreen(user: widget.user,),));
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AllRecommendCourtScreen(
+                    user: widget.user,
+                  ),
+                ));
               },
               child: const Text('See All',
                   style: TextStyle(
@@ -427,7 +432,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          'http://192.168.18.11:8080${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                          venue.fields![0].gallery!.isEmpty ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg' : 'http://192.168.18.11:8080${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
                           width: double.infinity,
                           height: 100,
                           fit: BoxFit.cover,
@@ -566,7 +571,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    setState(() => _currentPosition = position);
+    setState(() {
+      _currentPosition = position;
+    });
   }
 
   double _calculateDistance(
@@ -585,7 +592,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
     if (result['success'] == 'true') {
       List<dynamic> data = result['data'];
       setState(() {
-        _venues = data.map((item) => Venue.fromJson(item)).toList();
+        final tempVenues = List<Venue>.from(data.map((e) => Venue.fromJson(e)));
+        _venues =
+            tempVenues.where((venue) => venue.fields!.isNotEmpty && venue.owner!.id! != widget.user.id).toList();
         _nearbyVenues = _venues;
         _recommendedVenues = _venues.take(3).toList();
         _isLoading = false;
@@ -631,39 +640,5 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ),
       ),
     );
-  }
-
-  void _getVenues() async {
-    final user = await _userService.getUser();
-
-    if (user == null) {
-      return;
-    }
-
-    final result = await _venueService.loadVenues(user);
-
-    if (result['success'] == 'true') {
-      final data = result['data'];
-      print('Data: $data');
-
-      // Check if the widget is still mounted before calling setState
-      if (mounted) {
-        setState(() {
-          _venues = List<Venue>.from(data.map((e) => Venue.fromJson(e)));
-          for (var venue in _venues) {
-            print(venue);
-          }
-        });
-      }
-    } else {
-      final errorMessage = result['error'] is String
-          ? result['error']
-          : (result['error'] as List).join('\n');
-
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    }
   }
 }

@@ -106,6 +106,7 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
               child: CardVenueWidget(
                 user: widget.user,
                 venue: venue,
+                sign: 'book',
               ),
             );
           },
@@ -118,6 +119,7 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
               child: CardVenueWidget(
                 user: widget.user,
                 venue: venue,
+                sign: 'book',
               ),
             );
           },
@@ -137,7 +139,9 @@ class _MainVenueScreenState extends State<MainVenueScreen> {
       // Check if the widget is still mounted before calling setState
       if (mounted) {
         setState(() {
-          _venues = List<Venue>.from(data.map((e) => Venue.fromJson(e)));
+          final tempVenues = List<Venue>.from(data.map((e) => Venue.fromJson(e)));
+          _venues =
+              tempVenues.where((venue) => venue.fields!.isNotEmpty && venue.owner!.id! != widget.user.id).toList();
           for (var venue in _venues) {
             print(venue);
           }

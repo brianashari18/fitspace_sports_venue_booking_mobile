@@ -104,6 +104,7 @@ class _AllRecommendCourtScreenState extends State<AllRecommendCourtScreen>{
               child: CardVenueWidget(
                 user: widget.user,
                 venue: venue as Venue,
+                sign: 'book',
               ),
             );
           },
