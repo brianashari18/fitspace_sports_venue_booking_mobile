@@ -1,5 +1,6 @@
 import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -129,6 +130,38 @@ class VenueService {
       } else {
         final body = json.decode(response.body);
         return {'success': false, 'error': body['errors']};
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> loadVenuesAi(User user, Position position) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://${dotenv.env["HOST"]}:${dotenv.env["PORT_AI"]}/recommendations'),
+        headers: {
+          'Authorization': 'Bearer ${user.token}',
+          'Content-Type': 'application/json'
+        },
+        body: json.encode({
+          "user_id": user.id,
+          "user_lat": position.latitude,
+          "user_lon": position.longitude,
+          "top_n": 10,
+        }),
+      );
+
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        return {'success': 'true', 'data': body};
+      } else if (response.statusCode == 400) {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['error']};
+      } else {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['error']};
       }
     } catch (e) {
       return {'success': false, 'error': 'Error: $e'};

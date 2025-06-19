@@ -43,8 +43,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
-    _loadVenues();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _getCurrentLocation();
+    await _loadVenues();
+    _sortNearbyVenues();
+    _loadRecommendedVenues();
   }
 
   List<Venue> _venues = [];
@@ -228,7 +234,16 @@ class _HomepageScreenState extends State<HomepageScreen> {
           _nearbyVenues = tempFilteredVenues;
           _recommendedVenues = tempFilteredVenues.take(5).toList();
         });
-      }),
+      }, onReset: (){
+        setState(() {
+          selectedField = null;
+          selectedLocation = null;
+          selectedSports = [];
+          searchController.clear();
+        });
+        _sortNearbyVenues();
+        _loadRecommendedVenues();
+      },),
     );
   }
 
@@ -247,7 +262,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AllNearbyCourtScreen(user: widget.user),
+                  builder: (context) => AllNearbyCourtScreen(user: widget.user, venues: _nearbyVenues),
                 ));
               },
               child: const Text('See All',
@@ -256,7 +271,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
             ),
           ],
         ),
-        _isLoading
+        _isLoading && _currentPosition == null
             ? const Center(child: CircularProgressIndicator())
             : _nearbyVenues.isEmpty
                 ? const SizedBox(
@@ -283,7 +298,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     child: Row(
                       children: (showAllNearby
                               ? _nearbyVenues
-                              : _nearbyVenues.take(10))
+                              : _nearbyVenues.take(3))
                           .map((venue) => Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: _venueCard(venue, isHorizontal: true),
@@ -350,7 +365,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => AllRecommendCourtScreen(
-                    user: widget.user,
+                    user: widget.user, venues: _recommendedVenues
                   ),
                 ));
               },
@@ -386,7 +401,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 : Column(
                     children: (showAllRecommended
                             ? _recommendedVenues
-                            : _recommendedVenues.take(10))
+                            : _recommendedVenues.take(2))
                         .map((venue) => Column(
                               children: [
                                 _venueCard(venue),
@@ -433,7 +448,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          venue.fields![0].gallery!.isEmpty ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg' : 'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                          venue.fields![0].gallery!.isEmpty
+                              ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg'
+                              : 'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
                           width: double.infinity,
                           height: 100,
                           fit: BoxFit.cover,
@@ -574,6 +591,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _currentPosition = position;
+      print('lokk: $_currentPosition');
     });
   }
 
@@ -594,10 +612,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
       List<dynamic> data = result['data'];
       setState(() {
         final tempVenues = List<Venue>.from(data.map((e) => Venue.fromJson(e)));
-        _venues =
-            tempVenues.where((venue) => venue.fields!.isNotEmpty && venue.owner!.id! != widget.user.id).toList();
-        _nearbyVenues = _venues;
-        _recommendedVenues = _venues.take(3).toList();
+        _venues = tempVenues
+            .where((venue) =>
+                venue.fields!.isNotEmpty && venue.owner!.id! != widget.user.id)
+            .toList();
+        if (_currentPosition != null) {
+          _nearbyVenues = List.from(_venues);
+          _nearbyVenues.sort((a, b) {
+            final distanceA = _calculateDistance(a.latitude!, a.longitude!,
+                _currentPosition!.latitude, _currentPosition!.longitude);
+
+            final distanceB = _calculateDistance(b.latitude!, b.longitude!,
+                _currentPosition!.latitude, _currentPosition!.longitude);
+
+            return distanceA.compareTo(distanceB);
+          });
+        } else {
+          _nearbyVenues = _venues;
+        }
         _isLoading = false;
       });
     } else {
@@ -641,5 +673,52 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ),
       ),
     );
+  }
+
+  void _sortNearbyVenues() {
+    if (_currentPosition != null && _venues.isNotEmpty) {
+      _nearbyVenues = List.from(_venues.where((venue) =>
+          venue.latitude != null &&
+          venue.longitude != null));
+
+      _nearbyVenues.sort((a, b) {
+        final distanceA = _calculateDistance(a.latitude!, a.longitude!,
+            _currentPosition!.latitude, _currentPosition!.longitude);
+
+        final distanceB = _calculateDistance(b.latitude!, b.longitude!,
+            _currentPosition!.latitude, _currentPosition!.longitude);
+
+        return distanceA.compareTo(distanceB);
+      });
+    } else {
+      _nearbyVenues = List.from(_venues);
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _loadRecommendedVenues() async {
+    final result = await _venueService.loadVenuesAi(widget.user, _currentPosition!);
+
+    if (result['success'] == 'true') {
+        setState(() {
+          _recommendedVenues = _venues.where((venue) {
+            return result['data'].any((data) => data['venue_id'] == venue.id);
+          }).toList();
+
+          _isLoading = false;
+        });
+    } else {
+      setState(() => _isLoading = false);
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
   }
 }

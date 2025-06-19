@@ -4,8 +4,9 @@ import '../models/filter_drawer_model.dart';
 
 class FilterDrawer extends StatefulWidget {
   final Function(FilterOptions) onFilterApplied;
+  final Function() onReset;
 
-  const FilterDrawer({super.key, required this.onFilterApplied});
+  const FilterDrawer({super.key, required this.onFilterApplied, required this.onReset});
 
   @override
   State<FilterDrawer> createState() => _FilterDrawerState();
@@ -215,7 +216,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
                             ratingSort = 'Ascending';
                             nameSort = 'Ascending';
                           });
-                          widget.onFilterApplied(FilterOptions());
+                          widget.onReset();
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
