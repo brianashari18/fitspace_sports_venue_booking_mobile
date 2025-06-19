@@ -7,6 +7,7 @@ import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/screens/payment_detail_screen.dart';
 import 'package:fitspace_sports_venue_booking_mobile/services/field_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_rating_native/flutter_rating_native.dart';
 import 'package:intl/intl.dart';
 
@@ -153,7 +154,7 @@ class _BookScreenState extends State<BookScreen> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: NetworkImage(
-                              'http://192.168.18.11:8080${widget.field.gallery![0].photoUrl != null ? field.gallery![0].photoUrl! : ''}',
+                              'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${widget.field.gallery![0].photoUrl != null ? field.gallery![0].photoUrl! : ''}',
                             ),
                             fit: BoxFit.cover,
                           ),

@@ -4,6 +4,7 @@ import 'package:fitspace_sports_venue_booking_mobile/screens/payment_success_scr
 import 'package:fitspace_sports_venue_booking_mobile/services/booking_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -85,7 +86,7 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
                         height: 70,
                         width: 70,
                         child: Image.network(
-                          'http://192.168.18.11:8080${widget.field.gallery![0].photoUrl != null ? widget.field.gallery![0].photoUrl! : ''}',
+                          'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${widget.field.gallery![0].photoUrl != null ? widget.field.gallery![0].photoUrl! : ''}',
                           fit: BoxFit.cover,
                         ),
                       ),

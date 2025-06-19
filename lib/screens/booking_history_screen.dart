@@ -3,6 +3,7 @@ import 'package:fitspace_sports_venue_booking_mobile/services/booking_service.da
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
 import '../models/booking_model.dart';
@@ -180,7 +181,7 @@ class BookingCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
-                    'http://192.168.18.11:8080${order.field!.gallery![0].photoUrl != null ? order.field!.gallery![0].photoUrl! : ''}',
+                    'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${order.field!.gallery![0].photoUrl != null ? order.field!.gallery![0].photoUrl! : ''}',
                     width: 90,
                     height: 90,
                     fit: BoxFit.cover,

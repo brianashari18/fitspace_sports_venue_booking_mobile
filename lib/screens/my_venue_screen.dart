@@ -128,6 +128,9 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
                 user: widget.user,
                 venue: venue as Venue,
                 sign: 'owner',
+                onDelete: (){
+                  _deleteVenue(venue);
+                },
               ),
             );
           },
@@ -149,6 +152,21 @@ class _MyVenueScreenState extends State<MyVenueScreen> {
       });
     } else {
       setState(() => _isLoad = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['error'].toString())));
+    }
+  }
+
+  void _deleteVenue(Venue venue) async {
+    final result = await _venueService.delete(widget.user, venue.id!);
+    print('venues: $result');
+
+    if (result['success'] == 'true') {
+      _loadVenues();
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully Delete Venue')));
+    } else {
+      setState(() => _isLoad = false);
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result['error'].toString())));
     }
   }

@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:fitspace_sports_venue_booking_mobile/models/user_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 
@@ -11,11 +14,14 @@ import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../models/field_schedule_model.dart';
 import '../models/venue_model.dart';
 
 class UpdateFieldScreen extends StatefulWidget {
-  const UpdateFieldScreen({super.key, required this.venue, required this.field});
+  const UpdateFieldScreen(
+      {super.key, required this.venue, required this.field, required this.user});
 
+  final User user;
   final Venue venue;
   final Field field;
 
@@ -32,15 +38,27 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
   var _enteredType = '';
   var _enteredPrice = 0;
   var _enteredPhotos = <File>[];
+  var _oldPhotos = <File>[];
+  var _newPhotos = <File>[];
   var _removedImages = <String>[];
 
   var _isSubmit = false;
+  var _isLoad = false;
   var _errorPhoto = '';
+
+  List<DateTime> _weeklyDate = [];
+  DateTime _selectedDate = DateTime.now();
+  String _selectedTimeSlot = '';
+  List<FieldSchedule> _filteredFieldSchedules = [];
+  late Field field;
+  List<FieldSchedule> _updatedFieldSchedules = [];
 
   @override
   void initState() {
     _enteredType = widget.field.type!;
     _enteredPrice = widget.field.price!;
+    _weeklyDate = _generateWeeklyDate();
+    _loadField();
 
     for (var photo in widget.field.gallery!) {
       downloadImage(photo.photoUrl!).then((file) {
@@ -53,6 +71,8 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
         }
       });
     }
+    
+    _oldPhotos = _enteredPhotos;
 
     print(_enteredPhotos);
 
@@ -175,13 +195,15 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
                                     width: 2.0,
                                   ),
                                 ),
-                                floatingLabelBehavior: FloatingLabelBehavior.never,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
                                 labelText: 'Select a type of field',
                                 labelStyle: Theme.of(context)
                                     .textTheme
                                     .labelMedium!
                                     .copyWith(
-                                      color: AppColors.darkGrey.withOpacity(0.5),
+                                      color:
+                                          AppColors.darkGrey.withOpacity(0.5),
                                       fontSize:
                                           AppSize.getWidth(context) * 14 / 419,
                                     ),
@@ -229,7 +251,9 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
                                 return null;
                               },
                             )),
-                        const SizedBox(height: 15,),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -327,49 +351,249 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
                         _enteredPhotos.isEmpty
                             ? const Text('No images selected.')
                             : GridView.builder(
-                          shrinkWrap: true,
-                          gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
+                                shrinkWrap: true,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: _enteredPhotos.length,
+                                itemBuilder: (context, index) {
+                                  return Stack(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(15),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.file(
+                                            _enteredPhotos[index],
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: -10,
+                                        right: -7.5,
+                                        child: IconButton(
+                                          icon: const Icon(Icons.remove_circle,
+                                              color: Colors.red),
+                                          onPressed: () => _removeImage(index),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                        _errorPhoto.isNotEmpty
+                            ? Text(
+                                _errorPhoto,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(
+                                        color: AppColors.red,
+                                        fontSize: AppSize.getWidth(context) *
+                                            14 /
+                                            360),
+                              )
+                            : Container(),
+                        const SizedBox(height: 10),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Field Schedule',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: AppColors.darkGrey,
+                                      fontSize:
+                                          AppSize.getWidth(context) * 14 / 419,
+                                      fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height:
+                          AppSize.getWidth(context) * 50 / 360,
+                          child: ListView.separated(
+                            itemCount: _weeklyDate.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) => InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedDate = _weeklyDate[index];
+                                  _selectedTimeSlot = '';
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(7.5),
+                                width: AppSize.getWidth(context) *
+                                    75 /
+                                    360,
+                                decoration: BoxDecoration(
+                                    color: _selectedDate.day ==
+                                        _weeklyDate[index].day
+                                        ? AppColors.primaryColor
+                                        : AppColors.whitePurple,
+                                    borderRadius:
+                                    BorderRadius.circular(15),
+                                    border: Border.all(
+                                        color: AppColors.grey)),
+                                child: Text(
+                                  '${_weeklyDate[index].day} ${DateFormat('MMMM').format(_weeklyDate[index]).substring(0, 3)}\n${DateFormat('EEEE').format(_weeklyDate[index]).substring(0, 3)}',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                      color: _selectedDate.day ==
+                                          _weeklyDate[index]
+                                              .day
+                                          ? AppColors.whitePurple
+                                          : AppColors
+                                          .primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: AppSize.getWidth(
+                                          context) *
+                                          14 /
+                                          360),
+                                ),
+                              ),
+                            ),
+                            separatorBuilder: (context, index) =>
+                            const SizedBox(
+                              width: 10,
+                            ),
                           ),
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _enteredPhotos.length,
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.file(
-                                      _enteredPhotos[index],
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                            height: AppSize.getHeight(context) / 3.25,
+                            child: GridView.builder(
+                              padding: const EdgeInsets.all(0),
+                              gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 7,
+                                childAspectRatio: 8 / 4,
+                                crossAxisCount: 4,
+                              ),
+                              itemBuilder: (context, index) {
+                                List<FieldSchedule> fsToday =
+                                _filteredFieldSchedules
+                                    .where((schedule) {
+                                  DateTime scheduleDate =
+                                  schedule.schedule!.date!;
+
+                                  return scheduleDate.day ==
+                                      _selectedDate.day;
+                                }).toList();
+
+                                final List<FieldSchedule> sortedFs =
+                                List.from(fsToday)
+                                  ..sort((a, b) {
+                                    final aStartHour = int.parse(a
+                                        .schedule!.timeSlot!
+                                        .substring(0, 2));
+                                    final bStartHour = int.parse(b
+                                        .schedule!.timeSlot!
+                                        .substring(0, 2));
+
+                                    return aStartHour
+                                        .compareTo(bStartHour);
+                                  });
+
+                                if (!sortedFs.isNotEmpty && !(index < sortedFs.length)) {
+                                  print('Error: The list is empty or index is out of range');
+                                  return Container();
+                                }
+
+                                final selectedFs = sortedFs[index];
+
+                                bool isAvailable =
+                                    selectedFs.status == 'Available';
+
+                                return InkWell(
+                                  onTap: isAvailable
+                                      ? () {
+                                    setState(() {
+                                      FieldSchedule updateToNotAvailFS = FieldSchedule(id: selectedFs.id, status: 'Not Available', schedule: selectedFs.schedule, fieldId: selectedFs.fieldId, scheduleId: selectedFs.scheduleId);
+                                      if (_updatedFieldSchedules.any((fs) => fs.id == updateToNotAvailFS.id)) {
+                                        FieldSchedule existingUpdatedFs = _updatedFieldSchedules.firstWhere((fs) => fs.id == updateToNotAvailFS.id);
+                                        _updatedFieldSchedules.remove(existingUpdatedFs);
+                                      }
+                                      _updatedFieldSchedules.add(updateToNotAvailFS);
+
+                                      FieldSchedule existingFilteredFs = _filteredFieldSchedules.firstWhere((fs) => fs.id == updateToNotAvailFS.id);
+                                      _filteredFieldSchedules.remove(existingFilteredFs);
+                                      _filteredFieldSchedules.add(updateToNotAvailFS);
+
+                                      print('update: $_updatedFieldSchedules');
+                                    });
+                                  }
+                                      : () {
+                                    setState(() {
+                                      FieldSchedule updateToAvailFS = FieldSchedule(id: selectedFs.id, status: 'Available', schedule: selectedFs.schedule, fieldId: selectedFs.fieldId, scheduleId: selectedFs.scheduleId);
+                                      if (_updatedFieldSchedules.any((fs) => fs.id == updateToAvailFS.id)) {
+                                        FieldSchedule existingUpdatedFs = _updatedFieldSchedules.firstWhere((fs) => fs.id == updateToAvailFS.id);
+                                        _updatedFieldSchedules.remove(existingUpdatedFs);
+                                      }
+                                      _updatedFieldSchedules.add(updateToAvailFS);
+
+                                      FieldSchedule existingFilteredFs = _filteredFieldSchedules.firstWhere((fs) => fs.id == updateToAvailFS.id);
+                                      _filteredFieldSchedules.remove(existingFilteredFs);
+                                      _filteredFieldSchedules.add(updateToAvailFS);
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: !isAvailable
+                                          ? AppColors.grey
+                                          .withOpacity(0.7)
+                                          : _selectedTimeSlot ==
+                                          selectedFs.schedule!
+                                              .timeSlot
+                                          ? AppColors.primaryColor
+                                          : Colors.transparent,
+                                      borderRadius:
+                                      BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: isAvailable
+                                            ? AppColors.primaryColor
+                                            : AppColors.grey
+                                            .withOpacity(0.7),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        selectedFs.schedule!.timeSlot!
+                                            .substring(0, 6),
+                                        style: TextStyle(
+                                          color: _selectedTimeSlot ==
+                                              selectedFs.schedule!
+                                                  .timeSlot
+                                              ? AppColors
+                                              .whitePurple // Change text color when selected
+                                              : isAvailable
+                                              ? AppColors
+                                              .primaryColor
+                                              : AppColors
+                                              .whitePurple, // Text color based on availability
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  top: -10,
-                                  right: -7.5,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.remove_circle,
-                                        color: Colors.red),
-                                    onPressed: () =>
-                                        _removeImage(index),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        _errorPhoto.isNotEmpty ? Text(_errorPhoto, style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                            color: AppColors.red,
-                            fontSize: AppSize.getWidth(context) * 14 / 360
-                        ),) : Container()
-
+                                );
+                              },
+                              itemCount: 18,
+                            )),
                       ],
                     )),
               ),
@@ -411,8 +635,8 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
       return;
     }
 
-    final result = await _fieldService.update(
-        user, widget.venue, widget.field, _enteredType, _enteredPrice, _enteredPhotos, _removedImages);
+    final result = await _fieldService.update(user, widget.venue, widget.field,
+        _enteredType, _enteredPrice, _newPhotos, _removedImages, _updatedFieldSchedules);
 
     setState(() {
       _isSubmit = false;
@@ -444,6 +668,7 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
     setState(() {
       if (pickedFile != null) {
         _enteredPhotos.add(File(pickedFile.path));
+        _newPhotos.add(File(pickedFile.path));
       }
     });
   }
@@ -454,6 +679,7 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
     setState(() {
       if (pickedFile != null) {
         _enteredPhotos.add(File(pickedFile.path));
+        _newPhotos.add(File(pickedFile.path));
       }
     });
   }
@@ -461,6 +687,7 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
   void _removeImage(int index) {
     setState(() {
       _removedImages.add(widget.field.gallery![index].photoUrl!);
+      print('GID: ${widget.field.gallery![index].id}');
       _enteredPhotos.removeAt(index);
     });
   }
@@ -496,11 +723,13 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
 
   Future<File?> downloadImage(String imageUrl) async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.18.11:8080$imageUrl'));
+      final response = await http.get(Uri.parse(
+          'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}$imageUrl'));
 
       if (response.statusCode == 200) {
         final directory = await getApplicationDocumentsDirectory();
-        final filePath = join(directory.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
+        final filePath = join(
+            directory.path, '${DateTime.now().millisecondsSinceEpoch}.jpg');
 
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
@@ -515,5 +744,49 @@ class _UpdateFieldScreenState extends State<UpdateFieldScreen> {
       print("Error downloading image: $e");
       return null;
     }
+  }
+
+  List<DateTime> _generateWeeklyDate() {
+    var today = DateTime.now();
+    var weekday = today.weekday;
+    var startOfWeek = today.subtract(Duration(days: weekday - 1));
+
+    List<DateTime> weekDates =
+    List.generate(7, (index) => startOfWeek.add(Duration(days: index)));
+
+    return weekDates;
+  }
+
+  void _loadField() async {
+    final result = await _fieldService.loadField(widget.user, widget.field.id!);
+
+    if (result['success'] == true) {
+      setState(() {
+        field = Field.fromJson(result['data']);
+
+        final startDate = _weeklyDate[0];
+        final endDate = _weeklyDate[6];
+
+        _filteredFieldSchedules = field.fieldSchedules!.where((schedule) {
+          DateTime scheduleDate = schedule.schedule!.date!;
+          return scheduleDate
+              .isAfter(startDate.subtract(const Duration(days: 1))) &&
+              scheduleDate.isBefore(endDate.add(const Duration(days: 1)));
+        }).toList();
+      });
+    } else {
+      final errorMessage = result['error'] is String
+          ? result['error']
+          : (result['error'] as List).join('\n');
+
+      ScaffoldMessenger.of(context as BuildContext).clearSnackBars();
+      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
+
+    setState(() {
+      _isLoad = false;
+    });
   }
 }

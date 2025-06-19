@@ -8,6 +8,7 @@ import 'package:fitspace_sports_venue_booking_mobile/screens/venue_detail_screen
 import 'package:fitspace_sports_venue_booking_mobile/services/user_service.dart';
 import 'package:fitspace_sports_venue_booking_mobile/widgets/filter_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
 import 'package:intl/intl.dart';
@@ -432,7 +433,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          venue.fields![0].gallery!.isEmpty ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg' : 'http://192.168.18.11:8080${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                          venue.fields![0].gallery!.isEmpty ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg' : 'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
                           width: double.infinity,
                           height: 100,
                           fit: BoxFit.cover,
@@ -463,7 +464,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          'http://192.168.18.11:8080${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
+                          'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${venue.fields![0].gallery![0].photoUrl != null ? venue.fields![0].gallery![0].photoUrl! : ''}',
                           width: 120,
                           height: 130,
                           fit: BoxFit.cover,

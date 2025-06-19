@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/size.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import '../models/user_model.dart';
 import '../models/venue_model.dart';
@@ -177,7 +178,7 @@ class MyVenueDetailScreenState extends State<MyVenueDetailScreen> {
                       image: NetworkImage(
                         fields.isEmpty || fields[0].gallery!.isEmpty
                             ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg'
-                            : 'http://192.168.18.11:8080${fields[0].gallery![0].photoUrl != null ? fields[0].gallery![0].photoUrl! : ''}',
+                            : 'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${fields[0].gallery![0].photoUrl != null ? fields[0].gallery![0].photoUrl! : ''}',
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -470,11 +471,22 @@ class MyVenueDetailScreenState extends State<MyVenueDetailScreen> {
                                           imagePaths: field.gallery!
                                               .map((photo) => photo.photoUrl!)
                                               .toList(),
-                                          onEdit: () {
-                                            Navigator.of(context).push(
+                                          onEdit: () async {
+                                            final back =
+                                                await Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        UpdateFieldScreen(venue: venue, field: field,)));
+                                                        UpdateFieldScreen(venue: venue, field: field, user: widget.user,)));
+
+                                            print("BACK: $back");
+
+                                            if (back != null && back == true) {
+                                              await _loadVenue();
+                                              print("Updated venue: $venue");
+
+                                              await _loadFields();
+                                              print("Updated fields: $fields");
+                                            }
                                           },
                                           onDelete: () {
                                             showModalBottomSheet(
@@ -636,7 +648,7 @@ class MyVenueDetailScreenState extends State<MyVenueDetailScreen> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                'http://192.168.18.11:8080${imagePaths[0]}',
+                                'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${imagePaths[0]}',
                                 fit: BoxFit.cover,
                                 width: 250,
                                 loadingBuilder: (BuildContext context,
@@ -674,7 +686,7 @@ class MyVenueDetailScreenState extends State<MyVenueDetailScreen> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
-                                    'http://192.168.18.11:8080${imagePaths[index]}',
+                                    'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${imagePaths[index]}',
                                     fit: BoxFit.cover,
                                     width: 250,
                                     loadingBuilder: (BuildContext context,

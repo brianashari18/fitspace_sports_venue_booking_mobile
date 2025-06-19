@@ -76,7 +76,6 @@ class VenueService {
   }
 
   Future<Map<String, dynamic>> load(User user, int venueId) async {
-    print("HEREEEEE");
     try {
       final response = await http.get(Uri.parse('$_baseUrl/venues/$venueId'),
           headers: {'Authorization': 'Bearer ${user.token}'});
@@ -99,6 +98,26 @@ class VenueService {
   Future<Map<String, dynamic>> loadVenuesByOwner(User user) async {
     try {
       final response = await http.get(Uri.parse('$_baseUrl/venues-owner'),
+          headers: {'Authorization': 'Bearer ${user.token}'});
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        return {'success': 'true', 'data': body['data']};
+      } else if (response.statusCode == 400) {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      } else {
+        final body = json.decode(response.body);
+        return {'success': false, 'error': body['errors']};
+      }
+    } catch (e) {
+      return {'success': false, 'error': 'Error: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> delete(User user, int venueId) async {
+    try {
+      final response = await http.delete(Uri.parse('$_baseUrl/venues/delete/$venueId'),
           headers: {'Authorization': 'Bearer ${user.token}'});
 
       if (response.statusCode == 200) {

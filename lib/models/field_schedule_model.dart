@@ -25,7 +25,7 @@ class FieldSchedule {
       'status': status,
       'field_id': fieldId,
       'schedule_id': scheduleId,
-      'schedule': schedule
+      'schedule': schedule!.toJson()
     };
   }
 

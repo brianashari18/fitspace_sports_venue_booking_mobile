@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fitspace_sports_venue_booking_mobile/screens/my_venue_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fitspace_sports_venue_booking_mobile/utils/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
@@ -14,12 +15,14 @@ class CardVenueWidget extends StatefulWidget {
   final User user;
   final Venue venue;
   final String sign;
+  final void Function()? onDelete;
 
   const CardVenueWidget({
     super.key,
     required this.user,
     required this.venue,
     required this.sign,
+    this.onDelete
   });
 
   @override
@@ -87,7 +90,7 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
                           widget.venue.fields!.isEmpty ||
                                   widget.venue.fields![0].gallery!.isEmpty
                               ? 'https://staticg.sportskeeda.com/editor/2022/11/a9ef8-16681658086025-1920.jpg'
-                              : 'http://192.168.18.11:8080${widget.venue.fields![0].gallery![0].photoUrl != null ? widget.venue.fields![0].gallery![0].photoUrl! : ''}',
+                              : 'http://${dotenv.env["HOST"]}:${dotenv.env["PORT"]}${widget.venue.fields![0].gallery![0].photoUrl != null ? widget.venue.fields![0].gallery![0].photoUrl! : ''}',
                           width: double.infinity,
                           height: 100,
                           fit: BoxFit.cover,
@@ -215,6 +218,29 @@ class _CardVenueWidgetState extends State<CardVenueWidget> {
                                     ),
                                   ],
                                 ),
+                          widget.sign == 'owner' ?
+                            Column(children: [
+                              const SizedBox(height: 10,),
+                              SizedBox(
+                                width: 90,
+                                height: 30,
+                                child: ElevatedButton(
+                                  onPressed: widget.onDelete!,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.red,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                      color: AppColors.whitePurple,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],) : Container()
                         ],
                       ),
                     ],

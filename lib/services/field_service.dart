@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fitspace_sports_venue_booking_mobile/models/field_schedule_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/photo_model.dart';
 import 'package:fitspace_sports_venue_booking_mobile/models/venue_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -113,7 +114,8 @@ class FieldService {
     }
   }
 
-  Future<Map<String, dynamic>> update(User user, Venue venue, Field field, String type, int price, List<File> files, List<String> removedImages) async {
+  Future<Map<String, dynamic>> update(User user, Venue venue, Field field, String type, int price, List<File> files, List<String> removedImages, List<FieldSchedule> fieldSchedule) async {
+    print("PHO: $files");
     try {
       final uri = Uri.parse('$_baseUrl/${venue.id}/fields/${field.id}/update');
       var request = http.MultipartRequest('PATCH', uri);
@@ -125,7 +127,8 @@ class FieldService {
       request.fields['field'] = json.encode({
         'type': type,
         'price': price,
-        'removedImages': removedImages
+        'removedImages': removedImages,
+        'field_schedules': List.from(fieldSchedule.map((fs) => fs.toJson()))
       });
 
       for (var file in files) {
@@ -140,7 +143,7 @@ class FieldService {
       var response = await request.send();
 
 
-      if (response.statusCode == 202) {
+      if (response.statusCode == 200) {
         final body = await response.stream.bytesToString();
         final data = json.decode(body);
         return {
